@@ -167,11 +167,36 @@ body {
     background-color: hsl(0, 0%, 15%);
 }
 
+/* Locked Task Visual Cues (NEW) */
+.task-locked .rewards-list {
+    opacity: 0.3;
+}
+.task-locked .collapsed-requirements {
+    color: #dc3545; 
+    font-weight: bold;
+}
+
+/* Task Quick Slotted State (NEW) */
+.task-quick-slotted {
+    background-color: hsl(42, 80%, 10%); /* Subtle gold/yellow background */
+    border-color: #F5B925; /* Use the main accent color */
+    box-shadow: 0 0 10px rgba(245, 185, 37, 0.4);
+    order: -1; /* Pinned tasks always go to the top in the flex/grid container */
+}
+.task-quick-slotted:hover:not(.task-completed):not(.task-locked) {
+    background-color: hsl(42, 80%, 12%); 
+}
+
 /* COLLAPSED VIEW */
 .collapsed-view {
     display: flex;
     gap: 15px;
     align-items: center;
+    justify-content: space-between; /* Spread items out, crucial for button placement */
+}
+/* New wrapper for the text content (NEW) */
+.collapsed-text-group {
+    flex-grow: 1; /* Allows text content to take up the available space */
 }
 .collapsed-view > div {
     flex-grow: 0;
@@ -200,6 +225,35 @@ body {
     display: inline-block;
 }
 
+/* Quick Slot Button Styles (NEW) */
+.quick-slot-btn {
+    background: none;
+    border: 1px solid #F5B925;
+    color: #F5B925;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.5em;
+    line-height: 1;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Keep button size fixed */
+    height: fit-content;
+    margin-left: auto; /* Push button to the far right */
+}
+
+.quick-slot-btn:hover {
+    background-color: #F5B925;
+    color: #111;
+}
+
+/* Active (Quick Slotted) State */
+.slotted-active {
+    background-color: #F5B925;
+    color: #111;
+    border-color: #F5B925;
+}
+
+
 /* EXPANDED VIEW */
 .expanded-view {
     display: none; /* Controlled by JS */
@@ -215,12 +269,10 @@ body {
 }
 
 /* Trader Icon/Image Box - COLLAPSED VIEW STYLES (UPDATED) */
-.trader-icon-small {
-    /* Base dimensions and circle shape */
+.trader-icon-small { 
     width: 100px;
     height: 100px;
     border-radius: 0%;
-    /* Removed background-color to help debug distortion, it should be transparent */
     
     /* CRITICAL FIX: Prevent stretching/manipulation in flex container */
     flex-shrink: 0; 
@@ -433,15 +485,23 @@ body {
         grid-row: span 1;
     }
     .collapsed-view {
-        flex-direction: column;
+        flex-direction: row; /* Keep the button visible on the right */
         align-items: flex-start;
-        text-align: left;
+        flex-wrap: wrap; /* Allow wrapping if content is too wide */
     }
     .trader-icon-small {
-        width: 100%;
-        height: 30px;
-        justify-content: flex-start;
-        padding-left: 10px;
+        width: 30px; 
+        height: 30px; 
+        background-size: cover; 
+    }
+    .collapsed-text-group {
+        order: 1; /* Keep text content after the icon and before the button in the flow */
+        width: calc(100% - 100px);
+    }
+    .quick-slot-btn {
+        order: 2; /* Place button at the end of the first row */
+        margin-left: 0;
+        align-self: flex-start;
     }
     .collapsed-requirements {
         margin-left: 0;
