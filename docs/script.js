@@ -18,7 +18,7 @@ function loadProgress() {
     completedTasks = JSON.parse(localStorage.getItem(COMPLETED_TASKS_KEY) || '{}');
     completedObjectives = JSON.parse(localStorage.getItem(COMPLETED_OBJECTIVES_KEY) || '{}'); 
     
-    // Initialize all 7 traders in the default data structure
+    // Initialize all 7 traders in the default data structure (FIXED)
     const defaultData = { 
         Prapor: { 1: false, 2: false, 3: false, 4: false }, 
         Skier: { 1: false, 2: false, 3: false, 4: false },
@@ -31,7 +31,7 @@ function loadProgress() {
 
     traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
 
-    // Ensure newly added traders exist if old data was loaded
+    // Ensure newly added traders exist if old data was loaded (FIXED)
     const defaultLL = { 1: false, 2: false, 3: false, 4: false };
     if (!traderLL.Peacekeeper) traderLL.Peacekeeper = {...defaultLL};
     if (!traderLL.Mechanic) traderLL.Mechanic = {...defaultLL};
@@ -108,6 +108,9 @@ function checkRequirementsAndGenerateList(taskCard) {
     const requirementsAttribute = taskCard.getAttribute('data-task-requirements');
     const requirementsContainer = taskCard.querySelector('.task-requirements-list');
     
+    // Safety check for null/missing elements (FIXED)
+    if (!requirementsContainer) return true; 
+
     requirementsContainer.innerHTML = ''; 
     let allRequirementsMet = true;
     const traderName = taskCard.getAttribute('data-trader');
@@ -158,6 +161,9 @@ function generateChecklist(taskCard) {
     const objectivesList = taskCard.getAttribute('data-objective-list');
     const checklistContainer = taskCard.querySelector('.objective-checklist');
     
+    // Safety check for null/missing elements (FIXED)
+    if (!checklistContainer) return; 
+
     checklistContainer.innerHTML = ''; 
 
     if (!objectivesList) return;
@@ -226,8 +232,12 @@ function filterTasks() {
 
     expandableCards.forEach(card => {
         const trader = card.getAttribute('data-trader');
-        const title = card.querySelector('.task-title').textContent.toLowerCase();
-        const objective = card.querySelector('.task-objective').textContent.toLowerCase();
+        // Safety checks for missing elements (FIXED)
+        const titleElement = card.querySelector('.task-title');
+        const objectiveElement = card.querySelector('.task-objective');
+
+        const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+        const objective = objectiveElement ? objectiveElement.textContent.toLowerCase() : '';
 
         let matchesTrader = (selectedTrader === 'all' || trader === selectedTrader);
         let matchesSearch = true;
@@ -252,9 +262,13 @@ taskSearch.addEventListener('keyup', filterTasks);
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
+    
+    // Safety checks for missing elements (FIXED)
     const toggleButton = taskCard.querySelector('.task-toggle-btn');
     const dialogueTextElement = taskCard.querySelector('.dialogue-text'); 
     
+    if (!toggleButton || !dialogueTextElement) return; // Exit if critical elements are missing
+
     // 1. Check Requirements
     const isUnlocked = checkRequirementsAndGenerateList(taskCard);
     
