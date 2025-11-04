@@ -1,8 +1,70 @@
-/* --- Global Styles & Resets (No Changes) --- */
-/* ... (Keep your existing body, *, and container styles) ... */
+/* --- Global Styles & Resets --- */
+body {
+    /* Use a common system font and a tactical fallback */
+    font-family: 'Roboto Mono', monospace, Arial, sans-serif; 
+    background-color: hsl(0, 0%, 10%); /* Very dark grey/black background */
+    color: #E0E0E0; /* Off-white text for readability */
+    padding: 0; /* Removed padding to allow header full width */
+    margin: 0;
+    line-height: 1.6;
+    min-height: 100vh; /* Ensure body covers the viewport height */
+}
 
-/* --- 1. Header/Landing Bar Styles (No Changes) --- */
-/* ... (Keep your existing #landing-bar, .header-title, and nav styles) ... */
+/* Ensure all elements calculate size based on borders and padding */
+* {
+    box-sizing: border-box; 
+}
+
+/* Center and constrain main content */
+.container {
+    max-width: 900px;
+    margin: 0 auto; 
+    padding: 20px; 
+}
+
+
+/* --- 1. Header/Landing Bar Styles --- */
+#landing-bar {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    align-items: center;
+    background-color: hsl(0, 0%, 18%); 
+    padding: 10px 20px;
+    border-bottom: 2px solid #F5B925; /* Key yellow border */
+    margin-bottom: 30px;
+}
+
+.header-title {
+    color: #F5B925;
+    font-size: 1.5em;
+    margin: 5px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; 
+}
+
+nav .nav-btn {
+    background: none;
+    color: #E0E0E0;
+    border: 1px solid #444;
+    padding: 8px 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 0.9em;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+nav .nav-btn:hover {
+    background-color: #333;
+    border-color: #F5B925;
+}
 
 
 /* --- 2. Status Bar (Roubles/Debt) - UPDATED FOR INPUTS --- */
@@ -89,11 +151,168 @@
     background-color: #A00000;
 }
 
-/* --- Content Styles (No Changes) --- */
-/* ... (Keep all existing h2, .task-card, .rewards-list, etc. styles) ... */
 
-/* --- Responsive Adjustments (Updated status bar handling) --- */
+/* --- 3. Typography & Headings (Content) --- */
+h1, h2 {
+    text-transform: uppercase;
+    color: #E0E0E0;
+}
+
+h2 {
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* --- 4. Task Card Styles (Collapsible View) --- */
+.task-card {
+    background-color: hsl(0, 0%, 15%); 
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left: 5px solid #F5B925; /* Key yellow accent on the left */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease; 
+}
+
+/* Style for expandable cards */
+.task-card.expandable {
+    cursor: pointer; 
+}
+
+.task-card.expandable:hover {
+    background-color: hsl(0, 0%, 17%); 
+}
+
+.trader-name {
+    color: #5897FB; /* Blue hue for trader names */
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.task-title {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.1em;
+    display: inline-block;
+}
+
+.task-objective {
+    font-size: 0.9em;
+    color: #AAA;
+    margin: 5px 0 0 0;
+}
+
+/* EXPANDED CONTENT */
+.expanded-view {
+    border-top: 1px solid #333;
+    padding-top: 10px;
+    margin-top: 10px;
+    /* JS will toggle the display property */
+}
+
+/* Dialogue box style */
+.dialogue-box {
+    background-color: #222;
+    border-left: 3px solid #5897FB; 
+    padding: 10px;
+    margin-bottom: 15px;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+
+/* --- 5. Completed Task State --- */
+.task-completed {
+    opacity: 0.5; /* Fade completed tasks */
+    border-left-color: #555; /* Mute the accent color */
+    text-decoration: line-through;
+}
+
+.task-completed .trader-name, 
+.task-completed .task-title,
+.task-completed .rewards-list li {
+    text-decoration: none; /* Only strikethrough the card, not the text */
+}
+
+
+/* --- 6. Rewards & Item Image Styling --- */
+.rewards-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.rewards-list li {
+    color: #70E670; 
+    font-size: 0.9em;
+    padding-left: 35px; /* Create space for the image/icon */
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 25px; 
+    margin-bottom: 5px;
+}
+
+/* Item Icon placeholders (You would replace the background-image URL with your actual image path) */
+[data-item="roubles"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%2370E670">₽</text></svg>');
+}
+[data-item="helmet-6b47"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%23FFFFFF">⛑️</text></svg>');
+}
+[data-item="bolt"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%23FFD700">🔩</text></svg>');
+}
+[data-item="rep-prapor"] {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%235897FB">★</text></svg>');
+}
+
+/* --- Button Style --- */
+.complete-btn {
+    background-color: #8B0000;
+    color: white;
+    border: 1px solid #FF0000;
+    padding: 8px 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+.complete-btn:hover {
+    background-color: #A00000;
+}
+
+/* --- Page Visibility (For JS Routing) --- */
+.hidden-page {
+    display: none;
+}
+
+.active-page {
+    display: block;
+}
+
+/* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
+    #landing-bar {
+        flex-direction: column;
+    }
+    nav {
+        margin-top: 10px;
+        justify-content: center;
+        width: 100%;
+    }
+    .header-title {
+        text-align: center;
+    }
     #status-bar {
         flex-direction: column;
         align-items: center;
@@ -102,5 +321,4 @@
     .currency-tracker {
         min-width: 80%;
     }
-    /* ... (Keep your existing header responsive styles) ... */
 }
