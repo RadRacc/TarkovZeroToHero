@@ -227,36 +227,52 @@ body {
     font-weight: bold;
     font-size: 0.8em;
 }
+
+/* Updated Trader Image Box for Portraits */
 .trader-image-box {
     width: 100px;
     height: 100px;
-    background-color: #444;
+    background-color: #444; /* Fallback color */
     border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
     flex-shrink: 0;
     grid-row: span 3;
+    
+    /* Image Specific Properties */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #666;
 }
 
-/* Trader Colors for Icons (initials for now) */
-.trader-icon-small[data-trader-id="Prapor"], .trader-image-box[data-trader-id="Prapor"] { background-color: #CC2222; }
-.trader-icon-small[data-trader-id="Skier"], .trader-image-box[data-trader-id="Skier"] { background-color: #22CC99; }
-.trader-icon-small[data-trader-id="Therapist"], .trader-image-box[data-trader-id="Therapist"] { background-color: #44CCFF; }
-.trader-icon-small[data-trader-id="Peacekeeper"], .trader-image-box[data-trader-id="Peacekeeper"] { background-color: #2059CC; }
-.trader-icon-small[data-trader-id="Mechanic"], .trader-image-box[data-trader-id="Mechanic"] { background-color: #FF8C00; }
-.trader-icon-small[data-trader-id="Ragman"], .trader-image-box[data-trader-id="Ragman"] { background-color: #CC44CC; }
-.trader-icon-small[data-trader-id="Jaeger"], .trader-image-box[data-trader-id="Jaeger"] { background-color: #A0522D; }
-
+/* Small icons fallback (no image yet) */
 .trader-icon-small::after {
     content: attr(data-trader-id);
     color: white;
 }
-.trader-image-box::after {
-    content: attr(data-trader-id);
-    color: white;
+
+/* Trader Portrait Image Links - Relative to docs/style.css */
+.trader-image-box[data-trader-id="Prapor"] { 
+    background-image: url('images/prapor-portrait.png'); 
 }
+.trader-image-box[data-trader-id="Skier"] { 
+    background-image: url('images/skier-portrait.png'); 
+}
+.trader-image-box[data-trader-id="Therapist"] { 
+    background-image: url('images/therapist-portrait.png'); 
+}
+.trader-image-box[data-trader-id="Peacekeeper"] { 
+    background-image: url('images/peacekeeper-portrait.png'); 
+}
+.trader-image-box[data-trader-id="Mechanic"] { 
+    background-image: url('images/mechanic-portrait.png'); 
+}
+.trader-image-box[data-trader-id="Ragman"] { 
+    background-image: url('images/ragman-portrait.png'); 
+}
+.trader-image-box[data-trader-id="Jaeger"] { 
+    background-image: url('images/jaeger-portrait.png'); 
+}
+
 
 /* Dialogue Box */
 .dialogue-box {
