@@ -456,6 +456,7 @@ function handleObjectiveToggle(event) {
     const taskId = taskCard.getAttribute('data-task-id');
     const index = checkbox.getAttribute('data-objective-index');
     
+    // 1. Update Objective Status
     completedObjectives[taskId][index] = checkbox.checked;
     
     const allCheckboxes = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
@@ -466,14 +467,22 @@ function handleObjectiveToggle(event) {
         }
     });
 
+    // 2. Update Parent Task Status based on Objectives
     if (allCompleted) {
         completedTasks[taskId] = true;
     } else {
         completedTasks[taskId] = false;
     }
 
+    // 3. Update the visual status of the current card
     updateTaskStatus(taskCard); 
+    
+    // 4. Save progress
     saveProgress();
+    
+    // 5. CRITICAL FIX: Re-evaluate ALL tasks immediately
+    // This ensures tasks that DEPEND on this one are locked/unlocked correctly.
+    updateAllTaskStatuses(); 
 }
 
 
