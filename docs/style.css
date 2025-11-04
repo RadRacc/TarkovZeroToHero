@@ -171,7 +171,7 @@ h2 {
 }
 
 
-/* --- Trader Icons and Images (FIXED PATHS) --- */
+/* --- Trader Icons and Images --- */
 .trader-icon-small, .trader-image-box {
     background-size: cover; 
     background-repeat: no-repeat;
@@ -191,7 +191,7 @@ h2 {
     background-size: cover;
 }
 
-/* TRADER ICON MAPPING - PATHS CORRECTED to `images/...` */
+/* TRADER ICON MAPPING */
 [data-trader-id="Prapor"] { 
     background-image: url('images/prapor-portrait.png');
     background-color: #c0392b; 
@@ -302,7 +302,7 @@ h2 {
     color: #777;
 }
 
-/* --- Rewards and Dialogue --- */
+/* --- Rewards, Initial Equipment, and Dialogue --- */
 .dialogue-box {
     background-color: #222;
     padding: 10px;
@@ -325,7 +325,20 @@ h2 {
     list-style: none;
     padding: 0;
     margin: 0 0 15px 0;
-    font-size: 1em;
+    font-size: 0.9em;
+}
+
+/* Style for the Initial Equipment Section */
+.initial-equipment-list {
+    margin-bottom: 15px; 
+    border: 1px dashed #444;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+.equipment-heading {
+    color: #9b59b6; /* Purple color for visibility */
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* MODIFIED: Use Flexbox on the list item to align icon and text */
@@ -340,12 +353,12 @@ h2 {
 
 /* NEW: Style for the reward icon image */
 .reward-icon {
-    width: 48px;
-    height: 48px;
+    width: 16px;
+    height: 16px;
     object-fit: contain;
 }
 
-/* CURRENCY COLORS (Now only applies to text color if desired) */
+/* CURRENCY COLORS */
 .rewards-list li[data-item="roubles"] { color: #2ecc71; } 
 .rewards-list li[data-item="dollars"] { color: #5897FB; } 
 .rewards-list li[data-item="euros"] { color: #f39c12; } 
@@ -362,8 +375,13 @@ h2 {
 .currency-dollar { color: #5897FB; font-weight: bold; }
 .currency-euro { color: #f39c12; font-weight: bold; }
 
-/* --- Task Toggle Button --- */
-.task-toggle-btn {
+/* --- Task Toggle Button Group (NEW) --- */
+.task-buttons-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.task-toggle-btn, .guide-toggle-btn {
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
@@ -371,9 +389,25 @@ h2 {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.2s;
-    width: 100%;
-    margin-top: 10px;
 }
+
+/* Shorter button width, shared with Guide button */
+.task-toggle-btn {
+    flex-grow: 1; /* Make the Mark button take up available space */
+}
+
+/* Guide Button Style */
+.guide-toggle-btn {
+    flex-shrink: 0; /* Keep Guide button fixed size */
+    background-color: #F5B925; /* Gold/Yellow color */
+    color: #333;
+    font-weight: bold;
+}
+.guide-toggle-btn:hover {
+    background-color: #d8a51e; 
+}
+
+
 .complete-btn {
     background-color: #5897FB;
     color: white;
@@ -387,6 +421,25 @@ h2 {
 }
 .uncomplete-btn:hover {
     background-color: #c42d3c;
+}
+
+/* --- Walkthrough Box (NEW) --- */
+.walkthrough-box {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #333;
+    border-radius: 4px;
+    border-left: 3px solid #F5B925;
+}
+.walkthrough-box h4 {
+    color: #F5B925;
+    font-size: 0.9em;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.walkthrough-box p {
+    font-size: 0.85em;
+    margin: 0;
 }
 
 
