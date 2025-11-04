@@ -75,7 +75,7 @@ function saveProgress() {
 // --- NEW: DYNAMIC TASK CARD GENERATION ---
 
 function generateTaskCards() {
-    tasksSection.innerHTML = '<h2>🎯 Task Progression</h2>'; 
+    tasksSection.innerHTML = '<h2>Task Progression</h2>'; 
     
     TASKS_DATA.forEach(task => {
         const card = document.createElement('div');
