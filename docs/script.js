@@ -90,25 +90,35 @@ function generateTaskCards() {
         const rewardsHTML = task.rewards.map(reward => {
             let itemText = '';
             let dataAttr = '';
+            let iconPath = ''; // ADDED: Icon path variable
             
             if (reward.type === 'roubles') {
                 itemText = `${reward.amount.toLocaleString()} Roubles (₽)`;
                 dataAttr = `data-item="roubles"`;
                 rewardRoubles = reward.amount;
+                iconPath = 'images/icon-roubles.png'; // ADDED: Roubles icon path
             } else if (reward.type === 'dollars') {
                 itemText = `${reward.amount.toLocaleString()} Dollars ($)`;
                 dataAttr = `data-item="dollars"`;
                 rewardDollars = reward.amount;
+                iconPath = 'images/icon-dollars.png'; // ADDED: Dollars icon path
             } else if (reward.type === 'euros') {
                 itemText = `${reward.amount.toLocaleString()} Euros (€)`;
                 dataAttr = `data-item="euros"`;
                 rewardEuros = reward.amount;
+                iconPath = 'images/icon-euros.png'; // ADDED: Euros icon path
             } else if (reward.type === 'item') {
                 itemText = reward.name;
                 dataAttr = `data-item="item"`;
+                // You may want to use a specific icon for common items, or a generic one
+                iconPath = 'images/icon-item.png'; // ADDED: Generic item icon path
             }
             // Rep rewards are explicitly ignored
-            return `<li ${dataAttr}>${itemText}</li>`;
+            
+            // MODIFIED: Return statement now includes an <img> for the icon and a <span> for the text
+            const iconHTML = iconPath ? `<img src="${iconPath}" alt="${reward.type} icon" class="reward-icon">` : '';
+            return `<li ${dataAttr}>${iconHTML}<span class="reward-text">${itemText}</span></li>`;
+
         }).join('');
 
         // Determine requirement summary text for the collapsed view
@@ -156,8 +166,7 @@ function generateTaskCards() {
                     <p class="collapsed-requirements">${collapsedReqText}</p>
                     <h3 class="task-title">${task.title}</h3>
                     <p class="task-objective">${task.objectiveSummary}</p>
-                    <p class="reward-summary"></p> <!-- Placeholder for reward summary -->
-                </div>
+                    <p class="reward-summary"></p> </div>
                 <button class="quick-slot-btn" aria-label="Quick Slot Task">☆</button>
             </div>
             <div class="expanded-view hidden-detail">
