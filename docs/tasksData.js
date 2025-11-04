@@ -17,7 +17,7 @@ const TASKS_DATA = [
         rewards: [
             { type: "roubles", amount: 5000 },
             { type: "item", name: "2 Bolts", icon: "icon-bolts.png" },
-            { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png }
+            { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png" }
         ]
     },
     {
