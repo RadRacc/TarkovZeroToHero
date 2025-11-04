@@ -20,6 +20,7 @@ const TASKS_DATA = [
             { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png" }
         ]
     },
+
     {
         id: "First Aid Supplies",
         trader: "Therapist",
@@ -43,6 +44,7 @@ const TASKS_DATA = [
             { type: "item", name: "1 Esmarch tourniquet", icon: "icon-esmarch.png" }
         ]
     },
+    
     {
         id: "Emergency Repairs",
         trader: "Prapor",
@@ -68,13 +70,16 @@ const TASKS_DATA = [
             { type: "item", name: "1 PACA Soft Armor", icon: "icon-paca.png" }
         ]
     },
+    
     {
         id: "Antibiotics - Part 1",
         trader: "Therapist",
         title: "Antibiotics - Part 1",
         objectiveSummary: "Hand over 5 found in-raid Analgin painkillers.", 
         map: "Any",
-        requirements: ["First Aid Supplies"], 
+        requirements: [
+            "First Aid Supplies", "I:Analgin painkillers:5"
+        ], 
         initial_equipment: [],
         walkthrough: "Analgin painkillers are common medical spawns. Look for them in medicine bags, ambulances, and inside medical supply crates, particularly on Shoreline and Interchange. Ensure they are Found In Raid (FIR). Once you have 5, hand them over to Therapist.", 
         dialogueInitial: "The situation is worsening. I'm seeing more infected wounds than ever before. To treat these, I need a reliable supply of basic pain management drugs, and my reserves are almost gone. I need you to find me **five packs of Analgin painkillers**, and they must be **Found in Raid**. I can't risk using anything that's been tampered with. This is a simple collection job, but a vital one for the rest of my patients.",
@@ -88,6 +93,7 @@ const TASKS_DATA = [
             { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
         ]
     },
+    
     {
         id: "Important Business",
         trader: "Peacekeeper",
@@ -113,13 +119,16 @@ const TASKS_DATA = [
             { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" }
         ]
     },
+    
     {
         id: "Cleanup Crew",
         trader: "Peacekeeper",
         title: "Cleanup Crew",
         objectiveSummary: "Eliminate 5 PMCs with an MP5.",
         map: "Any",
-        requirements: ["LL1", "Important Business"],
+        requirements: [
+            "LL1", "Important Business", "I:Dogtags:5"
+        ],
         initial_equipment: [
             { name: "2 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
         ],
@@ -134,4 +143,5 @@ const TASKS_DATA = [
             { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
         ]
     }
+    
 ];
