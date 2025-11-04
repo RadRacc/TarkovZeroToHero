@@ -105,7 +105,7 @@ const TASKS_DATA = [
             "Plant 3 F-1 hand grenades on the third floor of the 3 story dorms"
         ],
         rewards: [
-            { type: "dollars", amount: 150 },
+            { type: "dollars", amount: 100 },
             { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" }
         ]
     },
@@ -126,7 +126,7 @@ const TASKS_DATA = [
             "Eliminate 5 PMCs with an MP5"
         ],
         rewards: [
-            { type: "dollars", amount: 100 },
+            { type: "dollars", amount: 150 },
             { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
         ]
     }
