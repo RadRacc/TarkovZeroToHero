@@ -219,18 +219,19 @@ body {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    /* Remove background-color: #555; */
+    background-color: #555; /* Add a fallback color for empty space */
     flex-shrink: 0;
     
-    /* Image Specific Properties */
-    background-size: cover; /* Ensures the image covers the circle */
+    /* CRITICAL UPDATE: Prevent stretching/distortion */
+    background-size: contain; 
     background-position: center;
     background-repeat: no-repeat;
-    border: 1px solid #F5B925; /* Added a border to make them pop */
+    
+    border: 1px solid #F5B925; 
 
     /* Ensure no text content shows up */
     display: block; 
-    text-indent: -9999px; /* Hides any text content */
+    text-indent: -9999px; 
 }
 
 /* Trader Portrait Image Links for COLLAPSED ICONS */
