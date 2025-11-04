@@ -37,7 +37,7 @@ header {
     text-align: center;
 }
 
-/* --- Filter and Search Controls (NEW) --- */
+/* --- Filter and Search Controls --- */
 #filter-controls {
     display: flex;
     gap: 15px;
@@ -57,7 +57,6 @@ header {
     border-radius: 4px;
 }
 
-/* Style for select box on webkit browsers */
 #trader-filter {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -78,6 +77,41 @@ h2 {
 }
 h3 { margin: 5px 0; }
 
+.objectives-heading, .requirements-heading {
+    margin-top: 15px;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 5px;
+}
+
+/* --- REQUIREMENTS LIST STYLES (NEW) --- */
+.task-requirements-list {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.requirement-item {
+    font-size: 0.9em;
+    padding-left: 25px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 18px;
+    margin-bottom: 3px;
+    font-weight: bold;
+}
+
+/* Met Requirement */
+.requirement-item.met {
+    color: #70E670; /* Green */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2370E670" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+}
+
+/* Unmet Requirement */
+.requirement-item.unmet {
+    color: #FF4500; /* Red */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23FF4500" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>');
+}
+
+
 /* --- Task Card Styles --- */
 .task-card {
     background-color: hsl(0, 0%, 15%); 
@@ -91,6 +125,18 @@ h3 { margin: 5px 0; }
 
 .task-card:hover {
     background-color: hsl(0, 0%, 17%); 
+}
+
+/* NEW: Locked Task State */
+.task-locked {
+    border-left-color: #555; /* Mute the accent */
+    background-color: hsl(0, 0%, 12%); /* Slightly darker background */
+    pointer-events: none; /* Make clicking less confusing/effective */
+    opacity: 0.7;
+}
+
+.task-locked:hover {
+    background-color: hsl(0, 0%, 12%); /* No hover change when locked */
 }
 
 .trader-name {
@@ -107,17 +153,17 @@ h3 { margin: 5px 0; }
     margin: 5px 0 0 0;
 }
 
-/* EXPANDED CONTENT LAYOUT (NEW: Using Grid) */
+/* EXPANDED CONTENT LAYOUT */
 .expanded-view {
-    display: none; /* Controlled by JS */
-    grid-template-columns: 150px 1fr; /* Image box on left, content on right */
+    display: none; 
+    grid-template-columns: 150px 1fr; 
     gap: 20px;
     border-top: 1px solid #333;
     padding-top: 15px;
     margin-top: 10px;
 }
 
-/* Trader Image Box (NEW) */
+/* Trader Image Box */
 .trader-image-box {
     width: 150px;
     height: 150px;
@@ -136,16 +182,64 @@ h3 { margin: 5px 0; }
     content: "Trader Image Placeholder";
 }
 
-/* Dialogue box style (Increased prominence) */
+/* Dialogue box style */
 .dialogue-box {
     background-color: #222;
-    border-left: 3px solid #F5B925; /* Use key color for attention */
+    border-left: 3px solid #F5B925; 
     padding: 15px;
     margin-bottom: 15px;
     font-size: 0.95em;
     line-height: 1.5;
 }
 
+/* --- OBJECTIVE CHECKLIST STYLES --- */
+.objective-checklist {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding: 0;
+    list-style: none;
+}
+
+.objective-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.objective-item input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    background-color: #333;
+    border: 1px solid #555;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    border-radius: 2px;
+}
+
+.objective-item input[type="checkbox"]:checked {
+    background-color: #00A000; 
+    border-color: #00FF00;
+}
+
+.objective-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.objective-item label {
+    color: #E0E0E0;
+    cursor: pointer;
+}
 
 /* --- Completed Task State --- */
 .task-completed {
@@ -155,7 +249,6 @@ h3 { margin: 5px 0; }
 .task-completed .trader-image-box {
     border-color: #555;
 }
-
 
 /* --- Rewards & Item Image Styling --- */
 .rewards-list {
@@ -212,10 +305,10 @@ h3 { margin: 5px 0; }
         max-width: 100%;
     }
     .expanded-view {
-        grid-template-columns: 1fr; /* Stack image and content vertically on small screens */
+        grid-template-columns: 1fr; 
     }
     .trader-image-box {
         width: 100%;
-        height: 100px; /* Adjust height when full width */
+        height: 100px;
     }
 }
