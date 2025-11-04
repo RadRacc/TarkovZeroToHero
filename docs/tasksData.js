@@ -15,7 +15,7 @@ const TASKS_DATA = [
             "Sell 5 Scav weapons to Prapor"
         ],
         rewards: [
-            { type: "roubles", amount: 5000 },
+            { type: "roubles", amount: 6000 },
             { type: "item", name: "2 Bolts", icon: "icon-bolts.png" },
             { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png" }
         ]
@@ -37,7 +37,7 @@ const TASKS_DATA = [
             "Deliver 2 Salewa first aid kit to Emercom Checkpoint (Ground Zero)"
         ],
         rewards: [
-            { type: "roubles", amount: 15000 },
+            { type: "roubles", amount: 4000 },
             { type: "item", name: "2 AI-2 medkit", icon: "icon-ai2.png" },
             { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
             { type: "item", name: "1 Esmarch tourniquet", icon: "icon-esmarch.png" }
@@ -59,7 +59,7 @@ const TASKS_DATA = [
             "Locate and Repair Generator 2"
         ],
         rewards: [
-            { type: "roubles", amount: 10000 },
+            { type: "roubles", amount: 8000 },
             { type: "item", name: "2 Electronic components", icon: "icon-electronic-components.png" },
             { type: "item", name: "1 Screwdriver", icon: "icon-screwdriver.png" },
             { type: "item", name: "1 Silicon tube", icon: "icon-silicon-tube.png" },
