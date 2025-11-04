@@ -97,7 +97,7 @@ const TASKS_DATA = [
         title: "Important Business",
         objectiveSummary: "Plant 9 F-1 hand grenades inside the 3 story dorms building on Customs.",
         map: "Customs",
-        requirements: ["Emergency Repairs"],
+        requirements: ["Antibiotics - Part 1"],
         initial_equipment: [
             { name: "3 F-1 hand grenade", icon: "icon-f1-grenade.png" }
         ],
