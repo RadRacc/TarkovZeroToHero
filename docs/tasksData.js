@@ -24,17 +24,17 @@ const TASKS_DATA = [
         id: "First Aid Supplies",
         trader: "Therapist",
         title: "First Aid Supplies",
-        objectiveSummary: "Deliver 2 Salewa First Aid Kits to Therapist.",
-        map: "Shoreline",
+        objectiveSummary: "Deliver 2 Salewa first aid kit to Emercom Checkpoint on Ground Zero.",
+        map: "Ground Zero",
         requirements: ["Target Practice"],
         initial_equipment: [ 
             { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
         ],
-        walkthrough: "The Salewas are given to you at the start. To complete the task, you only need to survive the raid (or buy them from the Flea Market/trade if you lose them) and hand them over to Therapist through the task completion menu.",
+        walkthrough: "The Salewas are given to you at the start. To complete the task, you only need to survive the raid after delivering them to Emercom Checkpoint on Ground Zero.",
         dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
         dialogueComplete: "The Salewas arrived just in time. Excellent work. Your reliability is noted, and I can assure you that this small favor will be remembered. This is your payment, use it wisely.",
         objectives: [
-            "Hand over 2 Salewa First Aid Kits"
+            "Deliver 2 Salewa first aid kit to Emercom Checkpoint (Ground Zero)"
         ],
         rewards: [
             { type: "roubles", amount: 15000 },
