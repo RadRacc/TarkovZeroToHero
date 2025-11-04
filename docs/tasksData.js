@@ -162,7 +162,7 @@ const TASKS_DATA = [
             { type: "roubles", amount: 5000 },
             { type: "item", name: "6 Bundles of wires", icon: "icon-wires.png" },
             { type: "item", name: "2 PC CPU", icon: "icon-cpu.png" },
-            { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png }
+            { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png" }
         ]
     }
     
