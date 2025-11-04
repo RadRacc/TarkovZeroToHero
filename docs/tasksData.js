@@ -74,7 +74,7 @@ const TASKS_DATA = [
         title: "Antibiotics - Part 1",
         objectiveSummary: "Hand over 5 found in-raid Analgin painkillers.", 
         map: "Any",
-        requirements: ["First Aid Supplies"], 
+        requirements: ["Emergency Repairs", "First Aid Supplies"], 
         initial_equipment: [],
         walkthrough: "Analgin painkillers are common medical spawns. Look for them in medicine bags, ambulances, and inside medical supply crates, particularly on Shoreline and Interchange. Ensure they are Found In Raid (FIR). Once you have 5, hand them over to Therapist.", 
         dialogueInitial: "The situation is worsening. I'm seeing more infected wounds than ever before. To treat these, I need a reliable supply of basic pain management drugs, and my reserves are almost gone. I need you to find me five packs of Analgin painkillers, and they must be found in-raid. I can't risk using anything that's been tampered with. This is a simple collection job, but a vital one for the rest of my patients.",
@@ -94,7 +94,7 @@ const TASKS_DATA = [
         title: "Strange Symbol - Part 1",
         objectiveSummary: "Investigate the strange markings in the bunker at Sniper Rock.",
         map: "Woods",
-        requirements: ["Antibiotics - Part 1"],
+        requirements: ["Emergency Repairs"],
         initial_equipment: [],
         walkthrough: "The bunker is located at the base of Sniper Rock (the largest rock outcropping in the center of the map). The interaction point is inside the bunker itself. You only need to visit the location and survive the raid.",
         dialogueInitial: "Hey, listen. I got a tip about something weird out in the Woods, near the old Sniper Rock. There's a bunker entrance there, and someone—or something—has been scratching strange symbols on the walls inside. I don't care about spooky stories; I care about **information**. Get in there, look at the markings, and bring back a detailed report in your head. Prove you saw it and get out. I'll pay you well for your silence and your memory. Don't tell *anyone* you're doing this for me.",
@@ -118,16 +118,9 @@ const TASKS_DATA = [
         map: "Woods",
         requirements: ["Strange Symbol - Part 1"],
         initial_equipment: [],
-        
-        // New Walkthrough
         walkthrough: "This bunker is separate from the first one. It's located just south and slightly to the east of Sniper Rock, often referred to as the 'Old Log Camp' bunker. The markings are an interaction point found on the wall inside the bunker's main room. Visit the location and survive the raid to complete the task.",
-        
-        // New Dialogue
         dialogueInitial: "The first set of symbols—they're complex. Too complex for a typical ritual, maybe. But the report I got says there’s a second set of markings, deeper in the woods, near a secondary bunker system. This one is less obvious, hidden near an old logging operation. You need to go back out there, find those new symbols, and confirm if they match the first set, or if they tell a different part of the story. Same rule as last time: eyes only. Get me the data, and get out clean.",
-        
-        // New Dialogue
         dialogueComplete: "Two separate locations, two sets of symbols. Interesting. They point to something... organized. I’m starting to see a pattern, but I need a lot more components to figure it out fully. You've earned this pay—it's worth more than the dirt you walked through. Don't worry, the next step involves less walking and more profit, assuming you can keep your mouth shut.",
-        
         objectives: [
             "Find the bunker",
             "Survive and Extract from the location"
@@ -144,7 +137,7 @@ const TASKS_DATA = [
         title: "Pest Control",
         objectiveSummary: "Eliminate 15 Scavs on Shoreline.",
         map: "Shoreline",
-        requirements: ["Antibiotics - Part 1"],
+        requirements: ["Strange Symbol - Part 2"],
         initial_equipment: [],
         walkthrough: "Shoreline is a large map, but Scavs are most common around the cottages, the gas station, and the pier/scav island. Focus on those areas to efficiently clear 15 targets.",
         dialogueInitial: "I need some relief around the Sanatorium area. The Scavs are becoming too numerous and they're harassing my runners who are bringing in supplies. This is not about healing; it's about making our work environment safe. Go to Shoreline and neutralize fifteen of those pests. Make sure they know they're not welcome near my jurisdiction.",
@@ -164,7 +157,7 @@ const TASKS_DATA = [
         title: "Important Business",
         objectiveSummary: "Plant 9 F-1 hand grenades inside the 3 story dorms building on Customs.",
         map: "Customs",
-        requirements: ["Antibiotics - Part 1"],
+        requirements: ["Emergency Repairs"],
         initial_equipment: [
             { name: "3 F-1 hand grenade", icon: "icon-f1-grenade.png" }
         ],
