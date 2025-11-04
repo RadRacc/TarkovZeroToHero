@@ -174,7 +174,7 @@ body {
     align-items: center;
 }
 .collapsed-view > div {
-    flex-grow: 1;
+    flex-grow: 0;
 }
 .trader-name {
     font-size: 0.8em;
@@ -217,9 +217,9 @@ body {
 /* Trader Icon/Image Box - COLLAPSED VIEW STYLES (UPDATED) */
 .trader-icon-small {
     /* Base dimensions and circle shape */
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 0%;
     /* Removed background-color to help debug distortion, it should be transparent */
     
     /* CRITICAL FIX: Prevent stretching/manipulation in flex container */
