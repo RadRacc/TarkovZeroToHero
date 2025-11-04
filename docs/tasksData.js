@@ -36,7 +36,8 @@ const TASKS_DATA = [
             { type: "roubles", amount: 10000 },
             { type: "item", name: "2 Electrical Components" },
             { type: "item", name: "1 Screwdriver" },
-            { type: "item", name: "1 Silicon Tube" }
+            { type: "item", name: "1 Silicon Tube" },
+            { type: "item", name: "1 PACA Soft Armor" }
             // Trader Rep reward is removed
         ]
     },
@@ -48,8 +49,8 @@ const TASKS_DATA = [
         map: "Any",
         // This task requires LL1, previous task completion, and a physical item (Toolset)
         requirements: ["Emergency Repairs"], 
-        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple **stabilization action**: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
-        dialogueComplete: "Confirmation received. The **noise floor** in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
+        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
+        dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
         objectives: [
             "Eliminate 5 PMCs"
         ],
