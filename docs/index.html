@@ -2,1028 +2,312 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFT Task Tracker Concept</title>
-    <style>
-        /* Base Styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2c2f33;
-            color: #ffffff;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #36393f;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            padding: 20px;
-        }
-
-        h1 {
-            color: #7289da;
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #4f545c;
-            padding-bottom: 10px;
-        }
-
-        /* Trader Icon Styling */
-        .trader-icon-small, .trader-image-box {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #4f545c;
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #7289da;
-            flex-shrink: 0;
-            margin-right: 15px;
-        }
-
-        .trader-image-box {
-            width: 80px;
-            height: 80px;
-            border: 3px solid #7289da;
-            margin-right: 20px;
-        }
-
-        /* Unique Trader Colors/Images (Use simple color to represent each trader) */
-        [data-trader-id="Prapor"] { background-color: #e74c3c; border-color: #c0392b; }
-        [data-trader-id="Skier"] { background-color: #f1c40f; border-color: #f39c12; }
-        [data-trader-id="Therapist"] { background-color: #2ecc71; border-color: #27ae60; }
-        [data-trader-id="Peacekeeper"] { background-color: #3498db; border-color: #2980b9; }
-        [data-trader-id="Mechanic"] { background-color: #95a5a6; border-color: #7f8c8d; }
-        [data-trader-id="Ragman"] { background-color: #9b59b6; border-color: #8e44ad; }
-        [data-trader-id="Jaeger"] { background-color: #1abc9c; border-color: #16a085; }
-
-
-        /* Task Card Styling */
-        .task-list {
-            display: grid;
-            gap: 15px;
-        }
-
-        .task-card {
-            background-color: #40444b;
-            border-radius: 6px;
-            padding: 15px;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-            border: 1px solid #4f545c;
-            position: relative;
-        }
-
-        .task-card.complete {
-            background-color: #4e5d94; /* Darker blue for completed */
-            opacity: 0.7;
-            border-left: 5px solid #2ecc71;
-        }
-
-        .collapsed-view {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .collapsed-view > div {
-            flex-grow: 1;
-        }
-
-        .trader-name {
-            font-size: 0.8em;
-            color: #b9bbbe;
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .task-title {
-            margin: 0;
-            font-size: 1.1em;
-        }
-
-        .task-objective {
-            margin: 3px 0 0;
-            font-size: 0.9em;
-            color: #b9bbbe;
-        }
-
-        /* Expanded View Styling */
-        .expanded-view {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #4f545c;
-            display: flex;
-        }
-
-        .expanded-view > div {
-            flex-grow: 1;
-        }
-        
-        .dialogue-box {
-            background-color: #32353b;
-            border-left: 3px solid #7289da;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        .dialogue-box h4 {
-            color: #7289da;
-            margin: 0 0 5px;
-        }
-
-        .dialogue-box p {
-            font-style: italic;
-            margin: 0;
-            font-size: 0.9em;
-        }
-
-        h4.requirements-heading, h4.objectives-heading, h4.rewards-heading {
-            color: #b9bbbe;
-            margin: 15px 0 8px;
-            font-size: 1em;
-            text-transform: uppercase;
-        }
-
-        .task-requirements-list {
-            padding: 0;
-            margin: 0;
-            font-size: 0.9em;
-        }
-
-        .objective-checklist {
-            padding: 0;
-            margin: 0;
-        }
-
-        .objective-checklist label {
-            display: block;
-            margin-bottom: 5px;
-            cursor: pointer;
-        }
-
-        .objective-checklist input[type="checkbox"]:checked + span {
-            text-decoration: line-through;
-            color: #99aab5;
-        }
-        
-        .rewards-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.9em;
-        }
-        
-        .rewards-list li {
-            margin-bottom: 3px;
-            color: #2ecc71;
-        }
-        
-        .rewards-list li::before {
-            content: '✓';
-            color: #7289da;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-
-        .complete-btn {
-            background-color: #43b581;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
-
-        .complete-btn:hover {
-            background-color: #309069;
-        }
-
-        .complete-btn.disabled {
-            background-color: #4f545c;
-            cursor: not-allowed;
-        }
-
-        /* Utility */
-        .hidden-detail {
-            display: none;
-        }
-        .text-error {
-            color: #f04747;
-            font-weight: bold;
-        }
-        .text-warning {
-            color: #faa61a;
-        }
-        .collapsed-requirements {
-            font-size: 0.8em;
-            color: #b9bbbe;
-            margin: 0;
-        }
-
-    </style>
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>EFT Task Tracker</title>
+    
+    <link rel="stylesheet" href="style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="container">
-        <h1>EFT Task Tracker Concept</h1>
-        <div class="task-list" id="task-list">
-
-            <div class="task-card expandable" data-task-id="task-1" data-trader="Prapor"
-                data-dialogue-initial="Welcome to Tarkov, kid. You look green, but maybe you'll be useful. I need you to prove you can navigate. Find the cargo shipment on Customs, mark it with my signal flare, and get out alive. It's a simple test, don't fail."
-                data-dialogue-complete="You got the cargo marked and survived. Good. That's one less thing I have to worry about. You're efficient. Here's your advance. I have more serious work coming."
-                data-objective-list="Mark cargo shipment on Customs;Survive and extract"
-                data-task-requirements="LL1">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Prapor"></div>
-                    <div>
-                        <span class="trader-name">Prapor</span>
-                        <p class="collapsed-requirements">LL: 1</p>
-                        <h3 class="task-title">Debut</h3>
-                        <p class="task-objective">Mark the cargo shipment on Customs and extract.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Prapor"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Prapor)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">5,000 Roubles</li>
-                            <li data-item="rep-prapor">+0.01 Prapor Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="5000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-9" data-trader="Prapor"
-                data-dialogue-initial="The cleanup from those recent skirmishes has been sloppy. We need to clear out the residue before it causes problems. Get me three of those yellow 'Wipe' cleaning products and three rolls of duct tape. They need to be serviceable—don't bring me garbage."
-                data-dialogue-complete="That's good stuff. The cleanup detail will appreciate this, and it means less paperwork for me. You're proving to be reliable, which is rare these days. You know the drill, take your reward and keep quiet."
-                data-objective-list="Hand over 3 Wipe Cleaning Products (0/3);Hand over 3 Duct Tape (0/3)"
-                data-task-requirements="LL2;Complete task-2">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Prapor"></div>
-                    <div>
-                        <span class="trader-name">Prapor</span>
-                        <p class="collapsed-requirements">LL: 2 | Task Required: Emergency Repairs</p>
-                        <h3 class="task-title">Post-Raid Cleanup</h3>
-                        <p class="task-objective">Hand over 3 Wipe Cleaning Products and 3 Duct Tape.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Prapor"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Prapor)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">8,000 Roubles</li>
-                            <li data-item="ammo-box">1 Box of 7.62x39 PS ammo</li>
-                            <li data-item="rep-prapor">+0.02 Prapor Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="8000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-10" data-trader="Prapor"
-                data-dialogue-initial="Some of the local PMC gangs have been moving on my territory. It's time to send a message that resonates. Go to **Customs** and eliminate **five PMCs**. I don't care about their faction, just that they stop breathing. Bring back their **dogtags** as proof of death."
-                data-dialogue-complete="Five PMCs eliminated, excellent work. The word will spread quickly, trust me. You've ensured my supply lines remain clear for now. You have earned a significant bump in standing with me."
-                data-objective-list="Eliminate 5 PMCs on Customs (0/5);Hand over 5 PMC Dogtags (0/5)"
-                data-task-requirements="LL2;Complete task-9">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Prapor"></div>
-                    <div>
-                        <span class="trader-name">Prapor</span>
-                        <p class="collapsed-requirements">LL: 2 | Task Required: Post-Raid Cleanup</p>
-                        <h3 class="task-title">Insurgency Proof</h3>
-                        <p class="task-objective">Eliminate 5 PMCs on Customs and retrieve their dogtags.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Prapor"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Prapor)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">15,000 Roubles</li>
-                            <li data-item="rep-prapor">+0.03 Prapor Rep</li>
-                            <li data-item="ammo-bp">200 rounds of 7.62x39 BP ammo</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="15000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-3" data-trader="Skier"
-                data-dialogue-initial="Listen, I have some serious buyers who need some optics for their new kits, but I'm not crossing that bridge right now. Get me three of those tactical scopes. Any scopes, I don't care, as long as they work. Bring them to me, and we'll talk about your next gig."
-                data-dialogue-complete="These are clean. Good work. You're already proving more useful than some of my usual contacts. Keep your eyes open out there; there's always a profit to be made if you're quick enough. I'll be in touch."
-                data-objective-list="Hand over 3 Tactical Scopes"
-                data-task-requirements="LL1;Complete task-1">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Skier"></div>
-                    <div>
-                        <span class="trader-name">Skier</span>
-                        <p class="collapsed-requirements">LL: 1 | Task Required: Debut</p>
-                        <h3 class="task-title">Shakedown</h3>
-                        <p class="task-objective">Hand over 3 Tactical Scopes.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Skier"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Skier)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">7,000 Roubles</li>
-                            <li data-item="rep-skier">+0.01 Skier Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="7000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-11" data-trader="Skier"
-                data-dialogue-initial="Look, the **Therapist** is getting a bit too much influence over medical supplies. It's cutting into my profit margin, and I don't like it one bit. I need you to go to the **Customs** office—that two-story building—and 'collect' some key information. Find her **medical records box** and bring it to me. Don't worry, it's nothing major, just some light competitive interference. If anyone asks, you were just passing through. Just do it discreetly."
-                data-dialogue-complete="Well, well. You brought the box back whole. Good. These records are... insightful. Knowing who has what kind of debt is useful leverage, wouldn't you agree? Consider this a down payment on a successful partnership, kid. You're showing me you can handle the grey area. Come back later, I've got another favour to ask."
-                data-objective-list="Retrieve the medical records box from Customs;Hand over the medical records box"
-                data-task-requirements="LL1;Complete task-3">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Skier"></div>
-                    <div>
-                        <span class="trader-name">Skier</span>
-                        <p class="collapsed-requirements">LL: 1 | Task Required: Shakedown</p>
-                        <h3 class="task-title">The Information Leak</h3>
-                        <p class="task-objective">Retrieve and hand over the Therapist's medical records box from Customs.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Skier"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Skier)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">12,000 Roubles</li>
-                            <li data-item="rep-skier">+0.01 Skier Rep</li>
-                            <li data-item="unlock-akm">Unlocks purchase of AKM at LL2</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="12000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-12" data-trader="Skier"
-                data-dialogue-initial="The market is hot right now for **electronics and construction materials**. I need you to source me a quick shipment of specialized items. Specifically, I'm looking for **three T-Plugs** and **three bags of Silica Gel**. I don't care where you find them, just make sure they are **Found In Raid**. I can't be dealing with second-hand junk from dead runs. If you can deliver, I'll pay you handsomely and our relationship will jump to the next level. Don't disappoint me."
-                data-dialogue-complete="Perfect. These T-Plugs look brand new, and the Silica is dry. You’ve got a good eye for quality, which is what separates the real entrepreneurs from the scavengers. This proves you understand value. I'll make sure you get access to the better stuff I hold in reserve now that you're a trusted supplier."
-                data-objective-list="Hand over 3 T-Plugs (0/3);Hand over 3 Silica Gel (0/3)"
-                data-task-requirements="LL2;Complete task-11">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Skier"></div>
-                    <div>
-                        <span class="trader-name">Skier</span>
-                        <p class="collapsed-requirements">LL: 2 | Task Required: The Information Leak</p>
-                        <h3 class="task-title">Collector's Fee</h3>
-                        <p class="task-objective">Hand over 3 T-Plugs and 3 Silica Gel (Found in Raid).</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Skier"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Skier)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">25,000 Roubles</li>
-                            <li data-item="rep-skier">+0.03 Skier Rep</li>
-                            <li data-item="ammo-bp">Unlocks purchase of M855A1 at LL2</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="25000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-4" data-trader="Therapist"
-                data-dialogue-initial="I'm trying to set up a secure line of communication. It's vital that my supply lines remain confidential. I need you to place my secure radio transceiver at the location on Shoreline. It's a high-traffic area, so be quick and discreet. This is for the well-being of all my clients."
-                data-dialogue-complete="The signal is clear. Thank you. This new relay will greatly improve my ability to coordinate emergency supply drops. You've earned my trust. Your future health will be... more affordable."
-                data-objective-list="Place secure radio transceiver on Shoreline;Survive and extract"
-                data-task-requirements="LL1;Complete task-1">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Therapist"></div>
-                    <div>
-                        <span class="trader-name">Therapist</span>
-                        <p class="collapsed-requirements">LL: 1 | Task Required: Debut</p>
-                        <h3 class="task-title">Health Care Privacy</h3>
-                        <p class="task-objective">Place the radio transceiver on Shoreline.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Therapist"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Therapist)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">6,500 Roubles</li>
-                            <li data-item="rep-therapist">+0.01 Therapist Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="6500">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-5" data-trader="Peacekeeper"
-                data-dialogue-initial="We have a lot of new arrivals who only know how to use NATO weapons. The Russian stuff is cheap, but their morale is better with what they know. I need you to bring me **two M4A1 assault rifles**. They don't need to be perfect, just functional. Euros will be deposited upon receipt."
-                data-dialogue-complete="Two M4A1s, just as requested. Excellent. This will greatly improve the combat readiness of my new units. You're a professional. I'll make sure you have access to some better imported gear now."
-                data-objective-list="Hand over 2 M4A1 assault rifles"
-                data-task-requirements="LL1;Complete task-4">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Peacekeeper"></div>
-                    <div>
-                        <span class="trader-name">Peacekeeper</span>
-                        <p class="collapsed-requirements">LL: 1 | Task Required: Health Care Privacy</p>
-                        <h3 class="task-title">Western Gunsmith</h3>
-                        <p class="task-objective">Hand over 2 M4A1 assault rifles.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Peacekeeper"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Peacekeeper)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="euros">1,000 Euros</li>
-                            <li data-item="rep-peacekeeper">+0.01 Peacekeeper Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="0" data-reward-currency="1000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-2" data-trader="Mechanic"
-                data-dialogue-initial="There's been a power surge, and my primary circuit board is fried. I need a replacement, now. Find me a **power supply unit (PSU)**. Doesn't have to be new, but it needs to be functional. I can't work without juice. Get it to me ASAP."
-                data-dialogue-complete="This PSU is rated for my current load. Acceptable. Everything is back online. Don't worry about the paperwork; I've already adjusted your account. We might have a future working relationship, but you need to demonstrate more technical aptitude."
-                data-objective-list="Hand over 1 Power Supply Unit (PSU)"
-                data-task-requirements="LL1;Complete task-1">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Mechanic"></div>
-                    <div>
-                        <span class="trader-name">Mechanic</span>
-                        <p class="collapsed-requirements">LL: 1 | Task Required: Debut</p>
-                        <h3 class="task-title">Emergency Repairs</h3>
-                        <p class="task-objective">Hand over 1 Power Supply Unit (PSU).</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Mechanic"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Mechanic)</h4>
-                            <p class="dialogue-text"></p>
-                        </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">8,000 Roubles</li>
-                            <li data-item="rep-mechanic">+0.01 Mechanic Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="8000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
+        <header>
+            <h1 class="header-title">EFT Task Tracker</h1>
+        </header>
+        
+        <div class="main-layout">
             
-            <div class="task-card expandable" data-task-id="task-6" data-trader="Mechanic"
-                data-dialogue-initial="I've got a specific request for a custom **MP-133** build. It needs to meet a minimum ergonomic rating and have a certain recoil level. Get the parts, assemble it to spec, and bring it to me. It's a technical challenge."
-                data-dialogue-complete="Data check complete. The modifications are precise, ergonomics are within tolerance, and the recoil is optimal. You clearly know your way around a workbench. I have more complex projects lined up for you."
-                data-objective-list="Assemble MP-133 to specs"
-                data-task-requirements="LL2;Complete task-2">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Mechanic"></div>
-                    <div>
-                        <span class="trader-name">Mechanic</span>
-                        <p class="collapsed-requirements">LL: 2 | Task Required: Emergency Repairs</p>
-                        <h3 class="task-title">Gunsmith - Part 1</h3>
-                        <p class="task-objective">Assemble a customized MP-133 shotgun.</p>
+            <aside id="ll-tracker">
+                <h2>📈 Trader Loyalty</h2>
+                
+                <div class="trader-ll-group" data-trader="Prapor">
+                    <h3>Prapor</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Mechanic"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Mechanic)</h4>
-                            <p class="dialogue-text"></p>
+
+                <div class="trader-ll-group" data-trader="Skier">
+                    <h3>Skier</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+                
+                <div class="trader-ll-group" data-trader="Therapist">
+                    <h3>Therapist</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+
+                <div class="trader-ll-group" data-trader="Peacekeeper">
+                    <h3>Peacekeeper</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+                
+                <div class="trader-ll-group" data-trader="Mechanic">
+                    <h3>Mechanic</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+
+                <div class="trader-ll-group" data-trader="Ragman">
+                    <h3>Ragman</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+
+                <div class="trader-ll-group" data-trader="Jaeger">
+                    <h3>Jaeger</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+            </aside>
+            
+            <main id="task-content">
+            
+                <div id="filter-controls">
+                    <select id="trader-filter">
+                        <option value="all">Filter by Trader (All)</option>
+                        <option value="Prapor">Prapor</option>
+                        <option value="Skier">Skier</option>
+                        <option value="Therapist">Therapist</option>
+                        <option value="Peacekeeper">Peacekeeper</option>
+                        <option value="Mechanic">Mechanic</option>
+                        <option value="Ragman">Ragman</option>
+                        <option value="Jaeger">Jaeger</option>
+                    </select>
+                    <input type="text" id="task-search" placeholder="Search task title or objective...">
+                </div>
+
+                <section id="tasks" class="page-content active-page">
+                    <h2>🎯 Task Progression</h2>
+
+                    <div class="task-card expandable" data-task-id="task-1" data-trader="Prapor"
+                        data-dialogue-initial="Listen up, my friend. We need to remind the local scavs who runs this corner of the woods..."
+                        data-dialogue-complete="You've earned your stripes, rookie. The local scavs are finally keeping their distance. Good work. Now, get ready for the next job."
+                        data-objective-list="Eliminate 10 Scavs (0/10);Sell 5 Scav weapons to Prapor (0/5)"
+                        data-task-requirements="None">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Prapor"></div>
+                            <div>
+                                <span class="trader-name">Prapor</span>
+                                <p class="collapsed-requirements">LL: N/A | Task Required: None</p>
+                                <h3 class="task-title">Target Practice</h3>
+                                <p class="task-objective">Eliminate 10 Scavs and Sell 5 Scav weapons to Prapor.</p>
+                            </div>
                         </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Prapor"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Prapor)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
 
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
 
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">15,000 Roubles</li>
-                            <li data-item="rep-mechanic">+0.01 Mechanic Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="15000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-7" data-trader="Ragman"
-                data-dialogue-initial="My shelves are empty, and the low-tier clients are waiting. I need some basic, reliable combat equipment—specifically **two of those 6B23-1 armored vests**. They need to be serviceable. You bring them, I move them."
-                data-dialogue-complete="These are rugged and in good shape. Exactly what I need to keep the gears turning. You're good for business, and that's always good for you. Here's your cut."
-                data-objective-list="Hand over 2 6B23-1 armored vests"
-                data-task-requirements="LL1;Complete task-3">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Ragman"></div>
-                    <div>
-                        <span class="trader-name">Ragman</span>
-                        <p class="collapsed-requirements">LL: 1 | Task Required: Shakedown</p>
-                        <h3 class="task-title">Salesmanship</h3>
-                        <p class="task-objective">Hand over 2 6B23-1 armored vests.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Ragman"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Ragman)</h4>
-                            <p class="dialogue-text"></p>
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">5,000 Roubles</li>
+                                    <li data-item="bolt">2 Bolts</li>
+                                    <li data-item="rep-prapor">+0.01 Prapor Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="5000">Mark as Complete</button>
+                            </div>
                         </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">8,000 Roubles</li>
-                            <li data-item="rep-ragman">+0.01 Ragman Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="8000">Mark as Complete</button>
                     </div>
-                </div>
-            </div>
-
-            <div class="task-card expandable" data-task-id="task-8" data-trader="Jaeger"
-                data-dialogue-initial="The woods are not a game. I need to know you possess the discipline to hunt. Go to **Woods** and prove your marksmanship by taking down **three Scavs with a precise shot to the head**. Don't waste the bullets."
-                data-dialogue-complete="Hmm. Not bad. The marksmanship is acceptable, but only barely. You have taken a small step on the hunter's path. Return when you have more to prove."
-                data-objective-list="Eliminate 3 Scavs on Woods with a headshot"
-                data-task-requirements="LL2;Complete task-4">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Jaeger"></div>
-                    <div>
-                        <span class="trader-name">Jaeger</span>
-                        <p class="collapsed-requirements">LL: 2 | Task Required: Health Care Privacy</p>
-                        <h3 class="task-title">Hunter's Path</h3>
-                        <p class="task-objective">Eliminate 3 Scavs on Woods with a headshot.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Jaeger"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (Jaeger)</h4>
-                            <p class="dialogue-text"></p>
+                    
+                    <div class="task-card expandable" data-task-id="task-2" data-trader="Prapor"
+                        data-dialogue-initial="I've got a problem over on Factory. Those stupid generators near the med tent are offline..."
+                        data-dialogue-complete="The power's back on? Excellent. You saved me a trip and a headache. Take your reward, you've earned it."
+                        data-objective-list="Locate and Repair Generator 1;Locate and Repair Generator 2"
+                        data-task-requirements="LL1;Complete task-1">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Prapor"></div>
+                            <div>
+                                <span class="trader-name">Prapor</span>
+                                <p class="collapsed-requirements">LL: 1 | Task Required: Target Practice</p>
+                                <h3 class="task-title">Emergency Repairs</h3>
+                                <p class="task-objective">Repair 2 generators on Factory located at med tent.</p>
+                            </div>
                         </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Prapor"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Prapor)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
 
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
 
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="roubles">9,000 Roubles</li>
-                            <li data-item="rep-jaeger">+0.02 Jaeger Rep</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="9000">Mark as Complete</button>
-                    </div>
-                </div>
-            </div>
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
 
-            <div class="task-card expandable" data-task-id="task-0" data-trader="Global"
-                data-dialogue-initial="You arrive in Tarkov. The environment is hostile, and survival is your first priority. Find a secure place to set up operations. (This is a conceptual starting task and unlocks all initial LL1 tasks.)"
-                data-dialogue-complete="You've established a base of operations. The major contacts in Tarkov now recognize your presence. Time to start working."
-                data-objective-list="Complete initial setup (Auto-complete)"
-                data-task-requirements="Level 1">
-                <div class="collapsed-view">
-                    <div class="trader-icon-small" data-trader-id="Global" style="background-color: #555555; border-color: #777777;"></div>
-                    <div>
-                        <span class="trader-name">System</span>
-                        <p class="collapsed-requirements">LL: 1</p>
-                        <h3 class="task-title">Initial Setup</h3>
-                        <p class="task-objective">Complete the starting objective to unlock all primary traders.</p>
-                    </div>
-                </div>
-                <div class="expanded-view hidden-detail">
-                    <div class="trader-image-box" data-trader-id="Global" style="background-color: #555555; border-color: #777777;"></div>
-                    <div>
-                        <div class="dialogue-box">
-                            <h4>Dialogue (System)</h4>
-                            <p class="dialogue-text"></p>
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">6,000 Roubles</li>
+                                    <li data-item="helmet-6b47">1 6B47 Helmet</li>
+                                    <li data-item="rep-prapor">+0.01 Prapor Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="6000">Mark as Complete</button>
+                            </div>
                         </div>
-                        
-                        <h4 class="requirements-heading">Requirements:</h4>
-                        <div class="task-requirements-list"></div>
-
-                        <h4 class="objectives-heading">Objectives:</h4>
-                        <div class="objective-checklist"></div>
-
-                        <h4 class="rewards-heading">Rewards:</h4>
-                        <ul class="rewards-list">
-                            <li data-item="unlock">Unlocks all starting LL1 Tasks</li>
-                        </ul>
-                        <button class="task-toggle-btn complete-btn" data-reward-roubles="0">Mark as Complete</button>
                     </div>
-                </div>
-            </div>
 
+                    <div class="task-card expandable" data-task-id="task-3" data-trader="Skier"
+                        data-dialogue-initial="Look, I need you to go to Customs. Bring back three MP-133 shotguns. Don't ask questions, just do it. And hurry up."
+                        data-dialogue-complete="About time. These look clean. Don't talk about this job to anyone. The less people know, the better for your health, friend."
+                        data-objective-list="Hand over 3 MP-133 shotguns"
+                        data-task-requirements="None">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Skier"></div>
+                            <div>
+                                <span class="trader-name">Skier</span>
+                                <p class="collapsed-requirements">LL: N/A | Task Required: None</p>
+                                <h3 class="task-title">Shakedown</h3>
+                                <p class="task-objective">Hand over 3 MP-133 shotguns.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Skier"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Skier)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
 
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">10,000 Roubles</li>
+                                    <li data-item="rep-skier">+0.01 Skier Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="10000">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-card expandable" data-task-id="task-4" data-trader="Therapist"
+                        data-dialogue-initial="We are running low on vital medical supplies. You must find and deliver two Salewas and three painkiller bottles."
+                        data-dialogue-complete="Excellent! These will save lives, comrade. Thank you for your speedy delivery. We can continue our work now."
+                        data-objective-list="Hand over 2 Salewa first aid kits (0/2);Hand over 3 Painkillers (0/3)"
+                        data-task-requirements="LL1;Complete task-1">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Therapist"></div>
+                            <div>
+                                <span class="trader-name">Therapist</span>
+                                <p class="collapsed-requirements">LL: 1 | Task Required: Target Practice</p>
+                                <h3 class="task-title">Pain Management</h3>
+                                <p class="task-objective">Hand over 2 Salewa first aid kits and 3 Painkillers.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Therapist"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Therapist)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">4,500 Roubles</li>
+                                    <li data-item="rep-therapist">+0.02 Therapist Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="4500">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-card expandable" data-task-id="task-5" data-trader="Peacekeeper"
+                        data-dialogue-initial="We have intel that a USEC squad is trying to block key supply routes. I need you to eliminate them and recover their intel."
+                        data-dialogue-complete="The operation was a success. Their intel has been secured, and the route is clear. Your continued cooperation is noted."
+                        data-objective-list="Eliminate 4 USEC PMCs (0/4);Hand over 1 Secure Flash Drive"
+                        data-task-requirements="LL3;Complete task-3">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Peacekeeper"></div>
+                            <div>
+                                <span class="trader-name">Peacekeeper</span>
+                                <p class="collapsed-requirements">LL: 3 | Task Required: Shakedown</p>
+                                <h3 class="task-title">The Western Front</h3>
+                                <p class="task-objective">Eliminate 4 USEC PMCs and secure a flash drive.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Peacekeeper"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Peacekeeper)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="dollars">2,000 Dollars</li>
+                                    <li data-item="rep-peacekeeper">+0.03 Peacekeeper Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="0">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    </section>
+            
+            </main>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tasks = document.querySelectorAll('.task-card');
-
-            // --- Game State (Initial Data) ---
-            let gameState = {
-                completedTasks: new Set(['task-0']), // Start with the global task complete
-                traderLevels: {
-                    Prapor: 1,
-                    Skier: 1,
-                    Therapist: 1,
-                    Peacekeeper: 1,
-                    Mechanic: 1,
-                    Ragman: 1,
-                    Jaeger: 1
-                }
-            };
-
-            // Helper function to check if a task is available
-            const isTaskAvailable = (taskCard) => {
-                const requiredLL = parseInt(taskCard.dataset.taskRequirements.match(/LL(\d+)/)?.[1] || 1);
-                const traderName = taskCard.dataset.trader;
-                const requiredTaskID = taskCard.dataset.taskRequirements.match(/Complete task-(\d+)/)?.[0];
-                
-                // 1. Check if the required predecessor task is complete
-                if (requiredTaskID && !gameState.completedTasks.has(requiredTaskID.replace('Complete ', ''))) {
-                    return false;
-                }
-                
-                // 2. Check if the trader's level is high enough
-                if (gameState.traderLevels[traderName] < requiredLL) {
-                    return false;
-                }
-                
-                // 3. Task must not already be complete
-                if (gameState.completedTasks.has(taskCard.dataset.taskId)) {
-                    return false;
-                }
-
-                // If task-0 is not complete, only task-0 is available
-                if (!gameState.completedTasks.has('task-0') && taskCard.dataset.taskId !== 'task-0') {
-                    return false;
-                }
-
-                return true;
-            };
-
-            // Helper function to update the visible state of a task card
-            const updateTaskCardState = (taskCard) => {
-                const taskId = taskCard.dataset.taskId;
-                const isComplete = gameState.completedTasks.has(taskId);
-                const isAvailable = isTaskAvailable(taskCard);
-
-                // Update 'complete' state
-                if (isComplete) {
-                    taskCard.classList.add('complete');
-                    taskCard.querySelector('.complete-btn').textContent = 'Completed';
-                    taskCard.querySelector('.complete-btn').classList.add('disabled');
-                    taskCard.querySelector('.collapsed-requirements').textContent = 'STATUS: Complete';
-                    taskCard.style.order = 1000; // Push to bottom
-                    taskCard.setAttribute('draggable', 'false');
-
-                } else {
-                    taskCard.classList.remove('complete');
-                    taskCard.querySelector('.complete-btn').textContent = 'Mark as Complete';
-                    taskCard.querySelector('.complete-btn').classList.remove('disabled');
-                    taskCard.style.order = 0; // Keep at top
-
-                    // Update availability state
-                    const requirementsList = taskCard.querySelector('.task-requirements-list');
-                    requirementsList.innerHTML = '';
-                    let requirementsMet = true;
-
-                    // Display LL Requirement
-                    const requiredLLMatch = taskCard.dataset.taskRequirements.match(/LL(\d+)/);
-                    if (requiredLLMatch) {
-                        const requiredLL = parseInt(requiredLLMatch[1]);
-                        const traderName = taskCard.dataset.trader;
-                        const currentLL = gameState.traderLevels[traderName];
-                        if (currentLL < requiredLL) {
-                            requirementsList.innerHTML += `<p class="text-error">Required: ${traderName} Loyalty Level ${requiredLL}</p>`;
-                            requirementsMet = false;
-                        } else {
-                            requirementsList.innerHTML += `<p>Required: ${traderName} Loyalty Level ${requiredLL} (Met)</p>`;
-                        }
-                    }
-
-                    // Display Predecessor Task Requirement
-                    const requiredTaskMatch = taskCard.dataset.taskRequirements.match(/Complete (task-\d+)/);
-                    if (requiredTaskMatch) {
-                        const requiredTaskID = requiredTaskMatch[1];
-                        const requiredTaskCard = document.querySelector(`[data-task-id="${requiredTaskID}"]`);
-                        const requiredTaskTitle = requiredTaskCard ? requiredTaskCard.querySelector('.task-title').textContent : 'Previous Task';
-                        
-                        if (!gameState.completedTasks.has(requiredTaskID)) {
-                            requirementsList.innerHTML += `<p class="text-error">Required: Complete "${requiredTaskTitle}"</p>`;
-                            requirementsMet = false;
-                        } else {
-                            requirementsList.innerHTML += `<p>Required: Complete "${requiredTaskTitle}" (Met)</p>`;
-                        }
-                    }
-
-                    // Disable/Enable the button based on requirements
-                    const completeBtn = taskCard.querySelector('.complete-btn');
-                    if (!isAvailable || !requirementsMet) {
-                        completeBtn.classList.add('disabled');
-                    } else {
-                        completeBtn.classList.remove('disabled');
-                    }
-                    
-                    // Update the collapsed view requirements line
-                    const reqText = taskCard.dataset.taskRequirements.replace(/Complete task-(\d+)/, (match, id) => {
-                        const prevTaskCard = document.querySelector(`[data-task-id="task-${id}"]`);
-                        return `Task Required: ${prevTaskCard ? prevTaskCard.querySelector('.task-title').textContent : 'Previous Task'}`;
-                    }).replace('LL', 'Loyalty Level ');
-
-                    taskCard.querySelector('.collapsed-requirements').textContent = reqText;
-                }
-
-                // Update the dialogue box
-                const dialogueText = taskCard.querySelector('.dialogue-text');
-                const initialDialogue = taskCard.dataset.dialogueInitial;
-                const completeDialogue = taskCard.dataset.dialogueComplete;
-                dialogueText.textContent = isComplete ? completeDialogue : initialDialogue;
-
-                // Create Checkboxes on first load or refresh
-                if (taskCard.querySelector('.objective-checklist').children.length === 0) {
-                    createCheckboxes(taskCard);
-                }
-            };
-
-            // Function to create objectives/checkboxes
-            const createCheckboxes = (taskCard) => {
-                const objectiveListElement = taskCard.querySelector('.objective-checklist');
-                objectiveListElement.innerHTML = ''; // Clear previous content
-
-                const objectiveItems = taskCard.dataset.objectiveList.split(';');
-
-                objectiveItems.forEach((objective, index) => {
-                    const id = `${taskCard.dataset.taskId}-obj-${index}`;
-                    const label = document.createElement('label');
-                    label.setAttribute('for', id);
-
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = id;
-                    checkbox.name = id;
-                    checkbox.checked = gameState[id] || false; // Load state from gameState (if it existed)
-
-                    const span = document.createElement('span');
-                    span.textContent = objective;
-
-                    label.appendChild(checkbox);
-                    label.appendChild(span);
-                    objectiveListElement.appendChild(label);
-                    
-                    // Save state on change
-                    checkbox.addEventListener('change', (e) => {
-                        gameState[id] = e.target.checked;
-                        saveGameState();
-                    });
-                });
-            };
-
-            // Event listener for expanding/collapsing
-            tasks.forEach(taskCard => {
-                const collapsedView = taskCard.querySelector('.collapsed-view');
-                const expandedView = taskCard.querySelector('.expanded-view');
-                
-                collapsedView.addEventListener('click', () => {
-                    // Check if it's the global task-0, if so, ignore the click
-                    if (taskCard.dataset.taskId === 'task-0') {
-                        return; 
-                    }
-                    expandedView.classList.toggle('hidden-detail');
-                });
-
-                // Initial load: create checkboxes and update state
-                updateTaskCardState(taskCard);
-
-                // Event listener for marking complete
-                taskCard.querySelector('.complete-btn').addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent card from collapsing
-
-                    const taskId = taskCard.dataset.taskId;
-                    const completeBtn = e.target;
-                    
-                    if (completeBtn.classList.contains('disabled')) return;
-
-                    // Check all objectives are checked (except for task-0 which is special)
-                    if (taskId !== 'task-0') {
-                        const objectives = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
-                        let allChecked = true;
-                        objectives.forEach(checkbox => {
-                            if (!checkbox.checked) {
-                                allChecked = false;
-                            }
-                        });
-                        
-                        if (!allChecked) {
-                            alert('All objectives must be checked to complete the task!');
-                            return;
-                        }
-                    }
-
-                    // --- Complete Task Logic ---
-                    gameState.completedTasks.add(taskId);
-                    
-                    // Reward / Reputation gain logic (simplified)
-                    const trader = taskCard.dataset.trader;
-                    const repChangeMatch = taskCard.querySelector(`[data-item="rep-${trader.toLowerCase()}"]`)?.textContent.match(/\+(\d+\.\d+)/);
-                    
-                    if (repChangeMatch) {
-                        // In a real game, this would update the reputation number and trigger the LL increase.
-                        // For this concept, we'll manually handle a simple LL increase after a few tasks.
-                        if (taskId === 'task-1' || taskId === 'task-3' || taskId === 'task-4') {
-                             // This is a placeholder for actual LL logic
-                             // Example: If Prapor is LL1 and this task gives him rep, he should eventually hit LL2
-                        }
-                    }
-                    
-                    // Manually grant LL2 to a trader for a complete example after their first task
-                    if (taskId === 'task-1') { gameState.traderLevels.Prapor = 2; }
-                    if (taskId === 'task-3') { gameState.traderLevels.Skier = 2; }
-                    if (taskId === 'task-2') { gameState.traderLevels.Mechanic = 2; }
-                    
-                    // Unlock all LL1 tasks after task-0 (Initial Setup)
-                    if (taskId === 'task-0') {
-                        // Mark all starting LL1 tasks as available
-                        tasks.forEach(t => {
-                            if (t.dataset.taskRequirements.includes('LL1') && t.dataset.taskRequirements.split(';').length === 1 && t.dataset.taskId !== 'task-0') {
-                                // This block is mostly for visual sorting on refresh
-                            }
-                        });
-                    }
-
-                    // Clear objective states for completed task
-                    taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]').forEach(checkbox => {
-                        delete gameState[checkbox.id];
-                    });
-
-                    // Update all tasks now that state has changed
-                    saveGameState();
-                    tasks.forEach(t => updateTaskCardState(t));
-
-                    // Collapse the card after completion
-                    expandedView.classList.add('hidden-detail');
-                });
-            });
-
-            // Function to save game state to local storage
-            const saveGameState = () => {
-                localStorage.setItem('eftTaskTrackerState', JSON.stringify({
-                    completedTasks: Array.from(gameState.completedTasks),
-                    traderLevels: gameState.traderLevels
-                }));
-            };
-
-            // Function to load game state from local storage
-            const loadGameState = () => {
-                const savedState = localStorage.getItem('eftTaskTrackerState');
-                if (savedState) {
-                    const loadedState = JSON.parse(savedState);
-                    gameState.completedTasks = new Set(loadedState.completedTasks);
-                    gameState.traderLevels = loadedState.traderLevels;
-                }
-            };
-
-            // Initial load and update of all tasks
-            loadGameState();
-            tasks.forEach(t => updateTaskCardState(t));
-            
-            // Re-sort the task list (complete tasks at bottom)
-            const taskList = document.getElementById('task-list');
-            Array.from(tasks)
-                .sort((a, b) => {
-                    const aComplete = gameState.completedTasks.has(a.dataset.taskId);
-                    const bComplete = gameState.completedTasks.has(b.dataset.taskId);
-                    if (aComplete === bComplete) return 0;
-                    return aComplete ? 1 : -1;
-                })
-                .forEach(taskCard => taskList.appendChild(taskCard));
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
