@@ -14,8 +14,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 5000 },
-            { type: "item", name: "2 Bolts" },
-            { type: "euros", amount: 250}
+            { type: "item", name: "2 Bolts" }
         ]
     },
     {
