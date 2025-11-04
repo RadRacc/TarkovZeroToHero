@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EFT Task Tracker</title>
     
+    <!-- Link to the style file -->
     <link rel="stylesheet" href="style.css"> 
+    <!-- Use a mono font for the Tarkov aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -17,8 +19,9 @@
         
         <div class="main-layout">
             
+            <!-- LEFT SIDEBAR: LOYALTY LEVEL TRACKER -->
             <aside id="ll-tracker">
-                <h2>Trader Loyalty</h2>
+                <h2>📈 Trader Loyalty</h2>
                 
                 <div class="trader-ll-group" data-trader="Prapor">
                     <h3>Prapor</h3>
@@ -91,9 +94,8 @@
                 </div>
             </aside>
             
-            <main id="task-area">
-                
-                <!-- Filter Controls -->
+            <!-- RIGHT CONTENT AREA: FILTERS AND TASKS -->
+            <main>
                 <div id="filter-controls">
                     <select id="trader-filter">
                         <option value="all">Filter by Trader (All)</option>
@@ -119,7 +121,7 @@
                     <input type="text" id="task-search" placeholder="Search task title or objective...">
                 </div>
 
-                <!-- Task cards will be dynamically inserted here by script.js -->
+                <!-- Task cards will be injected here by script.js -->
                 <section id="tasks" class="page-content active-page">
                     <h2>Task Progression</h2>
                 </section>
@@ -128,7 +130,7 @@
         </div>
     </div>
 
-    <!-- Script files must be loaded in order: Data first, then Logic -->
+    <!-- Load data first, then the script that uses it -->
     <script src="tasksData.js"></script>
     <script src="script.js"></script>
 </body>
