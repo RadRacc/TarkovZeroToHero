@@ -154,8 +154,8 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 9000 },
-            { type: "item", name: "1 Car first aid kit", icon: "icon-car-medkit.png" },
-            { type: "item", name: "1 Tourniquet", icon: "icon-tourniquet.png" }
+            { type: "item", name: "1 Car first aid kit", icon: "icon-cfak.png" },
+            { type: "item", name: "2 Esmarch tourniquets", icon: "icon-esmarch.png" }
         ]
     },
     {
@@ -192,15 +192,15 @@ const TASKS_DATA = [
         requirements: ["LL1", "Strange Symbol - Part 1"],
         initial_equipment: [],
         walkthrough: "CPU's and Wires are most often found in PC Blocks, which spawn in offices and tech stores across all maps. Customs (Dorms/Offices) and Interchange (Tech stores) are good bets. Both items must be Found In Raid.",
-        dialogueInitial: "The information you brought back about the symbols... it wasn't free. I need to process it, and that takes computing power I don't currently have. Get me three **PC CPU** units and three **Bundles of wires**. I need them found in raid, so get moving. Don't ask what it's for. Just know that if I can decrypt this information, we both stand to gain.",
+        dialogueInitial: "The information you brought back about the symbols... it wasn't free. I need to process it, and that takes computing power I don't currently have. Get me three PC CPU units and three Bundles of wires. I need them found in raid, so get moving. Don't ask what it's for. Just know that if I can decrypt this information, we both stand to gain.",
         dialogueComplete: "These components are sufficient for now. I'll have my tech guy work on the data. For your services, you get this. Come back later; once I've pieced together the real meaning of those symbols, I'll have a much more profitable job for you.",
         objectives: [
             "Hand over 3 found in-raid PC CPU",
             "Hand over 3 found in-raid Bundles of wires"
         ],
         rewards: [
-            { type: "roubles", amount: 15000 },
-            { type: "item", name: "1 60-round 5.45x39 magazine for AK-74 and compatibles", icon: "icon-ak-mag.png" }
+            { type: "roubles", amount: 11000 },
+            { type: "item", name: "40 12/70 Copper Sabot Premier HP slugs", icon: "icon-csp-slug.png" }
         ]
     },
     {
