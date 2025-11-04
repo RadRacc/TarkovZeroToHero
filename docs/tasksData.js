@@ -14,8 +14,8 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 5000 },
-            { type: "item", name: "2 Bolts" },
-            { type: "item", name: "1 Weapon Parts" }
+            { type: "item", name: "2 Bolts", icon: "icon-bolts.png" }
+            { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png" }
         ]
     },
     {
@@ -34,10 +34,10 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 10000 },
-            { type: "item", name: "2 Electrical Components" },
-            { type: "item", name: "1 Screwdriver" },
-            { type: "item", name: "1 Silicon Tube" },
-            { type: "item", name: "1 PACA Soft Armor" }
+            { type: "item", name: "2 Electronic Components", icon: "icon-electronic-components.png" },
+            { type: "item", name: "1 Screwdriver", icon: "icon-screwdriver.png" },
+            { type: "item", name: "1 Silicon Tube", icon: "icon-silicon-tube.png" },
+            { type: "item", name: "1 PACA Soft Armor", icon: "icon-paca.png" }
             // Trader Rep reward is removed
         ]
     },
@@ -56,7 +56,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "dollars", amount: 120 },
-            { type: "item", name: "1 Bottle of Dan Jackiel whiskey" }
+            { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
             // Trader Rep reward is removed
         ]
     },
@@ -75,7 +75,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "dollars", amount: 120 },
-            { type: "item", name: "1 Bottle of Dan Jackiel whiskey" }
+            { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
             // Trader Rep reward is removed
         ]
     }
