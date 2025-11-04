@@ -90,32 +90,38 @@ function generateTaskCards() {
         const rewardsHTML = task.rewards.map(reward => {
             let itemText = '';
             let dataAttr = '';
-            let iconPath = ''; // ADDED: Icon path variable
+            let iconPath = '';
             
             if (reward.type === 'roubles') {
                 itemText = `${reward.amount.toLocaleString()} Roubles (₽)`;
                 dataAttr = `data-item="roubles"`;
                 rewardRoubles = reward.amount;
-                iconPath = 'images/icon-roubles.png'; // ADDED: Roubles icon path
+                iconPath = 'images/icon-roubles.png';
             } else if (reward.type === 'dollars') {
                 itemText = `${reward.amount.toLocaleString()} Dollars ($)`;
                 dataAttr = `data-item="dollars"`;
                 rewardDollars = reward.amount;
-                iconPath = 'images/icon-dollars.png'; // ADDED: Dollars icon path
+                iconPath = 'images/icon-dollars.png';
             } else if (reward.type === 'euros') {
                 itemText = `${reward.amount.toLocaleString()} Euros (€)`;
                 dataAttr = `data-item="euros"`;
                 rewardEuros = reward.amount;
-                iconPath = 'images/icon-euros.png'; // ADDED: Euros icon path
+                iconPath = 'images/icon-euros.png';
             } else if (reward.type === 'item') {
                 itemText = reward.name;
                 dataAttr = `data-item="item"`;
-                // You may want to use a specific icon for common items, or a generic one
-                iconPath = 'images/icon-item.png'; // ADDED: Generic item icon path
+                
+                // *** MODIFIED LOGIC: Check for a specific icon in tasksData.js ***
+                if (reward.icon) {
+                    iconPath = `images/${reward.icon}`; // Use the custom icon name
+                } else {
+                    iconPath = 'images/icon-item.png'; // Fallback to generic icon
+                }
+                // *** END MODIFIED LOGIC ***
             }
             // Rep rewards are explicitly ignored
             
-            // MODIFIED: Return statement now includes an <img> for the icon and a <span> for the text
+            // Return statement now includes an <img> for the icon and a <span> for the text
             const iconHTML = iconPath ? `<img src="${iconPath}" alt="${reward.type} icon" class="reward-icon">` : '';
             return `<li ${dataAttr}>${iconHTML}<span class="reward-text">${itemText}</span></li>`;
 
