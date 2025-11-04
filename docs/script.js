@@ -1,43 +1,79 @@
-// --- 1. INITIALIZATION AND DATA LOADING ---
+// --- 1. INITIALIZATION AND DATA KEYS ---
 const ROUBLES_KEY = 'eftZthRoubles';
-const LICENSES_KEY = 'eftZthLicenses';
+const DEBT_KEY = 'eftZthDebt';
+const TAXES_KEY = 'eftZthTaxes'; 
 
 // Default starting values
 let roubles = 0;
-let licenses = 0;
+let debt = 0;
+let taxesPaid = 0;
 
 // DOM Elements
 const roublesDisplay = document.getElementById('roubles-display');
-const licensesDisplay = document.getElementById('licenses-display');
+const debtDisplay = document.getElementById('debt-display');
+const taxesPaidDisplay = document.getElementById('taxes-paid-display'); 
+
 const navButtons = document.querySelectorAll('.nav-btn');
 const pageContents = document.querySelectorAll('.page-content');
 const completeButtons = document.querySelectorAll('.complete-btn');
 const saveButton = document.getElementById('save-btn');
+const expandableCards = document.querySelectorAll('.task-card.expandable'); 
 
+// --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
     // Load from browser's local storage or use default 0
     roubles = parseInt(localStorage.getItem(ROUBLES_KEY) || '0');
-    licenses = parseInt(localStorage.getItem(LICENSES_KEY) || '0');
+    debt = parseInt(localStorage.getItem(DEBT_KEY) || '0');
+    taxesPaid = parseInt(localStorage.getItem(TAXES_KEY) || '0');
     updateDisplay();
 }
 
 function updateDisplay() {
-    roublesDisplay.textContent = roubles.toLocaleString(); // Format with commas
-    licensesDisplay.textContent = licenses.toLocaleString();
+    // Format with commas for better readability
+    roublesDisplay.textContent = roubles.toLocaleString(); 
+    debtDisplay.textContent = debt.toLocaleString();
+    taxesPaidDisplay.textContent = taxesPaid.toLocaleString();
 }
 
-// --- 2. NAVIGATION LOGIC ---
+function saveProgress() {
+    localStorage.setItem(ROUBLES_KEY, roubles);
+    localStorage.setItem(DEBT_KEY, debt);
+    localStorage.setItem(TAXES_KEY, taxesPaid);
+    console.log('Progress saved.'); 
+    alert('Progress saved to your browser!');
+}
+
+// --- 3. EXPAND/COLLAPSE TASK LOGIC ---
+expandableCards.forEach(card => {
+    card.addEventListener('click', (event) => {
+        // Stop the collapse action if the user clicks the "Mark as Complete" button
+        if (event.target.classList.contains('complete-btn')) {
+            return;
+        }
+
+        const expandedView = card.querySelector('.expanded-view');
+        
+        // Toggle the visibility of the expanded section
+        if (expandedView) {
+            // Check current computed display style for reliable toggle
+            const isHidden = window.getComputedStyle(expandedView).display === 'none';
+            expandedView.style.display = isHidden ? 'block' : 'none';
+        }
+    });
+});
+
+// --- 4. NAVIGATION LOGIC ---
 navButtons.forEach(button => {
     button.addEventListener('click', () => {
         const targetPageId = button.getAttribute('data-page');
 
-        // Hide all pages
+        // Remove active class from all pages and buttons
         pageContents.forEach(page => {
             page.classList.remove('active-page');
             page.classList.add('hidden-page');
         });
 
-        // Show the selected page
+        // Show the selected page and set the button as active (optional styling needed)
         const targetPage = document.getElementById(targetPageId);
         if (targetPage) {
             targetPage.classList.add('active-page');
@@ -46,21 +82,19 @@ navButtons.forEach(button => {
     });
 });
 
-// --- 3. TASK COMPLETION & CURRENCY TRACKING ---
+// --- 5. TASK COMPLETION & CURRENCY TRACKING ---
 completeButtons.forEach(button => {
     button.addEventListener('click', (event) => {
         const rblReward = parseInt(button.getAttribute('data-reward-roubles') || '0');
-        const licReward = parseInt(button.getAttribute('data-reward-licenses') || '0');
-
-        // 1. Grant Rewards
+        
+        // 1. Grant Roubles Reward
         roubles += rblReward;
-        licenses += licReward;
 
         // 2. Mark task as completed visually
         const taskCard = event.target.closest('.task-card');
         if (taskCard) {
             taskCard.classList.add('task-completed');
-            // Optional: Remove button so it can't be clicked again
+            // Remove button so it can't be clicked again
             event.target.remove(); 
         }
 
@@ -70,13 +104,7 @@ completeButtons.forEach(button => {
     });
 });
 
-// --- 4. SAVING SYSTEM ---
-function saveProgress() {
-    localStorage.setItem(ROUBLES_KEY, roubles);
-    localStorage.setItem(LICENSES_KEY, licenses);
-    alert('Progress saved to your browser!'); // Simple confirmation
-}
-
+// Attach save function to button
 saveButton.addEventListener('click', saveProgress);
 
 // Load progress when the page first loads
