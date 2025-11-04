@@ -1,18 +1,52 @@
-/* --- New: Header/Landing Bar Styles --- */
+/* --- Global Styles & Resets --- */
+body {
+    /* Use a common system font and a tactical fallback */
+    font-family: 'Roboto Mono', monospace, Arial, sans-serif; 
+    background-color: hsl(0, 0%, 10%); /* Very dark grey/black background */
+    color: #E0E0E0; /* Off-white text for readability */
+    padding: 0; /* Removed padding to allow header full width */
+    margin: 0;
+    line-height: 1.6;
+    min-height: 100vh; /* Ensure body covers the viewport height */
+}
+
+/* Ensure all elements calculate size based on borders and padding */
+* {
+    box-sizing: border-box; 
+}
+
+/* Center and constrain main content */
+.container {
+    max-width: 900px;
+    margin: 0 auto; 
+    padding: 20px; /* Add padding here instead of on the body */
+}
+
+
+/* --- 1. Header/Landing Bar Styles --- */
 #landing-bar {
     display: flex;
+    flex-wrap: wrap; /* Allows wrapping on small screens */
     justify-content: space-between;
     align-items: center;
-    background-color: hsl(0, 0%, 18%); /* Slightly brighter dark bar */
+    background-color: hsl(0, 0%, 18%); 
     padding: 10px 20px;
-    border-bottom: 2px solid #F5B925; /* Tarkov yellow border */
+    border-bottom: 2px solid #F5B925; /* Key yellow border */
     margin-bottom: 30px;
 }
 
 .header-title {
     color: #F5B925;
     font-size: 1.5em;
-    margin: 0;
+    margin: 5px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between buttons */
 }
 
 nav .nav-btn {
@@ -20,10 +54,11 @@ nav .nav-btn {
     color: #E0E0E0;
     border: 1px solid #444;
     padding: 8px 15px;
-    margin-left: 10px;
     cursor: pointer;
     text-transform: uppercase;
-    transition: background-color 0.2s;
+    font-family: inherit;
+    font-size: 0.9em;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 nav .nav-btn:hover {
@@ -31,28 +66,155 @@ nav .nav-btn:hover {
     border-color: #F5B925;
 }
 
-/* --- New: Status Bar (Roubles/Licenses) --- */
+
+/* --- 2. Status Bar (Roubles/Licenses) --- */
 #status-bar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between; /* Space out items */
     align-items: center;
     background-color: hsl(0, 0%, 15%);
-    padding: 10px;
-    margin-bottom: 20px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
     border: 1px dashed #555;
     font-weight: bold;
+    font-size: 1.1em;
+}
+
+#status-bar p {
+    margin: 0;
 }
 
 #roubles-display, #licenses-display {
-    color: #70E670; /* Green for money/assets */
+    color: #70E670; /* Green color for money/assets */
     margin-left: 5px;
 }
 
-/* --- New: Page Visibility (For JS Routing) --- */
+
+/* --- 3. Typography & Headings (Content) --- */
+h1, h2 {
+    text-transform: uppercase;
+    color: #E0E0E0;
+}
+
+h2 {
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* --- 4. Task Card Styles (The Meat of the Site) --- */
+.task-card {
+    background-color: hsl(0, 0%, 15%); 
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left: 5px solid #F5B925; /* Key yellow accent on the left */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease; 
+}
+
+.trader-name {
+    color: #5897FB; /* Blue hue for trader names */
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.task-title {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.1em;
+}
+
+.task-description {
+    font-size: 0.95em;
+    color: #AAA;
+    margin: 10px 0;
+}
+
+/* --- Completed Task State --- */
+.task-completed {
+    opacity: 0.5; /* Fade completed tasks */
+    border-left-color: #555; /* Mute the accent color */
+    text-decoration: line-through;
+}
+
+.task-completed .trader-name, 
+.task-completed .task-title,
+.task-completed .rewards-list li {
+    text-decoration: line-through; /* Keep the strikethrough effect */
+}
+
+/* --- Rewards & Details --- */
+.rewards-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.rewards-list li {
+    color: #70E670; /* Green color for rewards */
+    font-size: 0.9em;
+    padding-left: 15px;
+    position: relative;
+}
+
+.rewards-list li::before {
+    content: "•";
+    color: #F5B925; /* Yellow bullet point */
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+/* --- Button Style (Mark as Complete) --- */
+.complete-btn {
+    background-color: #8B0000;
+    color: white;
+    border: 1px solid #FF0000;
+    padding: 8px 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+.complete-btn:hover {
+    background-color: #A00000;
+}
+
+/* --- Page Visibility (For JS Routing) --- */
 .hidden-page {
     display: none;
 }
 
 .active-page {
     display: block;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    #landing-bar {
+        flex-direction: column;
+    }
+    nav {
+        margin-top: 10px;
+        justify-content: center;
+        width: 100%;
+    }
+    .header-title {
+        text-align: center;
+    }
+    #status-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
