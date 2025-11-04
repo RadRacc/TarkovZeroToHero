@@ -123,9 +123,7 @@ const TASKS_DATA = [
         title: "Cleanup Crew",
         objectiveSummary: "Eliminate 5 PMCs with an MP5.",
         map: "Any",
-        requirements: [
-            "LL1", "Important Business", "I:Dogtags:5"
-        ],
+        requirements: ["LL1", "Important Business"],
         initial_equipment: [
             { name: "2 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
         ],
@@ -133,11 +131,13 @@ const TASKS_DATA = [
         dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
         dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
         objectives: [
-            "Eliminate 5 PMCs with an MP5"
+            "Eliminate 5 PMCs with an MP5",
+            "Hand over 5 found in-raid dogtags"
         ],
         rewards: [
             { type: "dollars", amount: 150 },
-            { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
+            { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" },
+            { type: "item", name: "1 Military power filter", icon: "icon-mpf.png" }
         ]
     }
     
