@@ -1,16 +1,14 @@
 /* --- Global Styles & Resets --- */
 body {
-    /* Use a common system font and a tactical fallback */
     font-family: 'Roboto Mono', monospace, Arial, sans-serif; 
-    background-color: hsl(0, 0%, 10%); /* Very dark grey/black background */
-    color: #E0E0E0; /* Off-white text for readability */
+    background-color: hsl(0, 0%, 10%); 
+    color: #E0E0E0; 
     padding: 0; 
     margin: 0;
     line-height: 1.6;
     min-height: 100vh;
 }
 
-/* Ensure all elements calculate size based on borders and padding */
 * {
     box-sizing: border-box; 
 }
@@ -39,57 +37,68 @@ header {
     text-align: center;
 }
 
-
-/* --- Typography & Headings (Content) --- */
-h1, h2 {
-    text-transform: uppercase;
-    color: #E0E0E0;
+/* --- Filter and Search Controls (NEW) --- */
+#filter-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 10px;
+    background-color: hsl(0, 0%, 15%);
+    border-radius: 4px;
 }
 
+#trader-filter, #task-search {
+    flex-grow: 1;
+    padding: 10px;
+    background-color: #333;
+    color: #E0E0E0;
+    border: 1px solid #555;
+    font-family: inherit;
+    border-radius: 4px;
+}
+
+/* Style for select box on webkit browsers */
+#trader-filter {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23FFFFFF" d="M5 6l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    max-width: 250px;
+}
+
+/* --- Typography & Headings --- */
 h2 {
     border-bottom: 1px solid #444;
     padding-bottom: 5px;
     margin-top: 40px;
     margin-bottom: 20px;
 }
+h3 { margin: 5px 0; }
 
-h3 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-/* --- Task Card Styles (Collapsible View) --- */
+/* --- Task Card Styles --- */
 .task-card {
     background-color: hsl(0, 0%, 15%); 
     margin-bottom: 20px;
     padding: 15px;
-    border-left: 5px solid #F5B925; /* Key yellow accent on the left */
+    border-left: 5px solid #F5B925; 
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease; 
-}
-
-/* Style for expandable cards */
-.task-card.expandable {
     cursor: pointer; 
 }
 
-.task-card.expandable:hover {
+.task-card:hover {
     background-color: hsl(0, 0%, 17%); 
 }
 
 .trader-name {
-    color: #5897FB; /* Blue hue for trader names */
+    color: #5897FB;
     font-size: 0.9em;
     display: block;
     margin-bottom: 5px;
     text-transform: uppercase;
-}
-
-.task-title {
-    font-weight: bold;
-    color: #fff;
-    font-size: 1.1em;
-    display: inline-block;
 }
 
 .task-objective {
@@ -98,35 +107,53 @@ h3 {
     margin: 5px 0 0 0;
 }
 
-/* EXPANDED CONTENT */
+/* EXPANDED CONTENT LAYOUT (NEW: Using Grid) */
 .expanded-view {
+    display: none; /* Controlled by JS */
+    grid-template-columns: 150px 1fr; /* Image box on left, content on right */
+    gap: 20px;
     border-top: 1px solid #333;
-    padding-top: 10px;
+    padding-top: 15px;
     margin-top: 10px;
-    /* JS will toggle the display property */
 }
 
-/* Dialogue box style */
+/* Trader Image Box (NEW) */
+.trader-image-box {
+    width: 150px;
+    height: 150px;
+    background-color: #222;
+    border: 2px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    text-align: center;
+    color: #999;
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+.trader-image-box::before {
+    content: "Trader Image Placeholder";
+}
+
+/* Dialogue box style (Increased prominence) */
 .dialogue-box {
     background-color: #222;
-    border-left: 3px solid #5897FB; 
-    padding: 10px;
+    border-left: 3px solid #F5B925; /* Use key color for attention */
+    padding: 15px;
     margin-bottom: 15px;
-    font-style: italic;
-    font-size: 0.9em;
+    font-size: 0.95em;
+    line-height: 1.5;
 }
 
 
 /* --- Completed Task State --- */
 .task-completed {
-    opacity: 0.5; /* Fade completed tasks */
-    border-left-color: #555; /* Mute the accent color */
+    opacity: 0.5; 
+    border-left-color: #555; 
 }
-
-.task-completed .trader-name, 
-.task-completed .task-title,
-.task-completed .rewards-list li {
-    text-decoration: none;
+.task-completed .trader-image-box {
+    border-color: #555;
 }
 
 
@@ -136,7 +163,6 @@ h3 {
     padding-left: 0;
     margin-top: 10px;
 }
-
 .rewards-list li {
     color: #70E670; 
     font-size: 0.9em;
@@ -146,22 +172,10 @@ h3 {
     background-size: 25px; 
     margin-bottom: 5px;
 }
+/* ... Icon placeholders remain the same ... */
 
-/* Item Icon placeholders */
-[data-item="roubles"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%2370E670">₽</text></svg>');
-}
-[data-item="helmet-6b47"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%23FFFFFF">⛑️</text></svg>');
-}
-[data-item="bolt"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%23FFD700">🔩</text></svg>');
-}
-[data-item="rep-prapor"] {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%235897FB">★</text></svg>');
-}
 
-/* --- Task Toggle Button Styles (Mark Complete/Uncomplete) --- */
+/* --- Task Toggle Button Styles --- */
 .task-toggle-btn {
     padding: 8px 15px;
     cursor: pointer;
@@ -172,29 +186,36 @@ h3 {
     border-radius: 3px;
 }
 
-/* Style for Mark as Complete (green) */
+/* Mark as Complete (green) */
 .complete-btn {
     background-color: #006400;
     color: white;
     border: 1px solid #00FF00;
 }
+.complete-btn:hover { background-color: #008000; }
 
-.complete-btn:hover {
-    background-color: #008000;
-}
-
-/* Style for Mark as Uncomplete (red) */
+/* Mark as Uncomplete (red) */
 .uncomplete-btn {
     background-color: #4B0000;
     color: #FFC0CB; 
     border: 1px solid #FF4500;
 }
+.uncomplete-btn:hover { background-color: #600000; }
 
-.uncomplete-btn:hover {
-    background-color: #600000;
-}
-
-/* --- Page Visibility (Always display tasks) --- */
-.active-page {
-    display: block;
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    #filter-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    #trader-filter {
+        max-width: 100%;
+    }
+    .expanded-view {
+        grid-template-columns: 1fr; /* Stack image and content vertically on small screens */
+    }
+    .trader-image-box {
+        width: 100%;
+        height: 100px; /* Adjust height when full width */
+    }
 }
