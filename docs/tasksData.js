@@ -59,7 +59,6 @@ const TASKS_DATA = [
         objectives: [
             "Locate and Repair Generator 1",
             "Locate and Repair Generator 2",
-            "",
             "Survive and Extract from the location"
         ],
         rewards: [
