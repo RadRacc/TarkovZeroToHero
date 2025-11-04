@@ -106,7 +106,7 @@ const TASKS_DATA = [
         rewards: [
             { type: "roubles", amount: 5000 },
             { type: "item", name: "6 Bundles of wires", icon: "icon-wires.png" },
-            { type: "item", name: "2 PC CPU", icon: "icon-cpu.png" },
+            { type: "item", name: "2 PC CPUs", icon: "icon-cpu.png" },
             { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png" }
         ]
     },
@@ -128,7 +128,7 @@ const TASKS_DATA = [
         rewards: [
             { type: "roubles", amount: 6000 },
             { type: "item", name: "1 Golden neck chain", icon: "icon-gold-chain.png" },
-            { type: "item", name: "4 Light bulb", icon: "icon-light-bulb.png" }
+            { type: "item", name: "4 Light bulbs", icon: "icon-light-bulb.png" }
         ]
     },
     {
@@ -159,7 +159,7 @@ const TASKS_DATA = [
         map: "Customs",
         requirements: ["Emergency Repairs"],
         initial_equipment: [
-            { name: "3 F-1 hand grenade", icon: "icon-f1-grenade.png" }
+            { name: "3 F-1 hand grenades", icon: "icon-f1-grenade.png" }
         ],
         walkthrough: "The three F-1 grenades are provided at the start (you'll need to source 6 more). The planting spots are specific interaction points located inside the 3-story dorms: one on the first floor, one on the second, and one on the third. The task is split into three parts, meaning you must survive the raid after planting the three required grenades on each floor.",
         dialogueInitial: "We have intelligence indicating a high concentration of unauthorized personnel operating out of the three-story dorms on Customs. This location is now flagged for necessary sanitation. Your mission is to covertly place three F-1 fragmentation devices on each of the three floors—that's nine placements in total. I'll provide a few starters, but you'll need to acquire the rest. This isn't a demolition job; it's a message. Ensure the placements are stable and then extract. Failure is not an option. Move.",
@@ -172,7 +172,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "dollars", amount: 50 },
-            { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" },
+            { type: "item", name: "2 Xenomorph sealing foams", icon: "icon-xenomorph.png" },
             { type: "item", name: "1 Gas analyzer", icon: "icon-gas-analyzer.png" } // <-- FIXED ERROR HERE
         ]
     },
@@ -188,7 +188,7 @@ const TASKS_DATA = [
         dialogueInitial: "The information you brought back about the symbols... it wasn't free. I need to process it, and that takes computing power I don't currently have. Get me three PC CPU units and three Bundles of wires. I need them found in raid, so get moving. Don't ask what it's for. Just know that if I can decrypt this information, we both stand to gain.",
         dialogueComplete: "These components are sufficient for now. I'll have my tech guy work on the data. For your services, you get this. Come back later; once I've pieced together the real meaning of those symbols, I'll have a much more profitable job for you.",
         objectives: [
-            "Hand over 3 found in-raid PC CPU",
+            "Hand over 3 found in-raid PC CPUs",
             "Hand over 3 found in-raid Bundles of wires"
         ],
         rewards: [
