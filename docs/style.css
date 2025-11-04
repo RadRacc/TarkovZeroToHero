@@ -1,70 +1,58 @@
-/* --- Global Styles & Resets --- */
-body {
-    font-family: 'Arial', 'Roboto Mono', monospace; /* Use a common system font and a monospace fallback */
-    background-color: hsl(0, 0%, 10%); /* Very dark grey/black */
-    color: #E0E0E0; /* Off-white text */
-    padding: 20px;
-    line-height: 1.6;
-}
-
-/* --- Container Styles --- */
-.container {
-    max-width: 900px;
-    margin: 0 auto; /* Center the main content */
-}
-
-/* --- Typography & Headings --- */
-h1 {
-    color: #F5B925; /* Tarkov yellow accent */
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+/* --- New: Header/Landing Bar Styles --- */
+#landing-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: hsl(0, 0%, 18%); /* Slightly brighter dark bar */
+    padding: 10px 20px;
+    border-bottom: 2px solid #F5B925; /* Tarkov yellow border */
     margin-bottom: 30px;
 }
 
-h2 {
+.header-title {
+    color: #F5B925;
+    font-size: 1.5em;
+    margin: 0;
+}
+
+nav .nav-btn {
+    background: none;
     color: #E0E0E0;
-    text-transform: uppercase;
-    border-bottom: 1px solid #444;
-    padding-bottom: 5px;
-    margin-top: 40px;
-}
-
-/* --- Task Card Styles (The Meat of the Site) --- */
-.task-card {
-    background-color: hsl(0, 0%, 15%); /* Slightly lighter container background */
-    margin-bottom: 20px;
-    padding: 15px;
-    border-left: 5px solid #F5B925; /* Key yellow accent on the left */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease; /* Smooth transition for status change */
-}
-
-.task-title {
-    font-weight: bold;
-    color: #fff;
-    font-size: 1.1em;
-}
-
-.task-completed {
-    opacity: 0.5; /* Fade completed tasks */
-    border-left-color: #555; /* Mute the accent color */
-    text-decoration: line-through;
-}
-
-/* --- Rewards & Details --- */
-.rewards-list li {
-    color: #70E670; /* Green color for rewards */
-}
-
-/* --- Button Style (if you use JavaScript later) --- */
-.complete-btn {
-    background-color: #8B0000;
-    color: white;
-    border: 1px solid #FF0000;
-    padding: 5px 10px;
+    border: 1px solid #444;
+    padding: 8px 15px;
+    margin-left: 10px;
     cursor: pointer;
     text-transform: uppercase;
-    font-size: 0.8em;
-    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+nav .nav-btn:hover {
+    background-color: #333;
+    border-color: #F5B925;
+}
+
+/* --- New: Status Bar (Roubles/Licenses) --- */
+#status-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: hsl(0, 0%, 15%);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px dashed #555;
+    font-weight: bold;
+}
+
+#roubles-display, #licenses-display {
+    color: #70E670; /* Green for money/assets */
+    margin-left: 5px;
+}
+
+/* --- New: Page Visibility (For JS Routing) --- */
+.hidden-page {
+    display: none;
+}
+
+.active-page {
+    display: block;
 }
