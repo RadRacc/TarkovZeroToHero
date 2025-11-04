@@ -327,23 +327,32 @@ h2 {
     margin: 0 0 15px 0;
     font-size: 0.9em;
 }
+
+/* MODIFIED: Use Flexbox on the list item to align icon and text */
 .rewards-list li {
-    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
     position: relative;
-}
-.rewards-list li::before {
-    content: "•";
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
+    color: #E0E0E0;
 }
 
-/* CURRENCY COLORS */
-.rewards-list li[data-item="roubles"]::before { color: #2ecc71; } 
-.rewards-list li[data-item="dollars"]::before { color: #5897FB; } 
-.rewards-list li[data-item="euros"]::before { color: #f39c12; } 
-.rewards-list li[data-item="item"]::before { color: #e74c3c; } 
+/* NEW: Style for the reward icon image */
+.reward-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+/* REMOVED: Old ::before styles that conflict with the new image icon */
+
+/* CURRENCY COLORS (Now only applies to text color if desired) */
+.rewards-list li[data-item="roubles"] { color: #2ecc71; } 
+.rewards-list li[data-item="dollars"] { color: #5897FB; } 
+.rewards-list li[data-item="euros"] { color: #f39c12; } 
+.rewards-list li[data-item="item"] { color: #e74c3c; } 
+
 
 /* COLLAPSED VIEW REWARD SUMMARY STYLES */
 .reward-summary {
