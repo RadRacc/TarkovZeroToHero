@@ -76,7 +76,7 @@ const TASKS_DATA = [
         title: "Antibiotics - Part 1",
         objectiveSummary: "Hand over 5 found in-raid Analgin painkillers.", 
         map: "Any",
-        requirements: ["First Aid Supplies", "I:Analgin painkillers:5"], 
+        requirements: ["First Aid Supplies"], 
         initial_equipment: [],
         walkthrough: "Analgin painkillers are common medical spawns. Look for them in medicine bags, ambulances, and inside medical supply crates, particularly on Shoreline and Interchange. Ensure they are Found In Raid (FIR). Once you have 5, hand them over to Therapist.", 
         dialogueInitial: "The situation is worsening. I'm seeing more infected wounds than ever before. To treat these, I need a reliable supply of basic pain management drugs, and my reserves are almost gone. I need you to find me **five packs of Analgin painkillers**, and they must be **Found in Raid**. I can't risk using anything that's been tampered with. This is a simple collection job, but a vital one for the rest of my patients.",
