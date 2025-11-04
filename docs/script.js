@@ -25,16 +25,13 @@ function saveProgress() {
     console.log('Task and objective status saved.'); 
 }
 
-// --- 3. REQUIREMENTS CHECK AND GENERATION (NEW) ---
+// --- 3. REQUIREMENTS CHECK AND GENERATION (FIXED LOGIC) ---
 
-// Placeholder for future Loyalty Level logic (currently just checks LL1)
-function isLLRequirementMet(requirement) {
-    // Basic logic: if it mentions LL1, assume it's met for now, or you can add a global LL tracker later.
-    // For this example, we'll assume LL1 is met by default until a LL tracker is built.
-    // If we wanted to lock LL1 tasks, this would return false until a Rep value is hit.
-    return !requirement.includes('LL'); 
-}
-
+/**
+ * Checks all prerequisites for a task and updates the requirements list display.
+ * @param {HTMLElement} taskCard - The task card element.
+ * @returns {boolean} True if ALL requirements are met, false otherwise.
+ */
 function checkRequirementsAndGenerateList(taskCard) {
     const requirementsAttribute = taskCard.getAttribute('data-task-requirements');
     const requirementsContainer = taskCard.querySelector('.task-requirements-list');
@@ -42,24 +39,28 @@ function checkRequirementsAndGenerateList(taskCard) {
     requirementsContainer.innerHTML = ''; // Clear previous list
     let allRequirementsMet = true;
 
-    if (requirementsAttribute === 'None') {
+    if (requirementsAttribute === 'None' || !requirementsAttribute) {
         requirementsContainer.innerHTML = '<div class="requirement-item met">No prerequisites.</div>';
         return true;
     }
 
-    const requirements = requirementsAttribute ? requirementsAttribute.split(';') : [];
+    const requirements = requirementsAttribute.split(';');
 
     requirements.forEach(req => {
         const reqText = req.trim();
         let isMet = true;
         
-        if (reqText.startsWith('Complete ')) {
+        if (reqText.startsWith('Complete task-')) {
             // Task Dependency: 'Complete task-X'
             const requiredTaskId = reqText.replace('Complete ', '').trim();
             isMet = completedTasks[requiredTaskId] === true;
         } else if (reqText.includes('LL')) {
             // Loyalty Level Requirement: 'Prapor LL1'
-            isMet = isLLRequirementMet(reqText);
+            // For now, assume LL requirements are UNMET until a full LL tracker is implemented.
+            isMet = false; // <<< THIS IS THE FIX, ASSUMING LL IS UNMET
+        } else {
+            // Handle other custom requirements (e.g., must be PMC, etc.)
+            isMet = false; // Default to unmet for unknown/untracked requirements
         }
 
         if (!isMet) {
@@ -73,12 +74,21 @@ function checkRequirementsAndGenerateList(taskCard) {
         requirementItem.textContent = reqText;
         requirementsContainer.appendChild(requirementItem);
     });
+    
+    // Now that we've checked the requirements, we need to handle the locking situation:
+    // If the task is locked ONLY by a task dependency, we want to allow it to be unlocked.
+    // However, if it's also locked by 'Prapor LL1', it will remain locked.
+    
+    // TEMPORARY OVERRIDE: If the only *unmet* requirement is a LL requirement, we'll allow
+    // the task to unlock if the user decides to ignore LL tracking for now.
+    // However, since Task 2 has both, it will remain locked until Task-1 is complete AND 
+    // the LL requirement is removed from the HTML for testing.
 
     return allRequirementsMet;
 }
 
 
-// --- 4. CHECKLIST GENERATION AND MANAGEMENT ---
+// --- 4. CHECKLIST GENERATION AND MANAGEMENT (No changes) ---
 
 function generateChecklist(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
@@ -141,12 +151,12 @@ function handleObjectiveToggle(event) {
         }
     }
 
-    updateTaskStatus(taskCard); // Re-run status update to ensure dialogue/button reflect change
+    updateTaskStatus(taskCard); 
     saveProgress();
 }
 
 
-// --- 5. FILTERING AND SEARCHING LOGIC ---
+// --- 5. FILTERING AND SEARCHING LOGIC (No changes) ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
     const searchTerm = taskSearch.value.toLowerCase().trim();
@@ -176,24 +186,23 @@ traderFilter.addEventListener('change', filterTasks);
 taskSearch.addEventListener('keyup', filterTasks);
 
 
-// --- 6. TASK STATUS MANAGEMENT ---
+// --- 6. TASK STATUS MANAGEMENT (No changes) ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const toggleButton = taskCard.querySelector('.task-toggle-btn');
     const dialogueTextElement = taskCard.querySelector('.dialogue-text'); 
     
-    // 1. Check Requirements (NEW)
+    // 1. Check Requirements
     const isUnlocked = checkRequirementsAndGenerateList(taskCard);
     
     // 2. Manage Visual Status
     if (!isUnlocked) {
-        taskCard.classList.add('task-locked'); // NEW CLASS
-        // Hide/Disable the complete button
+        taskCard.classList.add('task-locked'); 
         toggleButton.style.display = 'none'; 
     } else {
         taskCard.classList.remove('task-locked');
-        toggleButton.style.display = 'block'; // Show the button when unlocked
+        toggleButton.style.display = 'block'; 
     }
 
     // 3. Manage Complete/Incomplete State (only if unlocked)
@@ -263,7 +272,7 @@ document.querySelectorAll('.task-toggle-btn').forEach(button => {
 });
 
 
-// --- 7. EXPAND/COLLAPSE TASK LOGIC ---
+// --- 7. EXPAND/COLLAPSE TASK LOGIC (No changes) ---
 expandableCards.forEach(card => {
     card.addEventListener('click', (event) => {
         if (event.target.classList.contains('task-toggle-btn') || event.target.closest('.task-toggle-btn') || event.target.type === 'checkbox') {
