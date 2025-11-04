@@ -327,89 +327,98 @@ function handleLLToggle(event) {
 
 // --- 4. REQUIREMENTS CHECK AND GENERATION ---
 
-/**
- * Checks all prerequisites for a task and updates the requirements list display.
- * @param {HTMLElement} taskCard - The task card element.
- * @returns {boolean} True if ALL task/LL requirements are met, false otherwise.
- */
+// --- 6. CORE REQUIREMENT CHECK (Modified to support Item Requirements) ---
+
+// Function to check and update requirement status
 function checkRequirementsAndGenerateList(taskCard) {
-    const requirementsAttribute = taskCard.getAttribute('data-task-requirements');
-    const requirementsContainer = taskCard.querySelector('.task-requirements-list');
+    const taskId = taskCard.getAttribute('data-task-id');
+    const taskData = TASKS_DATA.find(t => t.id === taskId);
+    if (!taskData || !taskData.requirements) return true; // Default to unlocked
+
+    let isUnlocked = true;
+    let requiredListHTML = '';
+    let llList = [];
+    let taskList = [];
+    let itemRequirementsCount = 0; // New counter for items
+
+    taskData.requirements.forEach(req => {
+        let requirementMet = false;
+        let requirementText = req;
+
+        // 1. LOYALTY LEVEL CHECK (LLx)
+        if (req.startsWith('LL')) {
+            const trader = taskData.trader;
+            const level = parseInt(req.substring(2));
+            requirementText = `${trader} LL${level}`;
+            llList.push(requirementText);
+            
+            // Check if the LL is met
+            if (traderLL[trader] && traderLL[trader][level]) {
+                requirementMet = true;
+            }
+
+        // 2. NEW: ITEM REQUIREMENT CHECK (New format: I:Item Name:Count)
+        } else if (req.startsWith('I:')) {
+            const parts = req.split(':');
+            const itemName = parts[1];
+            const itemCount = parts[2];
+            
+            itemRequirementsCount++; // Count the item for the summary
+            requirementText = `${itemCount}x ${itemName} (Required)`;
+            
+            // CRITICAL LOGIC: Since we don't have separate item tracking UI,
+            // any item requirement in the 'requirements' array will keep the task locked
+            // until a future update is added to track its completion.
+            requirementMet = false; 
+
+        // 3. TASK DEPENDENCY CHECK (Task ID)
+        } else if (req === "N/A") {
+            requirementMet = true; // N/A is always met
+
+        } else if (req) {
+            requirementText = req;
+            taskList.push(req);
+            
+            // Check if the required task is met
+            if (completedTasks[req] === true) {
+                requirementMet = true;
+            }
+        }
+        
+        // Update overall unlocked status
+        if (!requirementMet) {
+            isUnlocked = false;
+            requiredListHTML += `<li class="unmet-req">${requirementText}</li>`;
+        } else {
+            requiredListHTML += `<li class="met-req">${requirementText}</li>`;
+        }
+    });
+
+    // Update the detailed list
+    const requirementsListElement = taskCard.querySelector('.requirements-list');
+    if (requirementsListElement) {
+        requirementsListElement.innerHTML = requiredListHTML || '<li>None</li>';
+    }
     
-    if (!requirementsContainer) return true; 
+    // Update the collapsed summary (the text the user asked about)
+    const summaryElement = taskCard.querySelector('.requirement-summary-text');
+    if (summaryElement) {
+        const llSummary = llList.length > 0 ? llList.join(', ') : 'N/A';
+        const taskSummary = taskList.length > 0 ? taskList.length : 'None';
+        const itemSummary = itemRequirementsCount > 0 ? itemRequirementsCount : 'None';
 
-    requirementsContainer.innerHTML = ''; 
-    let allUnlockRequirementsMet = true; // Only checks LL and Task dependencies
-    const traderName = taskCard.getAttribute('data-trader');
-
-    if (requirementsAttribute === 'N/A' || requirementsAttribute === 'None' || !requirementsAttribute) {
-        requirementsContainer.innerHTML = '<div class="requirement-item met">No prerequisites.</div>';
-        return true;
+        summaryElement.textContent = `LL: ${llSummary} | Task Required: ${taskSummary} | Item Required: ${itemSummary} | Map: ${taskData.map}`;
     }
 
-    const requirements = requirementsAttribute.split(';');
+    // Apply locked class
+    if (isUnlocked) {
+        taskCard.classList.remove('task-locked');
+    } else {
+        taskCard.classList.add('task-locked');
+    }
 
-    requirements.forEach(req => {
-        const reqText = req.trim();
-        let isMet = true;
-        let displayReqText = reqText;
-        let statusClass = 'met';
-        
-        // Item requirement check (e.g., "1 Toolset") - these do NOT lock the task
-        const isItemRequirement = /^\d+ .*/.test(reqText); 
-        
-        if (isItemRequirement) {
-            // Item Handover Requirement
-            displayReqText = `Hand over: ${reqText}`;
-            statusClass = 'item-handover';
-            isMet = true; 
-
-        } else if (reqText.startsWith('LL')) {
-            // Loyalty Level Requirement: 'LL1', 'LL2', etc.
-            const requiredLL = reqText.replace('LL', '');
-            isMet = traderLL[traderName] && traderLL[traderName][requiredLL] === true;
-            displayReqText = `${traderName} LL${requiredLL}`;
-
-            if (!isMet) {
-                allUnlockRequirementsMet = false;
-                statusClass = 'unmet';
-            } else {
-                statusClass = 'met';
-            }
-
-        } else {
-            // Task Dependency: Uses the task title/ID
-            const requiredTask = TASKS_DATA.find(t => t.id === reqText); 
-            if (requiredTask) {
-                isMet = completedTasks[requiredTask.id] === true;
-                displayReqText = `Complete: ${requiredTask.title}`;
-                
-                if (!isMet) {
-                    allUnlockRequirementsMet = false;
-                    statusClass = 'unmet';
-                } else {
-                    statusClass = 'met';
-                }
-            } else if (reqText !== 'None' && reqText.length > 0 && reqText !== 'N/A') {
-                 // Unknown/general text, display as unmet
-                displayReqText = reqText;
-                statusClass = 'unmet';
-                allUnlockRequirementsMet = false;
-            }
-        }
-
-        const requirementItem = document.createElement('div');
-        requirementItem.classList.add('requirement-item', statusClass);
-        if (isItemRequirement) {
-             requirementItem.classList.add('item-handover');
-        }
-        requirementItem.textContent = displayReqText;
-        requirementsContainer.appendChild(requirementItem);
-    });
-    
-    return allUnlockRequirementsMet;
+    return isUnlocked;
 }
-
 
 // --- 5. CHECKLIST GENERATION AND MANAGEMENT ---
 function generateChecklist(taskCard) {
