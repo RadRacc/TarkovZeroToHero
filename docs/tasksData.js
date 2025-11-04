@@ -72,7 +72,7 @@ const TASKS_DATA = [
         title: "Cleanup Crew",
         objectiveSummary: "Eliminate 5 PMCs with an MP5.",
         map: "Any",
-        requirements: ["Emergency Repairs"],
+        requirements: ["Emergency Repairs", "5 Dogtags"],
         initial_equipment: [
             { name: "2 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
         ],
