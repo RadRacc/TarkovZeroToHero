@@ -194,31 +194,31 @@ h2 {
 /* TRADER ICON MAPPING */
 /* Paths assume your style.css is in the root and images are in root/docs/images/ */
 [data-trader-id="Prapor"] { 
-    background-image: url('docs/images/Prapor_icon.png');
+    background-image: url('docs/images/prapor-portrait.png');
     background-color: #c0392b; 
 }
 [data-trader-id="Skier"] { 
-    background-image: url('docs/images/Skier_icon.png');
+    background-image: url('docs/images/skier-portrait.png');
     background-color: #2980b9; 
 }
 [data-trader-id="Therapist"] { 
-    background-image: url('docs/images/Therapist_icon.png');
+    background-image: url('docs/images/therapist-portrait.png');
     background-color: #27ae60; 
 }
 [data-trader-id="Peacekeeper"] { 
-    background-image: url('docs/images/Peacekeeper_icon.png');
+    background-image: url('docs/images/peacekeeper-portrait.png');
     background-color: #f1c40f; 
 }
 [data-trader-id="Mechanic"] { 
-    background-image: url('docs/images/Mechanic_icon.png');
+    background-image: url('docs/images/mechanic-portrait.png');
     background-color: #7f8c8d; 
 }
 [data-trader-id="Ragman"] { 
-    background-image: url('docs/images/Ragman_icon.png');
+    background-image: url('docs/images/ragman-portrait.png');
     background-color: #9b59b6; 
 }
 [data-trader-id="Jaeger"] { 
-    background-image: url('docs/images/Jaeger_icon.png');
+    background-image: url('docs/images/jaeger-portrait.png');
     background-color: #d35400; 
 }
 
