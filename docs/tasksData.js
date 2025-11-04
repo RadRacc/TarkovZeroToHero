@@ -24,21 +24,21 @@ const TASKS_DATA = [
         id: "First Aid Supplies",
         trader: "Therapist",
         title: "First Aid Supplies",
-        objectiveSummary: "Deliver 2 Salewa first aid kit to Emercom Checkpoint on Ground Zero.",
+        objectiveSummary: "Deliver 2 Salewa first aid kits to Emercom Checkpoint on Ground Zero.",
         map: "Ground Zero",
         requirements: ["Target Practice"],
         initial_equipment: [ 
-            { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
+            { name: "2 Salewa first aid kits", icon: "icon-sfak.png" }
         ],
         walkthrough: "The Salewas are given to you at the start. To complete the task, you only need to survive the raid after delivering them to Emercom Checkpoint on Ground Zero.",
         dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
         dialogueComplete: "The Salewas arrived just in time. Excellent work. Your reliability is noted, and I can assure you that this small favor will be remembered. This is your payment, use it wisely.",
         objectives: [
-            "Deliver 2 Salewa first aid kit to Emercom Checkpoint (Ground Zero)"
+            "Deliver 2 Salewa first aid kits to Emercom Checkpoint (Ground Zero)"
         ],
         rewards: [
             { type: "roubles", amount: 4000 },
-            { type: "item", name: "2 AI-2 medkit", icon: "icon-ai2.png" },
+            { type: "item", name: "2 AI-2 medkits", icon: "icon-ai2.png" },
             { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
             { type: "item", name: "1 Esmarch tourniquet", icon: "icon-esmarch.png" }
         ]
@@ -70,20 +70,43 @@ const TASKS_DATA = [
         id: "Antibiotics - Part 1",
         trader: "Therapist",
         title: "Antibiotics - Part 1",
-        objectiveSummary: "Hand over 5 Found in Raid Analgin painkillers.", 
+        objectiveSummary: "Hand over 5 found in-raid Analgin painkiller.", 
         map: "Any",
-        requirements: ["First Aid Supplies"], 
+        requirements: ["First Aid Supplies", "5 Analgin painkiller"], 
         initial_equipment: [],
         walkthrough: "Analgin painkillers are common medical spawns. Look for them in medicine bags, ambulances, and inside medical supply crates, particularly on Shoreline and Interchange. Ensure they are Found In Raid (FIR). Once you have 5, hand them over to Therapist.", 
         dialogueInitial: "The situation is worsening. I'm seeing more infected wounds than ever before. To treat these, I need a reliable supply of basic pain management drugs, and my reserves are almost gone. I need you to find me **five packs of Analgin painkillers**, and they must be **Found in Raid**. I can't risk using anything that's been tampered with. This is a simple collection job, but a vital one for the rest of my patients.",
         dialogueComplete: "Excellent, you procured them quickly. Analgin is a start, it helps ease the worst of the pain while we prepare for more complex treatments. I appreciate your discretion and promptness. Here, take these medical supplies; you'll likely need them more than I do right now. Be ready for the next phase of this operation.",
         objectives: [
-            "Hand over 5 found in raid Analgin painkillers"
+            "Hand over 5 found in-raid Analgin painkiller"
         ],
         rewards: [
             { type: "roubles", amount: 5000 },
-            { type: "item", name: "2 Bottle of hydrogen peroxide", icon: "icon-hydrogen-peroxide.png" },
+            { type: "item", name: "2 Bottles of hydrogen peroxide", icon: "icon-hydrogen-peroxide.png" },
             { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
+        ]
+    },
+    {
+        id: "Important Business",
+        trader: "Peacekeeper",
+        title: "Important Business",
+        objectiveSummary: "Plant 9 F-1 hand grenades inside the 3 story dorms building on Customs.",
+        map: "Customs",
+        requirements: ["Emergency Repairs"],
+        initial_equipment: [
+            { name: "3 F-1 hand grenade", icon: "icon-f1-grenade.png" }
+        ],
+        walkthrough: "",
+        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
+        dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
+        objectives: [
+            "Plant 3 F-1 hand grenades on the first floor of the 3 story dorms",
+            "Plant 3 F-1 hand grenades on the second floor of the 3 story dorms",
+            "Plant 3 F-1 hand grenades on the third floor of the 3 story dorms"
+        ],
+        rewards: [
+            { type: "dollars", amount: 150 },
+            { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" }
         ]
     },
     {
@@ -103,7 +126,7 @@ const TASKS_DATA = [
             "Eliminate 5 PMCs with an MP5"
         ],
         rewards: [
-            { type: "dollars", amount: 120 },
+            { type: "dollars", amount: 100 },
             { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
         ]
     }
