@@ -4,7 +4,234 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EFT Task Tracker Concept</title>
-    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Base Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c2f33;
+            color: #ffffff;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #36393f;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #7289da;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #4f545c;
+            padding-bottom: 10px;
+        }
+
+        /* Trader Icon Styling */
+        .trader-icon-small, .trader-image-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4f545c;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #7289da;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .trader-image-box {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #7289da;
+            margin-right: 20px;
+        }
+
+        /* Unique Trader Colors/Images (Use simple color to represent each trader) */
+        [data-trader-id="Prapor"] { background-color: #e74c3c; border-color: #c0392b; }
+        [data-trader-id="Skier"] { background-color: #f1c40f; border-color: #f39c12; }
+        [data-trader-id="Therapist"] { background-color: #2ecc71; border-color: #27ae60; }
+        [data-trader-id="Peacekeeper"] { background-color: #3498db; border-color: #2980b9; }
+        [data-trader-id="Mechanic"] { background-color: #95a5a6; border-color: #7f8c8d; }
+        [data-trader-id="Ragman"] { background-color: #9b59b6; border-color: #8e44ad; }
+        [data-trader-id="Jaeger"] { background-color: #1abc9c; border-color: #16a085; }
+
+
+        /* Task Card Styling */
+        .task-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .task-card {
+            background-color: #40444b;
+            border-radius: 6px;
+            padding: 15px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: 1px solid #4f545c;
+            position: relative;
+        }
+
+        .task-card.complete {
+            background-color: #4e5d94; /* Darker blue for completed */
+            opacity: 0.7;
+            border-left: 5px solid #2ecc71;
+        }
+
+        .collapsed-view {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .collapsed-view > div {
+            flex-grow: 1;
+        }
+
+        .trader-name {
+            font-size: 0.8em;
+            color: #b9bbbe;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .task-title {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        .task-objective {
+            margin: 3px 0 0;
+            font-size: 0.9em;
+            color: #b9bbbe;
+        }
+
+        /* Expanded View Styling */
+        .expanded-view {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #4f545c;
+            display: flex;
+        }
+
+        .expanded-view > div {
+            flex-grow: 1;
+        }
+        
+        .dialogue-box {
+            background-color: #32353b;
+            border-left: 3px solid #7289da;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .dialogue-box h4 {
+            color: #7289da;
+            margin: 0 0 5px;
+        }
+
+        .dialogue-box p {
+            font-style: italic;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        h4.requirements-heading, h4.objectives-heading, h4.rewards-heading {
+            color: #b9bbbe;
+            margin: 15px 0 8px;
+            font-size: 1em;
+            text-transform: uppercase;
+        }
+
+        .task-requirements-list {
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .objective-checklist {
+            padding: 0;
+            margin: 0;
+        }
+
+        .objective-checklist label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .objective-checklist input[type="checkbox"]:checked + span {
+            text-decoration: line-through;
+            color: #99aab5;
+        }
+        
+        .rewards-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+        }
+        
+        .rewards-list li {
+            margin-bottom: 3px;
+            color: #2ecc71;
+        }
+        
+        .rewards-list li::before {
+            content: '✓';
+            color: #7289da;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .complete-btn {
+            background-color: #43b581;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        .complete-btn:hover {
+            background-color: #309069;
+        }
+
+        .complete-btn.disabled {
+            background-color: #4f545c;
+            cursor: not-allowed;
+        }
+
+        /* Utility */
+        .hidden-detail {
+            display: none;
+        }
+        .text-error {
+            color: #f04747;
+            font-weight: bold;
+        }
+        .text-warning {
+            color: #faa61a;
+        }
+        .collapsed-requirements {
+            font-size: 0.8em;
+            color: #b9bbbe;
+            margin: 0;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -245,7 +472,7 @@
             </div>
 
             <div class="task-card expandable" data-task-id="task-4" data-trader="Therapist"
-                data-dialogue-initial="I'm trying to set up a secure line of communication. It's vital that my supply lines remain confidential. I need you to place my secure radio transceiver at the location on **Shoreline**. It's a high-traffic area, so be quick and discreet. This is for the well-being of all my clients."
+                data-dialogue-initial="I'm trying to set up a secure line of communication. It's vital that my supply lines remain confidential. I need you to place my secure radio transceiver at the location on Shoreline. It's a high-traffic area, so be quick and discreet. This is for the well-being of all my clients."
                 data-dialogue-complete="The signal is clear. Thank you. This new relay will greatly improve my ability to coordinate emergency supply drops. You've earned my trust. Your future health will be... more affordable."
                 data-objective-list="Place secure radio transceiver on Shoreline;Survive and extract"
                 data-task-requirements="LL1;Complete task-1">
@@ -513,7 +740,290 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tasks = document.querySelectorAll('.task-card');
+
+            // --- Game State (Initial Data) ---
+            let gameState = {
+                completedTasks: new Set(['task-0']), // Start with the global task complete
+                traderLevels: {
+                    Prapor: 1,
+                    Skier: 1,
+                    Therapist: 1,
+                    Peacekeeper: 1,
+                    Mechanic: 1,
+                    Ragman: 1,
+                    Jaeger: 1
+                }
+            };
+
+            // Helper function to check if a task is available
+            const isTaskAvailable = (taskCard) => {
+                const requiredLL = parseInt(taskCard.dataset.taskRequirements.match(/LL(\d+)/)?.[1] || 1);
+                const traderName = taskCard.dataset.trader;
+                const requiredTaskID = taskCard.dataset.taskRequirements.match(/Complete task-(\d+)/)?.[0];
+                
+                // 1. Check if the required predecessor task is complete
+                if (requiredTaskID && !gameState.completedTasks.has(requiredTaskID.replace('Complete ', ''))) {
+                    return false;
+                }
+                
+                // 2. Check if the trader's level is high enough
+                if (gameState.traderLevels[traderName] < requiredLL) {
+                    return false;
+                }
+                
+                // 3. Task must not already be complete
+                if (gameState.completedTasks.has(taskCard.dataset.taskId)) {
+                    return false;
+                }
+
+                // If task-0 is not complete, only task-0 is available
+                if (!gameState.completedTasks.has('task-0') && taskCard.dataset.taskId !== 'task-0') {
+                    return false;
+                }
+
+                return true;
+            };
+
+            // Helper function to update the visible state of a task card
+            const updateTaskCardState = (taskCard) => {
+                const taskId = taskCard.dataset.taskId;
+                const isComplete = gameState.completedTasks.has(taskId);
+                const isAvailable = isTaskAvailable(taskCard);
+
+                // Update 'complete' state
+                if (isComplete) {
+                    taskCard.classList.add('complete');
+                    taskCard.querySelector('.complete-btn').textContent = 'Completed';
+                    taskCard.querySelector('.complete-btn').classList.add('disabled');
+                    taskCard.querySelector('.collapsed-requirements').textContent = 'STATUS: Complete';
+                    taskCard.style.order = 1000; // Push to bottom
+                    taskCard.setAttribute('draggable', 'false');
+
+                } else {
+                    taskCard.classList.remove('complete');
+                    taskCard.querySelector('.complete-btn').textContent = 'Mark as Complete';
+                    taskCard.querySelector('.complete-btn').classList.remove('disabled');
+                    taskCard.style.order = 0; // Keep at top
+
+                    // Update availability state
+                    const requirementsList = taskCard.querySelector('.task-requirements-list');
+                    requirementsList.innerHTML = '';
+                    let requirementsMet = true;
+
+                    // Display LL Requirement
+                    const requiredLLMatch = taskCard.dataset.taskRequirements.match(/LL(\d+)/);
+                    if (requiredLLMatch) {
+                        const requiredLL = parseInt(requiredLLMatch[1]);
+                        const traderName = taskCard.dataset.trader;
+                        const currentLL = gameState.traderLevels[traderName];
+                        if (currentLL < requiredLL) {
+                            requirementsList.innerHTML += `<p class="text-error">Required: ${traderName} Loyalty Level ${requiredLL}</p>`;
+                            requirementsMet = false;
+                        } else {
+                            requirementsList.innerHTML += `<p>Required: ${traderName} Loyalty Level ${requiredLL} (Met)</p>`;
+                        }
+                    }
+
+                    // Display Predecessor Task Requirement
+                    const requiredTaskMatch = taskCard.dataset.taskRequirements.match(/Complete (task-\d+)/);
+                    if (requiredTaskMatch) {
+                        const requiredTaskID = requiredTaskMatch[1];
+                        const requiredTaskCard = document.querySelector(`[data-task-id="${requiredTaskID}"]`);
+                        const requiredTaskTitle = requiredTaskCard ? requiredTaskCard.querySelector('.task-title').textContent : 'Previous Task';
+                        
+                        if (!gameState.completedTasks.has(requiredTaskID)) {
+                            requirementsList.innerHTML += `<p class="text-error">Required: Complete "${requiredTaskTitle}"</p>`;
+                            requirementsMet = false;
+                        } else {
+                            requirementsList.innerHTML += `<p>Required: Complete "${requiredTaskTitle}" (Met)</p>`;
+                        }
+                    }
+
+                    // Disable/Enable the button based on requirements
+                    const completeBtn = taskCard.querySelector('.complete-btn');
+                    if (!isAvailable || !requirementsMet) {
+                        completeBtn.classList.add('disabled');
+                    } else {
+                        completeBtn.classList.remove('disabled');
+                    }
+                    
+                    // Update the collapsed view requirements line
+                    const reqText = taskCard.dataset.taskRequirements.replace(/Complete task-(\d+)/, (match, id) => {
+                        const prevTaskCard = document.querySelector(`[data-task-id="task-${id}"]`);
+                        return `Task Required: ${prevTaskCard ? prevTaskCard.querySelector('.task-title').textContent : 'Previous Task'}`;
+                    }).replace('LL', 'Loyalty Level ');
+
+                    taskCard.querySelector('.collapsed-requirements').textContent = reqText;
+                }
+
+                // Update the dialogue box
+                const dialogueText = taskCard.querySelector('.dialogue-text');
+                const initialDialogue = taskCard.dataset.dialogueInitial;
+                const completeDialogue = taskCard.dataset.dialogueComplete;
+                dialogueText.textContent = isComplete ? completeDialogue : initialDialogue;
+
+                // Create Checkboxes on first load or refresh
+                if (taskCard.querySelector('.objective-checklist').children.length === 0) {
+                    createCheckboxes(taskCard);
+                }
+            };
+
+            // Function to create objectives/checkboxes
+            const createCheckboxes = (taskCard) => {
+                const objectiveListElement = taskCard.querySelector('.objective-checklist');
+                objectiveListElement.innerHTML = ''; // Clear previous content
+
+                const objectiveItems = taskCard.dataset.objectiveList.split(';');
+
+                objectiveItems.forEach((objective, index) => {
+                    const id = `${taskCard.dataset.taskId}-obj-${index}`;
+                    const label = document.createElement('label');
+                    label.setAttribute('for', id);
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = id;
+                    checkbox.name = id;
+                    checkbox.checked = gameState[id] || false; // Load state from gameState (if it existed)
+
+                    const span = document.createElement('span');
+                    span.textContent = objective;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(span);
+                    objectiveListElement.appendChild(label);
+                    
+                    // Save state on change
+                    checkbox.addEventListener('change', (e) => {
+                        gameState[id] = e.target.checked;
+                        saveGameState();
+                    });
+                });
+            };
+
+            // Event listener for expanding/collapsing
+            tasks.forEach(taskCard => {
+                const collapsedView = taskCard.querySelector('.collapsed-view');
+                const expandedView = taskCard.querySelector('.expanded-view');
+                
+                collapsedView.addEventListener('click', () => {
+                    // Check if it's the global task-0, if so, ignore the click
+                    if (taskCard.dataset.taskId === 'task-0') {
+                        return; 
+                    }
+                    expandedView.classList.toggle('hidden-detail');
+                });
+
+                // Initial load: create checkboxes and update state
+                updateTaskCardState(taskCard);
+
+                // Event listener for marking complete
+                taskCard.querySelector('.complete-btn').addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent card from collapsing
+
+                    const taskId = taskCard.dataset.taskId;
+                    const completeBtn = e.target;
+                    
+                    if (completeBtn.classList.contains('disabled')) return;
+
+                    // Check all objectives are checked (except for task-0 which is special)
+                    if (taskId !== 'task-0') {
+                        const objectives = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
+                        let allChecked = true;
+                        objectives.forEach(checkbox => {
+                            if (!checkbox.checked) {
+                                allChecked = false;
+                            }
+                        });
+                        
+                        if (!allChecked) {
+                            alert('All objectives must be checked to complete the task!');
+                            return;
+                        }
+                    }
+
+                    // --- Complete Task Logic ---
+                    gameState.completedTasks.add(taskId);
+                    
+                    // Reward / Reputation gain logic (simplified)
+                    const trader = taskCard.dataset.trader;
+                    const repChangeMatch = taskCard.querySelector(`[data-item="rep-${trader.toLowerCase()}"]`)?.textContent.match(/\+(\d+\.\d+)/);
+                    
+                    if (repChangeMatch) {
+                        // In a real game, this would update the reputation number and trigger the LL increase.
+                        // For this concept, we'll manually handle a simple LL increase after a few tasks.
+                        if (taskId === 'task-1' || taskId === 'task-3' || taskId === 'task-4') {
+                             // This is a placeholder for actual LL logic
+                             // Example: If Prapor is LL1 and this task gives him rep, he should eventually hit LL2
+                        }
+                    }
+                    
+                    // Manually grant LL2 to a trader for a complete example after their first task
+                    if (taskId === 'task-1') { gameState.traderLevels.Prapor = 2; }
+                    if (taskId === 'task-3') { gameState.traderLevels.Skier = 2; }
+                    if (taskId === 'task-2') { gameState.traderLevels.Mechanic = 2; }
+                    
+                    // Unlock all LL1 tasks after task-0 (Initial Setup)
+                    if (taskId === 'task-0') {
+                        // Mark all starting LL1 tasks as available
+                        tasks.forEach(t => {
+                            if (t.dataset.taskRequirements.includes('LL1') && t.dataset.taskRequirements.split(';').length === 1 && t.dataset.taskId !== 'task-0') {
+                                // This block is mostly for visual sorting on refresh
+                            }
+                        });
+                    }
+
+                    // Clear objective states for completed task
+                    taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]').forEach(checkbox => {
+                        delete gameState[checkbox.id];
+                    });
+
+                    // Update all tasks now that state has changed
+                    saveGameState();
+                    tasks.forEach(t => updateTaskCardState(t));
+
+                    // Collapse the card after completion
+                    expandedView.classList.add('hidden-detail');
+                });
+            });
+
+            // Function to save game state to local storage
+            const saveGameState = () => {
+                localStorage.setItem('eftTaskTrackerState', JSON.stringify({
+                    completedTasks: Array.from(gameState.completedTasks),
+                    traderLevels: gameState.traderLevels
+                }));
+            };
+
+            // Function to load game state from local storage
+            const loadGameState = () => {
+                const savedState = localStorage.getItem('eftTaskTrackerState');
+                if (savedState) {
+                    const loadedState = JSON.parse(savedState);
+                    gameState.completedTasks = new Set(loadedState.completedTasks);
+                    gameState.traderLevels = loadedState.traderLevels;
+                }
+            };
+
+            // Initial load and update of all tasks
+            loadGameState();
+            tasks.forEach(t => updateTaskCardState(t));
+            
+            // Re-sort the task list (complete tasks at bottom)
+            const taskList = document.getElementById('task-list');
+            Array.from(tasks)
+                .sort((a, b) => {
+                    const aComplete = gameState.completedTasks.has(a.dataset.taskId);
+                    const bComplete = gameState.completedTasks.has(b.dataset.taskId);
+                    if (aComplete === bComplete) return 0;
+                    return aComplete ? 1 : -1;
+                })
+                .forEach(taskCard => taskList.appendChild(taskCard));
+        });
+    </script>
 
 </body>
 </html>
