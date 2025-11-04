@@ -26,7 +26,7 @@ const TASKS_DATA = [
         title: "First Aid Supplies",
         objectiveSummary: "Deliver 2 Salewa first aid kit to Emercom Checkpoint on Ground Zero.",
         map: "Ground Zero",
-        requirements: ["Target Practice"],
+        requirements: ["Target Practice", "2 Salewa first aid kit"],
         initial_equipment: [ 
             { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
         ],
