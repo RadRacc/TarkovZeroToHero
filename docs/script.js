@@ -1,78 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFT Zero to Hero: Task Tracker</title>
-    
-    <link rel="stylesheet" href="style.css"> 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
+// --- 1. INITIALIZATION AND DATA LOADING ---
+const ROUBLES_KEY = 'eftZthRoubles';
+const LICENSES_KEY = 'eftZthLicenses';
 
-    <header id="landing-bar">
-        <h1 class="header-title">EFT Zero to Hero</h1>
-        <nav>
-            <button class="nav-btn" data-page="tasks">Tasks</button>
-            <button class="nav-btn" data-page="hideout">Hideout</button>
-            <button class="nav-btn" data-page="stats">Stat Tracking</button>
-            <button class="nav-btn" data-page="store">Store/Taxes</button>
-        </nav>
-    </header>
+// Default starting values
+let roubles = 0;
+let licenses = 0;
 
-    <div class="container">
-        <div id="status-bar">
-            <p>Roubles: <span id="roubles-display">0</span></p>
-            <p>Licenses: <span id="licenses-display">0</span></p>
-            <button id="save-btn" class="complete-btn">Save Progress</button>
-        </div>
-        
-        <section id="tasks" class="page-content active-page">
-            <h2>🎯 Phase 1: Prapor's Initial Orders</h2>
+// DOM Elements
+const roublesDisplay = document.getElementById('roubles-display');
+const licensesDisplay = document.getElementById('licenses-display');
+const navButtons = document.querySelectorAll('.nav-btn');
+const pageContents = document.querySelectorAll('.page-content');
+const completeButtons = document.querySelectorAll('.complete-btn');
+const saveButton = document.getElementById('save-btn');
 
-            <div class="task-card task-completed" data-task-id="task-1">
-                <span class="trader-name">Prapor</span>
-                <h3 class="task-title">Target Practice (Completed)</h3>
-                <p class="task-description">Eliminate 10 Scavs and Sell 5 Scav weapons to Prapor.</p>
-                <h4>Rewards:</h4>
-                <ul class="rewards-list">
-                    <li>5,000 Roubles</li>
-                    <li>2 Bolts</li>
-                </ul>
-            </div>
-            
-            <div class="task-card" data-task-id="task-2">
-                <span class="trader-name">Prapor</span>
-                <h3 class="task-title">Emergency Repairs (Active)</h3>
-                <p class="task-description">Repair 2 generators on Factory located at med tent.</p>
-                <h4>Rewards:</h4>
-                <ul class="rewards-list">
-                    <li>6,000 Roubles</li>
-                    <li>1 6B47 Helmet</li>
-                </ul>
-                
-                <button class="complete-btn" data-reward-roubles="6000" data-reward-licenses="0">Mark as Complete</button>
-            </div>
-        </section>
+function loadProgress() {
+    // Load from browser's local storage or use default 0
+    roubles = parseInt(localStorage.getItem(ROUBLES_KEY) || '0');
+    licenses = parseInt(localStorage.getItem(LICENSES_KEY) || '0');
+    updateDisplay();
+}
 
-        <section id="hideout" class="page-content hidden-page">
-            <h2>🛠️ Hideout Progression</h2>
-            <p>Track your Hideout module upgrades here. (Coming Soon!)</p>
-        </section>
+function updateDisplay() {
+    roublesDisplay.textContent = roubles.toLocaleString(); // Format with commas
+    licensesDisplay.textContent = licenses.toLocaleString();
+}
 
-        <section id="stats" class="page-content hidden-page">
-            <h2>📈 Overall Stats</h2>
-            <p>Monitor your overall progress, survival rate, and other non-currency metrics. (Coming Soon!)</p>
-        </section>
+// --- 2. NAVIGATION LOGIC ---
+navButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const targetPageId = button.getAttribute('data-page');
 
-        <section id="store" class="page-content hidden-page">
-            <h2>💰 Store & Taxes</h2>
-            <p>Record your purchases, calculate your 'Flea Market Tax' (in-game or custom), and track inventory value. (Coming Soon!)</p>
-            <p>Total Taxes Paid: <span id="taxes-paid-display">0</span> Roubles</p>
-        </section>
+        // Hide all pages
+        pageContents.forEach(page => {
+            page.classList.remove('active-page');
+            page.classList.add('hidden-page');
+        });
 
-    </div>
+        // Show the selected page
+        const targetPage = document.getElementById(targetPageId);
+        if (targetPage) {
+            targetPage.classList.add('active-page');
+            targetPage.classList.remove('hidden-page');
+        }
+    });
+});
 
-    <script src="script.js"></script>
-</body>
-</html>
+// --- 3. TASK COMPLETION & CURRENCY TRACKING ---
+completeButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+        const rblReward = parseInt(button.getAttribute('data-reward-roubles') || '0');
+        const licReward = parseInt(button.getAttribute('data-reward-licenses') || '0');
+
+        // 1. Grant Rewards
+        roubles += rblReward;
+        licenses += licReward;
+
+        // 2. Mark task as completed visually
+        const taskCard = event.target.closest('.task-card');
+        if (taskCard) {
+            taskCard.classList.add('task-completed');
+            // Optional: Remove button so it can't be clicked again
+            event.target.remove(); 
+        }
+
+        // 3. Update the display and save
+        updateDisplay();
+        saveProgress();
+    });
+});
+
+// --- 4. SAVING SYSTEM ---
+function saveProgress() {
+    localStorage.setItem(ROUBLES_KEY, roubles);
+    localStorage.setItem(LICENSES_KEY, licenses);
+    alert('Progress saved to your browser!'); // Simple confirmation
+}
+
+saveButton.addEventListener('click', saveProgress);
+
+// Load progress when the page first loads
+loadProgress();
