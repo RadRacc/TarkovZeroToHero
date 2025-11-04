@@ -67,9 +67,18 @@ body {
     align-items: center;
 }
 
+/* Fix for Checkboxes looking like text boxes */
 .ll-checkbox-group input[type="checkbox"] {
     margin-right: 5px;
     accent-color: #F5B925;
+    /* Explicitly forcing checkbox appearance and size */
+    appearance: checkbox; 
+    -webkit-appearance: checkbox; 
+    -moz-appearance: checkbox;
+    width: 1em; 
+    height: 1em;
+    background: none; /* Remove text input background */
+    border: 1px solid #ccc; /* Standard checkbox border */
 }
 
 
