@@ -536,10 +536,25 @@ function updateTaskStatus(taskCard) {
     // 1. Check Requirements
     const isUnlocked = checkRequirementsAndGenerateList(taskCard);
     
-    // 2. Manage Visual Status
+    // 2. Manage Visual Status and CRITICAL RESET LOGIC
     if (!isUnlocked) {
         taskCard.classList.add('task-locked'); 
         toggleButton.style.display = 'none'; 
+        
+        // --- NEW LOGIC: RESET PROGRESS IF LOCKED ---
+        if (completedTasks[taskId] === true) {
+            completedTasks[taskId] = false; // Un-complete the main task
+        }
+        // Clear all objectives
+        if (completedObjectives[taskId]) {
+            for (const key in completedObjectives[taskId]) {
+                completedObjectives[taskId][key] = false;
+            }
+        }
+        // Save the reset to local storage
+        saveProgress();
+        // ------------------------------------------
+
     } else {
         taskCard.classList.remove('task-locked');
         toggleButton.style.display = 'inline-block'; // Set to inline-block for button group
@@ -560,7 +575,7 @@ function updateTaskStatus(taskCard) {
         dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-initial'); 
     }
     
-    // 4. Manage Quick Slot State
+    // 4. Manage Quick Slot State (no change)
     if (quickSlotButton) {
         if (isQuickSlotted) {
             taskCard.classList.add('task-quick-slotted');
@@ -574,9 +589,10 @@ function updateTaskStatus(taskCard) {
     }
     
     // 5. Update Checklist
-    generateChecklist(taskCard);
+    // This is crucial: it re-generates the checklist with the newly reset status
+    generateChecklist(taskCard); 
 
-    // 6. UPDATE COLLAPSED REWARD SUMMARY (Includes new currencies)
+    // 6. UPDATE COLLAPSED REWARD SUMMARY (no change)
     const roubles = parseInt(toggleButton.dataset.rewardRoubles || 0);
     const dollars = parseInt(toggleButton.dataset.rewardDollars || 0);
     const euros = parseInt(toggleButton.dataset.rewardEuros || 0);
