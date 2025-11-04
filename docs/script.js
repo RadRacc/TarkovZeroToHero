@@ -2,72 +2,72 @@
 const ROUBLES_KEY = 'eftZthRoubles';
 const DEBT_KEY = 'eftZthDebt';
 const TAXES_KEY = 'eftZthTaxes'; 
-const COMPLETED_TASKS_KEY = 'eftZthCompletedTasks'; // NEW KEY
+const COMPLETED_TASKS_KEY = 'eftZthCompletedTasks'; 
 
 // Default starting values
 let roubles = 0;
 let debt = 0;
 let taxesPaid = 0;
-let completedTasks = {}; // NEW: Store task completion status by ID
+let completedTasks = {}; 
 
 // DOM Elements
 const roublesDisplay = document.getElementById('roubles-display');
 const debtDisplay = document.getElementById('debt-display');
 const taxesPaidDisplay = document.getElementById('taxes-paid-display'); 
+const debtStatusDisplay = document.getElementById('debt-status-display'); // NEW ELEMENT for dedicated debt page
 
 const navButtons = document.querySelectorAll('.nav-btn');
 const pageContents = document.querySelectorAll('.page-content');
 const saveButton = document.getElementById('save-btn');
 const expandableCards = document.querySelectorAll('.task-card.expandable'); 
 const currencyActionButtons = document.querySelectorAll('.action-btn'); 
-const taxAddButton = document.getElementById('add-tax-btn'); // NEW: Tax Button
+const taxAddButton = document.getElementById('add-tax-btn'); 
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
     roubles = parseInt(localStorage.getItem(ROUBLES_KEY) || '0');
     debt = parseInt(localStorage.getItem(DEBT_KEY) || '0');
     taxesPaid = parseInt(localStorage.getItem(TAXES_KEY) || '0');
-    // NEW: Load completed tasks
     completedTasks = JSON.parse(localStorage.getItem(COMPLETED_TASKS_KEY) || '{}');
     
     updateDisplay();
-    updateAllTaskStatuses(); // NEW: Update visual state on load
+    updateAllTaskStatuses(); 
 }
 
 function updateDisplay() {
-    // Format with commas 
+    // Status Bar & Taxes Page
     roublesDisplay.textContent = roubles.toLocaleString(); 
     debtDisplay.textContent = debt.toLocaleString();
     taxesPaidDisplay.textContent = taxesPaid.toLocaleString();
-    // Update Debt on Taxes Page too (since it's not a live input field there)
-    document.querySelector('#taxes .taxes-tracker span').textContent = debt.toLocaleString(); 
+    
+    // NEW: Update Debt on dedicated Debt Page
+    if (debtStatusDisplay) {
+        debtStatusDisplay.textContent = debt.toLocaleString();
+    }
 }
 
 function saveProgress() {
     localStorage.setItem(ROUBLES_KEY, roubles);
     localStorage.setItem(DEBT_KEY, debt);
     localStorage.setItem(TAXES_KEY, taxesPaid);
-    // NEW: Save completed tasks
     localStorage.setItem(COMPLETED_TASKS_KEY, JSON.stringify(completedTasks));
     console.log('Progress saved.'); 
     alert('Progress saved to your browser!');
 }
 
-// --- 3. TASK COMPLETION / UNMARK LOGIC (UPDATED) ---
-
-// Updates a single task card's visual state and button
+// --- 3. TASK COMPLETION / UNMARK LOGIC ---
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const toggleButton = taskCard.querySelector('.task-toggle-btn');
 
+    if (!toggleButton) return; // Guard against missing button
+
     if (completedTasks[taskId]) {
-        // MARKED AS COMPLETE
         taskCard.classList.add('task-completed');
         toggleButton.textContent = 'Mark as Uncomplete';
-        toggleButton.classList.remove('complete-btn'); // Use a different style for unmark
+        toggleButton.classList.remove('complete-btn');
         toggleButton.classList.add('uncomplete-btn');
     } else {
-        // MARKED AS INCOMPLETE
         taskCard.classList.remove('task-completed');
         toggleButton.textContent = 'Mark as Complete';
         toggleButton.classList.remove('uncomplete-btn');
@@ -75,7 +75,6 @@ function updateTaskStatus(taskCard) {
     }
 }
 
-// Update all task statuses on page load
 function updateAllTaskStatuses() {
     expandableCards.forEach(updateTaskStatus);
 }
@@ -90,7 +89,7 @@ function handleTaskToggle(event) {
     if (completedTasks[taskId]) {
         // ACTION: UNMARK AS COMPLETE
         completedTasks[taskId] = false;
-        roubles = Math.max(0, roubles - rblReward); // Subtract reward, prevent negative
+        roubles = Math.max(0, roubles - rblReward); 
     } else {
         // ACTION: MARK AS COMPLETE
         completedTasks[taskId] = true;
@@ -112,7 +111,6 @@ function handleCurrencyAction(event) {
     const currency = event.target.getAttribute('data-currency');
     const action = event.target.getAttribute('data-action');
     
-    // Get the input element specific to the currency being acted upon
     const inputId = (currency === 'taxes') ? 'tax-amount' : `${currency}-amount`;
     const inputElement = document.getElementById(inputId);
     
@@ -137,7 +135,6 @@ function handleCurrencyAction(event) {
             debt = Math.max(0, debt - amount); 
         }
     } else if (currency === 'taxes' && action === 'add') {
-        // Logic for the dedicated Tax button
         taxesPaid += amount;
     }
 
@@ -158,7 +155,6 @@ if (taxAddButton) {
 // --- 5. EXPAND/COLLAPSE TASK LOGIC ---
 expandableCards.forEach(card => {
     card.addEventListener('click', (event) => {
-        // Prevent action if the user clicks a button or input field inside the card
         if (event.target.classList.contains('task-toggle-btn') || event.target.closest('.currency-input-group')) {
             return;
         }
