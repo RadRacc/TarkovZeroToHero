@@ -21,6 +21,29 @@ const TASKS_DATA = [
         ]
     },
     {
+        id: "First Aid Supplies",
+        trader: "Therapist",
+        title: "First Aid Supplies",
+        objectiveSummary: "Deliver 2 Salewa First Aid Kits to Therapist.",
+        map: "Shoreline",
+        requirements: ["Target Practice"],
+        initial_equipment: [ 
+            { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
+        ],
+        walkthrough: "The Salewas are given to you at the start. To complete the task, you only need to survive the raid (or buy them from the Flea Market/trade if you lose them) and hand them over to Therapist through the task completion menu.",
+        dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
+        dialogueComplete: "The Salewas arrived just in time. Excellent work. Your reliability is noted, and I can assure you that this small favor will be remembered. This is your payment, use it wisely.",
+        objectives: [
+            "Hand over 2 Salewa First Aid Kits"
+        ],
+        rewards: [
+            { type: "roubles", amount: 15000 },
+            { type: "item", name: "2 AI-2 medkit", icon: "icon-ai2.png" },
+            { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
+            { type: "item", name: "1 Esmarch tourniquet", icon: "icon-esmarch.png" }
+        ]
+    },
+    {
         id: "Emergency Repairs",
         trader: "Prapor",
         title: "Emergency Repairs",
@@ -37,31 +60,10 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 10000 },
-            { type: "item", name: "2 Electronic Components", icon: "icon-electronic-components.png" },
+            { type: "item", name: "2 Electronic components", icon: "icon-electronic-components.png" },
             { type: "item", name: "1 Screwdriver", icon: "icon-screwdriver.png" },
-            { type: "item", name: "1 Silicon Tube", icon: "icon-silicon-tube.png" },
+            { type: "item", name: "1 Silicon tube", icon: "icon-silicon-tube.png" },
             { type: "item", name: "1 PACA Soft Armor", icon: "icon-paca.png" }
-        ]
-    },
-    {
-        id: "First Aid Supplies",
-        trader: "Therapist",
-        title: "First Aid Supplies",
-        objectiveSummary: "Deliver 2 Salewa First Aid Kits to Therapist.",
-        map: "Shoreline",
-        requirements: ["N/A"],
-        initial_equipment: [ 
-            { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
-        ],
-        walkthrough: "The Salewas are given to you at the start. To complete the task, you only need to survive the raid (or buy them from the Flea Market/trade if you lose them) and hand them over to Therapist through the task completion menu.",
-        dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
-        dialogueComplete: "The Salewas arrived just in time. Excellent work. Your reliability is noted, and I can assure you that this small favor will be remembered. This is your payment, use it wisely.",
-        objectives: [
-            "Hand over 2 Salewa First Aid Kits"
-        ],
-        rewards: [
-            { type: "roubles", amount: 15000 },
-            { type: "item", name: "1 AI-2 Medkit", icon: "icon-ai2.png" }
         ]
     },
     {
