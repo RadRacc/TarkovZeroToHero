@@ -10,8 +10,10 @@ let traderLL = {};
 // DOM Elements
 const expandableCards = document.querySelectorAll('.task-card.expandable'); 
 const traderFilter = document.getElementById('trader-filter');
+const mapFilter = document.getElementById('map-filter'); // NEW MAP FILTER
 const taskSearch = document.getElementById('task-search');
 const llCheckboxes = document.querySelectorAll('#ll-tracker input[type="checkbox"]');
+
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
@@ -25,228 +27,83 @@ function loadProgress() {
         Therapist: { 1: false, 2: false, 3: false, 4: false },
         Peacekeeper: { 1: false, 2: false, 3: false, 4: false },
         Mechanic: { 1: false, 2: false, 3: false, 4: false },   
-        Ragman: { 1: false, 2: false, 3: false, 4: false },     
-        Jaeger: { 1: false, 2: false, 3: false, 4: false }      
+        Ragman: { 1: false, 2: false, 3: false, 4: false },
+        Jaeger: { 1: false, 2: false, 3: false, 4: false }
     };
 
-    traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
+    const loadedLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || '{}');
+    // Merge loaded data with default to ensure all keys are present
+    for (const trader in defaultData) {
+        traderLL[trader] = loadedLL[trader] ? { ...defaultData[trader], ...loadedLL[trader] } : defaultData[trader];
+    }
+    
+    // Initialize task-0 as complete if not found (Bootstrap)
+    if (!completedTasks['task-0']) {
+        completedTasks['task-0'] = true;
+    }
 
-    // Ensure newly added traders exist if old data was loaded (FIXED)
-    const defaultLL = { 1: false, 2: false, 3: false, 4: false };
-    if (!traderLL.Peacekeeper) traderLL.Peacekeeper = {...defaultLL};
-    if (!traderLL.Mechanic) traderLL.Mechanic = {...defaultLL};
-    if (!traderLL.Ragman) traderLL.Ragman = {...defaultLL};
-    if (!traderLL.Jaeger) traderLL.Jaeger = {...defaultLL};
-
-
-    // Apply saved LL status to checkboxes
-    llCheckboxes.forEach(checkbox => {
-        const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader');
-        const ll = checkbox.getAttribute('data-ll');
-        if (traderLL[trader] && traderLL[trader][ll]) {
-            checkbox.checked = true;
-        }
-    });
-
-    updateAllTaskStatuses(); 
-    filterTasks(); 
+    applyLLProgressToUI();
+    updateAllTaskCards();
 }
 
 function saveProgress() {
     localStorage.setItem(COMPLETED_TASKS_KEY, JSON.stringify(completedTasks));
-    localStorage.setItem(COMPLETED_OBJECTIVES_KEY, JSON.stringify(completedObjectives)); 
-    localStorage.setItem(TRADER_LL_KEY, JSON.stringify(traderLL)); 
-    console.log('Task and objective status saved.'); 
+    localStorage.setItem(COMPLETED_OBJECTIVES_KEY, JSON.stringify(completedObjectives));
+    localStorage.setItem(TRADER_LL_KEY, JSON.stringify(traderLL));
 }
 
-// --- 3. LOYALTY LEVEL TRACKER HANDLER ---
-
-function handleLLToggle(event) {
-    const checkbox = event.target;
-    const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader');
-    const ll = checkbox.getAttribute('data-ll');
-    const isChecked = checkbox.checked;
-    
-    // 1. Update the data model
-    traderLL[trader][ll] = isChecked;
-
-    // 2. Enforce LL Hierarchy: If LL_X is checked, all lower levels must be checked. 
-    // If LL_X is unchecked, all higher levels must be unchecked.
-    const allLLCheckboxes = checkbox.closest('.ll-checkbox-group').querySelectorAll('input[type="checkbox"]');
-    
-    allLLCheckboxes.forEach(cb => {
-        const cbLL = parseInt(cb.getAttribute('data-ll'));
-
-        if (isChecked && cbLL < parseInt(ll)) {
-            // Check lower levels
-            cb.checked = true;
-            traderLL[trader][cbLL] = true;
-        } else if (!isChecked && cbLL > parseInt(ll)) {
-            // Uncheck higher levels
-            cb.checked = false;
-            traderLL[trader][cbLL] = false;
-        }
-    });
-
-    saveProgress();
-    updateAllTaskStatuses(); // Re-check task requirements after LL change
-}
-
-llCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', handleLLToggle);
-});
-
-
-// --- 4. REQUIREMENTS CHECK AND GENERATION (UPDATED) ---
-
-/**
- * Checks all prerequisites for a task and updates the requirements list display.
- * @param {HTMLElement} taskCard - The task card element.
- * @returns {boolean} True if ALL requirements are met, false otherwise.
- */
-function checkRequirementsAndGenerateList(taskCard) {
-    const requirementsAttribute = taskCard.getAttribute('data-task-requirements');
-    const requirementsContainer = taskCard.querySelector('.task-requirements-list');
-    
-    // Safety check for null/missing elements (FIXED)
-    if (!requirementsContainer) return true; 
-
-    requirementsContainer.innerHTML = ''; 
-    let allRequirementsMet = true;
-    const traderName = taskCard.getAttribute('data-trader');
-
-    if (requirementsAttribute === 'None' || !requirementsAttribute) {
-        requirementsContainer.innerHTML = '<div class="requirement-item met">No prerequisites.</div>';
-        return true;
-    }
-
-    const requirements = requirementsAttribute.split(';');
-
-    requirements.forEach(req => {
-        const reqText = req.trim();
-        let isMet = true;
+function applyLLProgressToUI() {
+    llCheckboxes.forEach(checkbox => {
+        const trader = checkbox.closest('.trader-ll-group').dataset.trader;
+        const ll = checkbox.dataset.ll;
         
-        if (reqText.startsWith('Complete task-')) {
-            // Task Dependency: 'Complete task-X'
-            const requiredTaskId = reqText.replace('Complete ', '').trim();
-            isMet = completedTasks[requiredTaskId] === true;
-        } else if (reqText.startsWith('LL')) {
-            // Loyalty Level Requirement: 'LL1', 'LL2', etc.
-            const requiredLL = reqText.replace('LL', '');
-            // Check the new LL data model
-            isMet = traderLL[traderName] && traderLL[traderName][requiredLL] === true;
-        } else {
-            isMet = true; 
-        }
-
-        if (!isMet) {
-            allRequirementsMet = false;
-        }
-
-        const statusClass = isMet ? 'met' : 'unmet';
-        
-        const requirementItem = document.createElement('div');
-        requirementItem.classList.add('requirement-item', statusClass);
-        requirementItem.textContent = reqText;
-        requirementsContainer.appendChild(requirementItem);
-    });
-    
-    return allRequirementsMet;
-}
-
-
-// --- 5. CHECKLIST GENERATION AND MANAGEMENT ---
-function generateChecklist(taskCard) {
-    const taskId = taskCard.getAttribute('data-task-id');
-    const objectivesList = taskCard.getAttribute('data-objective-list');
-    const checklistContainer = taskCard.querySelector('.objective-checklist');
-    
-    // Safety check for null/missing elements (FIXED)
-    if (!checklistContainer) return; 
-
-    checklistContainer.innerHTML = ''; 
-
-    if (!objectivesList) return;
-
-    const objectives = objectivesList.split(';');
-
-    if (!completedObjectives[taskId]) {
-        completedObjectives[taskId] = {};
-    }
-
-    objectives.forEach((objectiveText, index) => {
-        const uniqueId = `${taskId}-${index}`;
-        const isCompleted = completedObjectives[taskId][index] || false;
-
-        const objectiveItem = document.createElement('div');
-        objectiveItem.classList.add('objective-item');
-
-        objectiveItem.innerHTML = `
-            <input type="checkbox" id="${uniqueId}" data-objective-index="${index}" ${isCompleted ? 'checked' : ''}>
-            <label for="${uniqueId}">${objectiveText}</label>
-        `;
-        
-        checklistContainer.appendChild(objectiveItem);
-    });
-    
-    checklistContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', handleObjectiveToggle);
-    });
-}
-
-function handleObjectiveToggle(event) {
-    const checkbox = event.target;
-    const taskCard = checkbox.closest('.task-card');
-    const taskId = taskCard.getAttribute('data-task-id');
-    const index = checkbox.getAttribute('data-objective-index');
-    
-    completedObjectives[taskId][index] = checkbox.checked;
-    
-    if (checkbox.checked) {
-        const allCheckboxes = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
-        let allCompleted = true;
-        allCheckboxes.forEach(cb => {
-            if (!cb.checked) {
-                allCompleted = false;
+        // Ensure that if a higher LL is checked, all lower LLs are also checked
+        if (traderLL[trader] && ll) {
+            checkbox.checked = traderLL[trader][ll];
+            checkbox.disabled = false; // Enable all checkboxes
+            
+            if (checkbox.checked) {
+                // Check all lower levels
+                for (let i = 1; i < parseInt(ll); i++) {
+                    const lowerLLCheckbox = checkbox.closest('.trader-ll-group').querySelector(`input[data-ll="${i}"]`);
+                    if (lowerLLCheckbox) lowerLLCheckbox.checked = true;
+                }
             }
-        });
-
-        if (allCompleted) {
-            completedTasks[taskId] = true;
         }
-    } else {
-        if (completedTasks[taskId]) {
-             completedTasks[taskId] = false;
+    });
+
+    // Ensure state reflects UI checks for LL
+    for (const trader in traderLL) {
+        for (let ll = 1; ll <= 4; ll++) {
+            const checkbox = document.querySelector(`[data-trader="${trader}"] input[data-ll="${ll}"]`);
+            if (checkbox) {
+                traderLL[trader][ll] = checkbox.checked;
+            }
         }
     }
-
-    updateTaskStatus(taskCard); 
-    saveProgress();
 }
 
-
-// --- 6. FILTERING AND SEARCHING LOGIC ---
-function filterTasks() {
-    const selectedTrader = traderFilter.value;
-    const searchTerm = taskSearch.value.toLowerCase().trim();
+// --- 3. FILTERING AND SEARCH ---
+function filterAndSearchTasks() {
+    const selectedTrader = traderFilter.value.toLowerCase();
+    const selectedMap = mapFilter.value.toLowerCase(); // Get selected map
+    const searchTerm = taskSearch.value.toLowerCase();
 
     expandableCards.forEach(card => {
-        const trader = card.getAttribute('data-trader');
-        // Safety checks for missing elements (FIXED)
-        const titleElement = card.querySelector('.task-title');
-        const objectiveElement = card.querySelector('.task-objective');
+        const trader = card.dataset.trader.toLowerCase();
+        const map = card.dataset.map.toLowerCase(); // Get task map
+        const title = card.querySelector('.task-title').textContent.toLowerCase();
+        
+        // Trader Filter
+        const traderMatch = selectedTrader === '' || trader === selectedTrader;
 
-        const title = titleElement ? titleElement.textContent.toLowerCase() : '';
-        const objective = objectiveElement ? objectiveElement.textContent.toLowerCase() : '';
+        // Map Filter (NEW)
+        const mapMatch = selectedMap === '' || map === selectedMap;
+        
+        // Search Filter
+        const searchMatch = title.includes(searchTerm);
 
-        let matchesTrader = (selectedTrader === 'all' || trader === selectedTrader);
-        let matchesSearch = true;
-
-        if (searchTerm.length > 0) {
-            matchesSearch = title.includes(searchTerm) || objective.includes(searchTerm);
-        }
-
-        if (matchesTrader && matchesSearch) {
+        if (traderMatch && searchMatch && mapMatch) {
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
@@ -254,71 +111,279 @@ function filterTasks() {
     });
 }
 
-traderFilter.addEventListener('change', filterTasks);
-taskSearch.addEventListener('keyup', filterTasks);
+// Attach event listeners for filtering
+traderFilter.addEventListener('change', filterAndSearchTasks);
+mapFilter.addEventListener('change', filterAndSearchTasks); // NEW MAP LISTENER
+taskSearch.addEventListener('input', filterAndSearchTasks);
 
 
-// --- 7. TASK STATUS MANAGEMENT ---
+// --- 4. TASK AVAILABILITY AND STATUS CHECK ---
+function checkTaskAvailability(card) {
+    const taskId = card.dataset.taskId;
+    const trader = card.dataset.trader;
 
-function updateTaskStatus(taskCard) {
-    const taskId = taskCard.getAttribute('data-task-id');
-    
-    // Safety checks for missing elements (FIXED)
-    const toggleButton = taskCard.querySelector('.task-toggle-btn');
-    const dialogueTextElement = taskCard.querySelector('.dialogue-text'); 
-    
-    if (!toggleButton || !dialogueTextElement) return; // Exit if critical elements are missing
-
-    // 1. Check Requirements
-    const isUnlocked = checkRequirementsAndGenerateList(taskCard);
-    
-    // 2. Manage Visual Status
-    if (!isUnlocked) {
-        taskCard.classList.add('task-locked'); 
-        toggleButton.style.display = 'none'; 
-    } else {
-        taskCard.classList.remove('task-locked');
-        toggleButton.style.display = 'block'; 
-    }
-
-    // 3. Manage Complete/Incomplete State (only if unlocked)
-    if (completedTasks[taskId] && isUnlocked) {
-        // MARKED AS COMPLETE
-        taskCard.classList.add('task-completed');
-        toggleButton.textContent = 'Mark as Uncomplete';
-        toggleButton.classList.remove('complete-btn'); 
-        toggleButton.classList.add('uncomplete-btn');
-        dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-complete'); 
-    } else {
-        // MARKED AS INCOMPLETE or UNLOCKED
-        taskCard.classList.remove('task-completed');
-        toggleButton.textContent = 'Mark as Complete';
-        toggleButton.classList.remove('uncomplete-btn');
-        toggleButton.classList.add('complete-btn');
-        dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-initial'); 
+    // Check if complete
+    if (completedTasks[taskId]) {
+        return { isAvailable: false, requirementsMet: true, reason: 'Complete' };
     }
     
-    // 4. Update Checklist
-    generateChecklist(taskCard);
+    // Check if global task-0 is complete (unlocks initial LL1 tasks)
+    if (taskId !== 'task-0' && !completedTasks['task-0']) {
+        return { isAvailable: false, requirementsMet: false, reason: 'Initial Setup Required' };
+    }
+
+    const requirements = card.dataset.taskRequirements.split(';');
+    let requirementsMet = true;
+
+    for (const req of requirements) {
+        const trimmedReq = req.trim();
+
+        // LL Requirement
+        if (trimmedReq.startsWith('LL')) {
+            const requiredLL = parseInt(trimmedReq.substring(2));
+            if (traderLL[trader] && !traderLL[trader][requiredLL]) {
+                requirementsMet = false;
+                break;
+            }
+        }
+
+        // Predecessor Task Requirement
+        if (trimmedReq.startsWith('Complete task-')) {
+            const requiredTaskID = trimmedReq.substring(9);
+            if (!completedTasks[requiredTaskID]) {
+                requirementsMet = false;
+                break;
+            }
+        }
+    }
+
+    return { isAvailable: requirementsMet, requirementsMet: requirementsMet, reason: requirementsMet ? 'Available' : 'Requirements Not Met' };
 }
 
-function updateAllTaskStatuses() {
+function updateTaskStatus(card) {
+    const taskId = card.dataset.taskId;
+    const isComplete = completedTasks[taskId];
+    const availability = checkTaskAvailability(card);
+    const requirementsList = card.querySelector('.task-requirements-list');
+    const completeBtn = card.querySelector('.task-toggle-btn');
+    const collapsedStatusBox = card.querySelector('.collapsed-status-box');
+
+    // 1. Completion Status
+    if (isComplete) {
+        card.classList.add('complete');
+        completeBtn.textContent = 'Unmark as Complete';
+        completeBtn.classList.remove('complete-btn', 'disabled');
+        completeBtn.classList.add('uncomplete-btn');
+        if(collapsedStatusBox) collapsedStatusBox.querySelector('.collapsed-requirements').textContent = 'STATUS: Complete';
+    } else {
+        card.classList.remove('complete');
+        completeBtn.textContent = 'Mark as Complete';
+        completeBtn.classList.remove('uncomplete-btn', 'disabled');
+        completeBtn.classList.add('complete-btn');
+    }
+
+    // 2. Availability / Requirement Status
+    if (!isComplete) {
+        if (!availability.requirementsMet) {
+            completeBtn.classList.add('disabled');
+        } else {
+            completeBtn.classList.remove('disabled');
+        }
+        
+        // Update expanded view requirements display
+        requirementsList.innerHTML = '';
+        const requirements = card.dataset.taskRequirements.split(';');
+        
+        let reqSummaryText = [];
+        
+        for (const req of requirements) {
+            const trimmedReq = req.trim();
+            let reqMet = true;
+
+            // LL Requirement Display
+            if (trimmedReq.startsWith('LL')) {
+                const requiredLL = parseInt(trimmedReq.substring(2));
+                const trader = card.dataset.trader;
+                reqMet = traderLL[trader] && traderLL[trader][requiredLL];
+
+                if (reqMet) {
+                    requirementsList.innerHTML += `<p class="text-success">${card.dataset.trader} LL${requiredLL} (Met)</p>`;
+                } else {
+                    requirementsList.innerHTML += `<p class="text-error">${card.dataset.trader} LL${requiredLL} (Required)</p>`;
+                }
+                reqSummaryText.push(`LL: ${requiredLL}`);
+            }
+
+            // Predecessor Task Requirement Display
+            if (trimmedReq.startsWith('Complete task-')) {
+                const requiredTaskID = trimmedReq.substring(9);
+                reqMet = completedTasks[requiredTaskID];
+                const requiredTaskCard = document.querySelector(`[data-task-id="${requiredTaskID}"]`);
+                const requiredTaskTitle = requiredTaskCard ? requiredTaskCard.querySelector('.task-title').textContent : 'Previous Task';
+
+                if (reqMet) {
+                    requirementsList.innerHTML += `<p class="text-success">Complete "${requiredTaskTitle}" (Met)</p>`;
+                } else {
+                    requirementsList.innerHTML += `<p class="text-error">Complete "${requiredTaskTitle}" (Required)</p>`;
+                }
+                reqSummaryText.push(`Task Required: ${requiredTaskTitle}`);
+            }
+        }
+        // Update collapsed view requirement text
+        if(collapsedStatusBox) {
+            collapsedStatusBox.querySelector('.collapsed-requirements').textContent = reqSummaryText.join(' | ');
+        }
+    }
+
+
+    // 3. Dialogue
+    const dialogueText = card.querySelector('.dialogue-text');
+    const initialDialogue = card.dataset.dialogueInitial;
+    const completeDialogue = card.dataset.dialogueComplete;
+    dialogueText.textContent = isComplete ? completeDialogue : initialDialogue;
+
+    // 4. Objectives (Checkboxes)
+    createCheckboxes(card, taskId, isComplete);
+    
+    // 5. Sort Tasks (Completed to Bottom)
+    sortTasks();
+}
+
+function updateAllTaskCards() {
     expandableCards.forEach(updateTaskStatus);
 }
 
 
+// --- 5. OBJECTIVE CHECKBOX LOGIC ---
+function createCheckboxes(taskCard, taskId, isTaskComplete) {
+    const objectiveListElement = taskCard.querySelector('.objective-checklist');
+    objectiveListElement.innerHTML = ''; 
+
+    // Initialize objectives for this task if they don't exist
+    if (!completedObjectives[taskId]) {
+        completedObjectives[taskId] = {};
+    }
+
+    const objectiveItems = taskCard.dataset.objectiveList.split(';');
+
+    objectiveItems.forEach((objective, index) => {
+        const id = `${taskId}-obj-${index}`;
+        
+        // Ensure objective state is initialized (defaults to false if not completed)
+        if (completedObjectives[taskId][id] === undefined) {
+            completedObjectives[taskId][id] = false;
+        }
+
+        const label = document.createElement('label');
+        label.classList.add('objective-item');
+        label.setAttribute('for', id);
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = id;
+        checkbox.name = id;
+        checkbox.checked = completedObjectives[taskId][id];
+
+        const span = document.createElement('span');
+        span.textContent = objective;
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        objectiveListElement.appendChild(label);
+        
+        // Objectives cannot be unchecked if the task is marked complete
+        checkbox.disabled = isTaskComplete;
+        
+        checkbox.addEventListener('change', (e) => {
+            completedObjectives[taskId][id] = e.target.checked;
+            saveProgress();
+            
+            // Check if all objectives are met to potentially enable the 'complete' button
+            updateTaskStatus(taskCard); 
+        });
+        
+        // If task is complete, ensure the span has line-through style regardless of checked state
+        if (isTaskComplete) {
+            span.style.textDecoration = 'line-through';
+            span.style.color = '#777';
+        } else if (checkbox.checked) {
+             span.style.textDecoration = 'line-through';
+             span.style.color = '#B0B0B0';
+        } else {
+             span.style.textDecoration = 'none';
+             span.style.color = '#E0E0E0';
+        }
+    });
+}
+
+
+// --- 6. LOYALTY LEVEL HANDLER ---
+llCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', (event) => {
+        const trader = checkbox.closest('.trader-ll-group').dataset.trader;
+        const ll = parseInt(checkbox.dataset.ll);
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            // Check all lower levels
+            for (let i = 1; i <= ll; i++) {
+                traderLL[trader][i] = true;
+            }
+        } else {
+            // Uncheck all higher levels
+            for (let i = ll; i <= 4; i++) {
+                traderLL[trader][i] = false;
+            }
+        }
+
+        // Manually update the UI state to reflect dependencies
+        applyLLProgressToUI(); 
+        
+        // Update all tasks as LL changes can affect availability
+        updateAllTaskCards();
+        saveProgress();
+    });
+});
+
+
+// --- 7. TASK COMPLETION HANDLER ---
 function handleTaskToggle(event) {
     const button = event.target;
     const taskCard = button.closest('.task-card');
-    const taskId = taskCard.getAttribute('data-task-id');
-    
-    if (taskCard.classList.contains('task-locked')) {
+    const taskId = taskCard.dataset.taskId;
+
+    // Check availability only if marking as complete (not uncompleting)
+    if (button.classList.contains('complete-btn') && button.classList.contains('disabled')) {
+        // If button is disabled and they try to complete, prevent action
         event.stopPropagation();
         return;
     }
-    
-    completedTasks[taskId] = !completedTasks[taskId];
 
+    const isCurrentlyComplete = completedTasks[taskId];
+
+    if (!isCurrentlyComplete) {
+        // MARK AS COMPLETE
+        const objectives = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
+        let allChecked = true;
+        objectives.forEach(checkbox => {
+            if (!checkbox.checked) {
+                allChecked = false;
+            }
+        });
+        
+        if (!allChecked) {
+            alert('Please check all objectives before completing the task!');
+            event.stopPropagation();
+            return;
+        }
+
+        completedTasks[taskId] = true;
+    } else {
+        // UNMARK AS COMPLETE
+        completedTasks[taskId] = false;
+    }
+
+    // Update objective status in local state when toggling completion
     if (!completedTasks[taskId] && completedObjectives[taskId]) {
         // If uncompleting task, uncheck all objectives
         Object.keys(completedObjectives[taskId]).forEach(key => {
@@ -334,6 +399,7 @@ function handleTaskToggle(event) {
     }
 
     updateTaskStatus(taskCard);
+    updateAllTaskCards(); // Necessary to check downstream tasks
     saveProgress();
     
     event.stopPropagation(); 
@@ -360,6 +426,40 @@ expandableCards.forEach(card => {
         }
     });
 });
+
+// --- 9. SORTING LOGIC ---
+function sortTasks() {
+    const taskList = document.getElementById('task-list');
+    const tasksArray = Array.from(taskList.children);
+
+    tasksArray.sort((a, b) => {
+        const aId = a.dataset.taskId;
+        const bId = b.dataset.taskId;
+        const aComplete = completedTasks[aId];
+        const bComplete = completedTasks[bId];
+
+        // Primary sort: Completed tasks go to the bottom
+        if (aComplete !== bComplete) {
+            return aComplete ? 1 : -1;
+        }
+        
+        // Secondary sort (for uncompleted tasks): Sort by trader and then by ID (natural order)
+        if (!aComplete && !bComplete) {
+            const aTrader = a.dataset.trader;
+            const bTrader = b.dataset.trader;
+            
+            if (aTrader !== bTrader) {
+                return aTrader.localeCompare(bTrader);
+            }
+            
+            // Tertiary sort: by task ID (task-1 < task-10)
+            return parseInt(aId.split('-')[1]) - parseInt(bId.split('-')[1]);
+        }
+        
+        // Default (for completed tasks): keep original order
+        return 0;
+    }).forEach(taskCard => taskList.appendChild(taskCard));
+}
 
 // Load progress when the page first loads
 loadProgress();
