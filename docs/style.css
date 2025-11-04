@@ -49,292 +49,274 @@ h2 {
     background-color: hsl(0, 0%, 15%);
     padding: 15px;
     border-radius: 4px;
-    height: fit-content; /* Only take up necessary height */
-    position: sticky; /* Keep it visible when scrolling */
+    height: fit-content; 
+    position: sticky; 
     top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-#ll-tracker h3 {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    color: #F5B925;
+
+.trader-ll-group {
+    margin-bottom: 15px;
+    padding-left: 10px;
 }
+
+.trader-ll-group h3 {
+    margin: 10px 0 5px 0;
+    color: #b3b3b3;
+    font-size: 1em;
+}
+
 .ll-checkbox-group {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+    gap: 10px;
 }
+
 .ll-checkbox-group label {
     display: flex;
     align-items: center;
-    gap: 5px;
+    font-size: 0.85em;
     cursor: pointer;
-    font-size: 0.9em;
-}
-.ll-checkbox-group input[type="checkbox"] {
-    appearance: none;
-    width: 14px;
-    height: 14px;
-    border: 1px solid #F5B925;
-    border-radius: 3px;
-    background-color: transparent;
-    cursor: pointer;
-    position: relative;
-    top: 1px;
-}
-.ll-checkbox-group input[type="checkbox"]:checked {
-    background-color: #F5B925;
+    user-select: none;
 }
 
-/* --- Filter and Search Controls (UPDATED) --- */
+.ll-checkbox-group input[type="checkbox"] {
+    margin-right: 5px;
+    accent-color: #5897FB;
+}
+
+/* --- TASK AREA STYLES --- */
+#task-area {
+    padding-top: 5px; 
+}
+
 #filter-controls {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     margin-bottom: 25px;
-    padding: 10px;
-    background-color: hsl(0, 0%, 15%);
-    border-radius: 4px;
-}
-#trader-filter, #map-filter, #task-search { /* Added #map-filter */
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #444;
-    background-color: #333;
-    color: #E0E0E0;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.9em;
-}
-#task-search {
-    flex-grow: 1;
 }
 
+#filter-controls select,
+#filter-controls input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: hsl(0, 0%, 15%);
+    color: #E0E0E0;
+    font-family: 'Roboto Mono', monospace;
+    flex-grow: 1;
+    min-width: 100px;
+}
 
 /* --- TASK CARD STYLES --- */
 .task-card {
     background-color: hsl(0, 0%, 15%);
-    border-radius: 6px;
-    margin-bottom: 15px;
-    padding: 0; /* Padding is inside collapsed view */
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    border: 2px solid transparent;
-}
-.task-card:hover:not(.task-locked) {
-    background-color: hsl(0, 0%, 18%);
-}
-
-/* Collapsed View (always visible) */
-.collapsed-view {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    gap: 15px;
+    border: 1px solid #333;
     border-radius: 4px;
+    margin-bottom: 15px;
+    cursor: pointer; 
+    transition: background-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
 }
 
-.collapsed-text-group {
-    flex-grow: 1;
+.task-card:hover {
+    background-color: hsl(0, 0%, 18%);
+    box-shadow: 0 0 15px rgba(245, 185, 37, 0.1);
 }
 
-.task-title {
+.task-card.completed {
+    border-left: 5px solid #5897FB;
+    opacity: 0.7; 
+}
+
+.task-card.task-locked {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.task-card.task-quick-slotted {
+    border: 1px solid #F5B925;
+    order: -1; /* Move quick-slotted tasks to the top */
+}
+
+.collapsed-view {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.header-status h3 {
     margin: 0;
     font-size: 1.1em;
     color: #F5B925;
 }
-.task-objective {
-    margin: 0;
+
+.task-status-text {
+    margin: 5px 0 0 0;
     font-size: 0.85em;
-    color: #aaa;
-}
-.trader-name {
-    font-size: 0.8em;
     color: #999;
 }
-.collapsed-requirements {
-    font-size: 0.75em;
-    color: #777;
-    margin-bottom: 2px;
+
+.task-card.completed .task-status-text {
+    color: #5897FB;
+    font-weight: bold;
 }
 
-/* Expanded View (Hidden by default, shown when clicked) */
+.collapsed-requirements {
+    flex-grow: 1;
+    text-align: right;
+    padding-left: 20px;
+    font-size: 0.9em;
+    color: #b3b3b3;
+}
+
+.reward-summary {
+    margin: 0;
+    font-size: 0.85em;
+}
+
 .expanded-view {
-    display: none; /* Controlled by JS */
-    grid-template-columns: 100px 1fr;
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Image box and content area */
     gap: 20px;
     padding: 15px;
-    padding-top: 0;
-    border-top: 1px dashed #333;
-}
-.expanded-view h4 {
-    color: #F5B925;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    border-top: 1px solid #333;
 }
 
-
-/* --- Trader Icons and Images (FIXED) --- */
-.trader-icon-small, .trader-image-box {
-    background-size: cover; /* Use cover to ensure image fills the box */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: #333;
-    border-radius: 4px;
-}
-.trader-icon-small {
-    min-width: 40px;
-    height: 40px;
-    border: 1px solid #F5B925; /* Added border back for the small icon */
+.hidden-detail {
+    display: none; /* Controlled by JS */
 }
 
+/* --- Trader Image Box FIX --- */
 .trader-image-box {
-    width: 100px;
-    height: 100px;
-    background-size: cover;
-}
-
-/* TRADER ICON MAPPING */
-/* Paths assume your style.css is in the root and images are in root/docs/images/ */
-[data-trader-id="Prapor"] { 
-    background-image: url('docs/images/prapor-portrait.png');
-    background-color: #c0392b; 
-}
-[data-trader-id="Skier"] { 
-    background-image: url('docs/images/skier-portrait.png');
-    background-color: #2980b9; 
-}
-[data-trader-id="Therapist"] { 
-    background-image: url('docs/images/therapist-portrait.png');
-    background-color: #27ae60; 
-}
-[data-trader-id="Peacekeeper"] { 
-    background-image: url('docs/images/peacekeeper-portrait.png');
-    background-color: #f1c40f; 
-}
-[data-trader-id="Mechanic"] { 
-    background-image: url('docs/images/mechanic-portrait.png');
-    background-color: #7f8c8d; 
-}
-[data-trader-id="Ragman"] { 
-    background-image: url('docs/images/ragman-portrait.png');
-    background-color: #9b59b6; 
-}
-[data-trader-id="Jaeger"] { 
-    background-image: url('docs/images/jaeger-portrait.png');
-    background-color: #d35400; 
-}
-
-
-/* --- Status Styles --- */
-
-/* Completed Task */
-.task-completed {
-    border-left: 5px solid #2ecc71;
-    opacity: 0.8;
-}
-.task-completed .task-title {
-    color: #2ecc71;
-}
-
-/* Locked Task */
-.task-locked {
-    border-left: 5px solid #777;
-    opacity: 0.4;
-    pointer-events: none; /* Disable clicking */
-    cursor: default;
-}
-.task-locked .task-title {
-    color: #777;
-}
-
-/* --- Quick Slot Styles (NEW) --- */
-.task-quick-slotted {
-    border-color: #F5B925; /* Gold border for quick slot */
-    background-color: hsl(45, 10%, 18%); /* Slightly warmer background */
-}
-.quick-slot-btn {
-    font-size: 1.5em;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #555; /* Hollow Star default */
-    transition: color 0.1s;
-    padding: 5px;
-}
-.quick-slot-btn:hover {
+    width: 100%;
+    height: 150px;
+    background-color: #222;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em; /* Larger for icon/initial */
     color: #F5B925;
+    font-weight: bold;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
-.quick-slot-btn.slotted-active {
-    color: #F5B925; /* Solid Star */
+/* Placeholder Trader Styles (Using background colors for effect) */
+.trader-image-box[data-trader-id="Prapor"] { background-color: #A34839; }
+.trader-image-box[data-trader-id="Skier"] { background-color: #4C39A3; }
+.trader-image-box[data-trader-id="Therapist"] { background-color: #39A36C; }
+.trader-image-box[data-trader-id="Peacekeeper"] { background-color: #396CA3; }
+.trader-image-box[data-trader-id="Mechanic"] { background-color: #8C8C8C; }
+.trader-image-box[data-trader-id="Ragman"] { background-color: #A37E39; }
+.trader-image-box[data-trader-id="Jaeger"] { background-color: #6A442E; }
+
+.dialogue-box {
+    background-color: #222;
+    padding: 10px;
+    border-left: 3px solid #F5B925;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 20px;
 }
 
+.dialogue-box h4 {
+    margin: 0 0 5px 0;
+    color: #F5B925;
+    font-size: 1em;
+}
 
-/* --- Requirement and Objective Lists --- */
-.requirement-item {
-    font-size: 0.8em;
-    padding: 3px 0;
-    border-bottom: 1px dotted #222;
+.dialogue-text {
+    margin: 0;
+    font-style: italic;
+    font-size: 0.9em;
+    color: #ccc;
 }
-.requirement-item.met {
-    color: #2ecc71;
+
+.requirements-heading, .objectives-heading, .rewards-heading {
+    color: #b3b3b3;
+    font-size: 0.95em;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-bottom: 1px dashed #222;
+    padding-bottom: 2px;
 }
-.requirement-item.unmet {
-    color: #e74c3c;
+
+.task-requirements-list p {
+    margin: 2px 0;
+    font-size: 0.9em;
+    color: #888;
+}
+
+.task-requirements-list .item-requirement {
+    color: #39A36C; /* Highlight item requirements */
+    font-weight: bold;
 }
 
 .objective-item {
     display: flex;
     align-items: center;
-    gap: 8px;
     font-size: 0.9em;
-    padding: 4px 0;
-}
-.objective-checklist input[type="checkbox"] {
+    margin: 5px 0;
+    user-select: none;
     cursor: pointer;
-    /* Style for custom checkbox appearance */
-}
-.objective-checklist label {
-    cursor: pointer;
-}
-.objective-checklist input[type="checkbox"]:checked + label {
-    text-decoration: line-through;
-    color: #777;
 }
 
-/* --- Rewards and Dialogue --- */
-.dialogue-box {
-    background-color: #222;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 10px;
+.objective-item input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #F5B925;
 }
-.dialogue-box h4 {
-    color: #999;
-    font-size: 0.8em;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-    border-bottom: 1px solid #444;
-}
-.dialogue-text {
-    font-size: 0.9em;
-    margin: 0;
-    font-style: italic;
-}
+
 .rewards-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 15px 0;
+    margin: 5px 0 15px 0;
     font-size: 0.9em;
 }
+
 .rewards-list li {
     padding-left: 10px;
     position: relative;
+    margin-bottom: 3px;
 }
 .rewards-list li::before {
     content: "•";
-    color: #2ecc71;
+    color: #5897FB; /* Use blue for reward bullet */
     font-weight: bold;
     display: inline-block;
     width: 1em;
     margin-left: -1em;
+}
+.rewards-list li[data-item="roubles"] { color: #5897FB; }
+.rewards-list li[data-item="dollars"] { color: #39A36C; }
+.rewards-list li[data-item="euros"] { color: #A37E39; }
+
+/* Currency Symbols in collapsed view summary */
+.currency-symbol {
+    font-weight: bold;
+    margin-right: 3px;
+}
+.currency.rouble-reward { color: #5897FB; }
+.currency.dollar-reward { color: #39A36C; }
+.currency.euro-reward { color: #A37E39; }
+.currency.negative { color: #dc3545; }
+
+/* Quick Slot Button */
+.quick-slot-btn {
+    background: none;
+    border: none;
+    color: #F5B925;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin-left: 10px;
+}
+.quick-slot-btn:hover {
+    color: white;
+}
+.quick-slot-btn.slotted {
+    color: #5897FB;
 }
 
 /* --- Task Toggle Button --- */
@@ -368,7 +350,7 @@ h2 {
 /* --- Responsive Adjustments --- */
 @media (max-width: 950px) {
     .main-layout {
-        grid-template-columns: 1fr; /* Stack sidebar and content on smaller screens */
+        grid-template-columns: 1fr; 
         gap: 20px;
     }
     #ll-tracker {
@@ -376,22 +358,18 @@ h2 {
         width: 100%;
         margin-bottom: 20px;
     }
-    .ll-checkbox-group {
-        grid-template-columns: repeat(4, 1fr); /* 4 columns for LLs across the screen */
-        gap: 15px;
-    }
-    .ll-checkbox-group label {
-        justify-content: center;
-    }
-    #filter-controls {
-        flex-direction: column;
-        gap: 10px;
-    }
     .expanded-view {
         grid-template-columns: 1fr; 
     }
     .trader-image-box {
         width: 100%;
         height: 100px;
+    }
+    #filter-controls {
+        flex-wrap: wrap;
+    }
+    #filter-controls select,
+    #filter-controls input[type="text"] {
+        flex-basis: 48%; /* Adjust for 2-column layout if needed */
     }
 }
