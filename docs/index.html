@@ -39,7 +39,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
                 <div class="trader-ll-group" data-trader="Therapist">
                     <h3>Therapist</h3>
                     <div class="ll-checkbox-group">
@@ -59,7 +59,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
                 <div class="trader-ll-group" data-trader="Mechanic">
                     <h3>Mechanic</h3>
                     <div class="ll-checkbox-group">
@@ -91,11 +91,11 @@
                 </div>
             </aside>
             
-            <main id="task-area">
-                
+            <main id="task-content">
+            
                 <div id="filter-controls">
-                    <select id="trader-filter" title="Filter by Trader">
-                        <option value="all">All Traders</option>
+                    <select id="trader-filter">
+                        <option value="all">Filter by Trader (All)</option>
                         <option value="Prapor">Prapor</option>
                         <option value="Skier">Skier</option>
                         <option value="Therapist">Therapist</option>
@@ -104,77 +104,316 @@
                         <option value="Ragman">Ragman</option>
                         <option value="Jaeger">Jaeger</option>
                     </select>
-                    <input type="text" id="task-search" placeholder="Search tasks by name or objective...">
+                    <input type="text" id="task-search" placeholder="Search task title or objective...">
                 </div>
 
-                <section id="tasks-list">
-                    
-                    <!-- === START: PRAFOR - SHAKING UP TELLER (TASK 1) === -->
-                    <div class="task-card expandable" 
-                        data-trader="Prapor" 
-                        data-task-id="p_s1_01" 
-                        data-is-locked="false" 
-                        data-required-ll="" 
-                        data-required-task-id="">
-                        
+                <section id="tasks" class="page-content active-page">
+                    <h2>🎯 Task Progression</h2>
+
+                    <div class="task-card expandable" data-task-id="task-1" data-trader="Prapor"
+                        data-dialogue-initial="Listen up, my friend. We need to remind the local Scavs who runs this corner of the woods. They're getting too comfortable, too careless. I've got a little job for you—a simple exercise, really. Go out there and eliminate ten of those rats. And while you're at it, bring back some of their junk rifles. I need parts, and they make for good scrap. Sell me five of their Scav weapons. Let's see if you can hit the broad side of a barn, eh? Don't waste your ammo. Get it done, and I'll make it worth your while."
+                        data-dialogue-complete="Ah, there you are. Good work, you got the job done. Ten less lowlifes cluttering the streets, and you even managed to bring back a few busted guns. Good. You're not completely useless after all. Here's your payment, don't spend it all in one place, or, actually, do—just buy more ammo! These bolts will come in handy for some... repairs. Now, get lost. I have real work to do."
+                        data-objective-list="Eliminate 10 Scavs;Hand over 5 Scav weapons"
+                        data-task-requirements="None">
                         <div class="collapsed-view">
                             <div class="trader-icon-small" data-trader-id="Prapor"></div>
                             <div>
-                                <div class="trader-name">Prapor</div>
+                                <span class="trader-name">Prapor</span>
+                                <p class="collapsed-requirements">LL: N/A | Task Required: None</p>
                                 <h3 class="task-title">Shaking Up Teller</h3>
                                 <p class="task-objective">Eliminate 10 Scavs and hand over 5 Scav weapons.</p>
                             </div>
-                            <p class="collapsed-requirements">
-                                Requires: None
-                            </p>
                         </div>
-                        
                         <div class="expanded-view hidden-detail">
                             <div class="trader-image-box" data-trader-id="Prapor"></div>
                             <div>
-                                
-                                <!-- Pre-Completion Dialogue -->
-                                <div class="dialogue-box pre-completion-dialogue">
-                                    <h4>Prapor's Request</h4>
-                                    <p class="dialogue-text">Listen up, my friend. We need to remind the local Scavs who runs this corner of the woods. They're getting too comfortable, too careless. I've got a little job for you—a simple exercise, really. Go out there and eliminate ten of those rats. And while you're at it, bring back some of their junk rifles. I need parts, and they make for good scrap. Sell me five of their Scav weapons. Let's see if you can hit the broad side of a barn, eh? Don't waste your ammo. Get it done, and I'll make it worth your while.</p>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Prapor)</h4>
+                                    <p class="dialogue-text"></p>
                                 </div>
                                 
                                 <h4 class="requirements-heading">Requirements:</h4>
-                                <div class="task-requirements-list">
-                                    <p class="requirement-item met">No prior requirements.</p>
-                                </div>
+                                <div class="task-requirements-list"></div>
 
                                 <h4 class="objectives-heading">Objectives:</h4>
-                                <div class="objective-checklist" data-task-id="p_s1_01">
-                                    <div class="objective-item">
-                                        <input type="checkbox" id="obj-p1-1" data-obj-key="kill_scavs">
-                                        <label for="obj-p1-1">Eliminate 10 Scavs</label>
-                                    </div>
-                                    <div class="objective-item">
-                                        <input type="checkbox" id="obj-p1-2" data-obj-key="turnin_guns">
-                                        <label for="obj-p1-2">Hand over 5 Scav weapons</label>
-                                    </div>
-                                </div>
-
-                                <!-- Post-Completion Dialogue -->
-                                <div class="dialogue-box post-completion-dialogue">
-                                    <h4>Prapor's Acknowledgment</h4>
-                                    <p class="dialogue-text">Ah, there you are. Good work, you got the job done. Ten less lowlifes cluttering the streets, and you even managed to bring back a few busted guns. Good. You're not completely useless after all. Here's your payment, don't spend it all in one place, or, actually, do—just buy more ammo! These bolts will come in handy for some... repairs. Now, get lost. I have real work to do.</p>
-                                </div>
+                                <div class="objective-checklist"></div>
 
                                 <h4 class="rewards-heading">Rewards:</h4>
                                 <ul class="rewards-list">
                                     <li data-item="roubles">10,000 Roubles</li>
-                                    <li data-item="rep-prapor">+0.03 Prapor Rep</li>
                                     <li data-item="item">2x Bolts</li>
+                                    <li data-item="rep-prapor">+0.03 Prapor Rep</li>
                                 </ul>
-                                
-                                <button class="task-toggle-btn complete-btn" data-task-id="p_s1_01" data-reward-roubles="10000" data-reward-rep="Prapor,0.03">Mark as Complete</button>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="10000">Mark as Complete</button>
                             </div>
                         </div>
                     </div>
-                    <!-- === END: PRAFOR - SHAKING UP TELLER (TASK 1) === -->
+                    <div class="task-card expandable" data-task-id="task-2" data-trader="Prapor"
+                        data-dialogue-initial="I've got a problem over on Factory. Those stupid generators near the med tent are offline..."
+                        data-dialogue-complete="The power's back on? Excellent. You saved me a trip and a headache. Take your reward, you've earned it."
+                        data-objective-list="Locate and Repair Generator 1;Locate and Repair Generator 2"
+                        data-task-requirements="LL1;Complete task-1">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Prapor"></div>
+                            <div>
+                                <span class="trader-name">Prapor</span>
+                                <p class="collapsed-requirements">LL: 1 | Task Required: Shaking Up Teller</p>
+                                <h3 class="task-title">Emergency Repairs</h3>
+                                <p class="task-objective">Repair 2 generators on Factory located at med tent.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Prapor"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Prapor)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">6,000 Roubles</li>
+                                    <li data-item="helmet-6b47">1 6B47 Helmet</li>
+                                    <li data-item="rep-prapor">+0.01 Prapor Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="6000">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
                     
+                    <div class="task-card expandable" data-task-id="task-3" data-trader="Skier"
+                        data-dialogue-initial="Look, I need you to go to Customs. Bring back three MP-133 shotguns. Don't ask questions, just do it. And hurry up."
+                        data-dialogue-complete="About time. These look clean. Don't talk about this job to anyone. The less people know, the better for your health, friend."
+                        data-objective-list="Hand over 3 MP-133 shotguns"
+                        data-task-requirements="None">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Skier"></div>
+                            <div>
+                                <span class="trader-name">Skier</span>
+                                <p class="collapsed-requirements">LL: N/A | Task Required: None</p>
+                                <h3 class="task-title">Shakedown</h3>
+                                <p class="task-objective">Hand over 3 MP-133 shotguns.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Skier"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Skier)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">10,000 Roubles</li>
+                                    <li data-item="rep-skier">+0.01 Skier Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="10000">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-card expandable" data-task-id="task-4" data-trader="Therapist"
+                        data-dialogue-initial="We are running low on vital medical supplies. You must find and deliver two Salewas and three painkiller bottles."
+                        data-dialogue-complete="Excellent! These will save lives, comrade. Thank you for your speedy delivery. We can continue our work now."
+                        data-objective-list="Hand over 2 Salewa first aid kits;Hand over 3 Painkillers"
+                        data-task-requirements="LL1;Complete task-1">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Therapist"></div>
+                            <div>
+                                <span class="trader-name">Therapist</span>
+                                <p class="collapsed-requirements">LL: 1 | Task Required: Shaking Up Teller</p>
+                                <h3 class="task-title">Pain Management</h3>
+                                <p class="task-objective">Hand over 2 Salewa first aid kits and 3 Painkillers.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Therapist"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Therapist)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">4,500 Roubles</li>
+                                    <li data-item="rep-therapist">+0.02 Therapist Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="4500">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card expandable" data-task-id="task-5" data-trader="Peacekeeper"
+                        data-dialogue-initial="We have intel that a USEC squad is trying to block key supply routes. I need you to eliminate them and recover their intel."
+                        data-dialogue-complete="The operation was a success. Their intel has been secured, and the route is clear. Your continued cooperation is noted."
+                        data-objective-list="Eliminate 4 USEC PMCs;Hand over 1 Secure Flash Drive"
+                        data-task-requirements="LL3;Complete task-3">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Peacekeeper"></div>
+                            <div>
+                                <span class="trader-name">Peacekeeper</span>
+                                <p class="collapsed-requirements">LL: 3 | Task Required: Shakedown</p>
+                                <h3 class="task-title">The Western Front</h3>
+                                <p class="task-objective">Eliminate 4 USEC PMCs and secure a flash drive.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Peacekeeper"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Peacekeeper)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="dollars">2,000 Dollars</li>
+                                    <li data-item="rep-peacekeeper">+0.03 Peacekeeper Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="0">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-card expandable" data-task-id="task-6" data-trader="Mechanic"
+                        data-dialogue-initial="Hey, I need you to assemble a specific weapon for me. It's a test of your capabilities. Let me know when you have the components."
+                        data-dialogue-complete="Perfect. You clearly know your way around a workbench. I have more complex projects lined up for you."
+                        data-objective-list="Assemble MP-133 to specs"
+                        data-task-requirements="LL2;Complete task-2">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Mechanic"></div>
+                            <div>
+                                <span class="trader-name">Mechanic</span>
+                                <p class="collapsed-requirements">LL: 2 | Task Required: Emergency Repairs</p>
+                                <h3 class="task-title">Gunsmith - Part 1</h3>
+                                <p class="task-objective">Assemble a customized MP-133 shotgun.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Mechanic"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Mechanic)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">15,000 Roubles</li>
+                                    <li data-item="rep-mechanic">+0.01 Mechanic Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="15000">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-card expandable" data-task-id="task-7" data-trader="Ragman"
+                        data-dialogue-initial="My shelves are empty, and the clients are waiting. I need basic combat equipment for the street level guys. Get me some armored vests."
+                        data-dialogue-complete="These are rugged. Exactly what I need to keep the wheels turning. You're good for business, and that's good for you."
+                        data-objective-list="Hand over 2 6B23-1 armored vests"
+                        data-task-requirements="LL1;Complete task-3">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Ragman"></div>
+                            <div>
+                                <span class="trader-name">Ragman</span>
+                                <p class="collapsed-requirements">LL: 1 | Task Required: Shakedown</p>
+                                <h3 class="task-title">Salesmanship</h3>
+                                <p class="task-objective">Hand over 2 6B23-1 armored vests.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Ragman"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Ragman)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">8,000 Roubles</li>
+                                    <li data-item="rep-ragman">+0.01 Ragman Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="8000">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-card expandable" data-task-id="task-8" data-trader="Jaeger"
+                        data-dialogue-initial="Found a few traps near my camp, but they were empty. Clearly, the locals need a lesson in tracking. Bring me some proof you're better than they are."
+                        data-dialogue-complete="Hmm. Not bad. The marksmanship is acceptable. Return when you have more to prove."
+                        data-objective-list="Eliminate 3 Scavs on Woods with a headshot"
+                        data-task-requirements="LL2;Complete task-4">
+                        <div class="collapsed-view">
+                            <div class="trader-icon-small" data-trader-id="Jaeger"></div>
+                            <div>
+                                <span class="trader-name">Jaeger</span>
+                                <p class="collapsed-requirements">LL: 2 | Task Required: Pain Management</p>
+                                <h3 class="task-title">Hunter's Path</h3>
+                                <p class="task-objective">Eliminate 3 Scavs on Woods with a headshot.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-view hidden-detail">
+                            <div class="trader-image-box" data-trader-id="Jaeger"></div>
+                            <div>
+                                <div class="dialogue-box">
+                                    <h4>Dialogue (Jaeger)</h4>
+                                    <p class="dialogue-text"></p>
+                                </div>
+                                
+                                <h4 class="requirements-heading">Requirements:</h4>
+                                <div class="task-requirements-list"></div>
+
+                                <h4 class="objectives-heading">Objectives:</h4>
+                                <div class="objective-checklist"></div>
+
+                                <h4 class="rewards-heading">Rewards:</h4>
+                                <ul class="rewards-list">
+                                    <li data-item="roubles">9,000 Roubles</li>
+                                    <li data-item="rep-jaeger">+0.02 Jaeger Rep</li>
+                                </ul>
+                                <button class="task-toggle-btn complete-btn" data-reward-roubles="9000">Mark as Complete</button>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             
             </main>
