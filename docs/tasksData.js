@@ -21,7 +21,6 @@ const TASKS_DATA = [
             { type: "item", name: "1 Emergency water ration", icon: "icon-emr.png" }
         ]
     },
-
     {
         id: "First Aid Supplies",
         trader: "Therapist",
@@ -45,7 +44,6 @@ const TASKS_DATA = [
             { type: "item", name: "1 Esmarch tourniquet", icon: "icon-esmarch.png" }
         ]
     },
-    
     {
         id: "Emergency Repairs",
         trader: "Prapor",
@@ -69,8 +67,7 @@ const TASKS_DATA = [
             { type: "item", name: "1 Silicon tube", icon: "icon-silicon-tube.png" },
             { type: "item", name: "1 PACA Soft Armor", icon: "icon-paca.png" }
         ]
-    },
-    
+    },    
     {
         id: "Antibiotics - Part 1",
         trader: "Therapist",
@@ -91,7 +88,69 @@ const TASKS_DATA = [
             { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
         ]
     },
-    
+    {
+        id: "Delivery from the Past",
+        trader: "Prapor",
+        title: "Delivery from the Past",
+        objectiveSummary: "Find the secure folder in the Customs offices and deliver it to Prapor's delivery point on Factory.",
+        map: "Customs/Factory",
+        requirements: ["Emergency Repairs"],
+        initial_equipment: [],
+        walkthrough: "The secure folder is found on a desk on the second floor of the main Customs office building (next to the gas station). Once found, it must be put into your secure container and then placed in the hidden cache on Factory. You must survive the raid after placing the item.",
+        dialogueInitial: "I have a small delivery that needs to be made. A contact left a secure folder in the Customs offices—it has some... old maps. You need to pick it up, take it to the Factory, and put it in the cache near the tunnels. I don't want anyone to know I was involved, so you're my mule. Get it done, and I'll make sure you're compensated for the risk. But lose that folder, and you owe me.",
+        dialogueComplete: "The folder is secured. Good. You have proven you can handle multiple points of contact without messing up the drop. This is just the beginning of what I have planned for you. Take the cash.",
+        objectives: [
+            "Find the secure folder in the Customs offices",
+            "Place the secure folder in the Factory cache",
+            "Survive and Extract from the location"
+        ],
+        rewards: [
+            { type: "roubles", amount: 10000 },
+            { type: "item", name: "1 AKM/AK-74/RPK-16 'Zenit' RK-3 pistol grip", icon: "icon-rk3-grip.png" }
+        ]
+    },
+    {
+        id: "Strange Symbol - Part 1",
+        trader: "Skier",
+        title: "Strange Symbol - Part 1",
+        objectiveSummary: "Investigate the strange markings in the bunker at Sniper Rock.",
+        map: "Woods",
+        requirements: ["Antibiotics - Part 1"],
+        initial_equipment: [],
+        walkthrough: "The bunker is located at the base of Sniper Rock (the largest rock outcropping in the center of the map). The interaction point is inside the bunker itself. You only need to visit the location and survive the raid.",
+        dialogueInitial: "Hey, listen. I got a tip about something weird out in the Woods, near the old Sniper Rock. There's a bunker entrance there, and someone—or something—has been scratching strange symbols on the walls inside. I don't care about spooky stories; I care about **information**. Get in there, look at the markings, and bring back a detailed report in your head. Prove you saw it and get out. I'll pay you well for your silence and your memory. Don't tell *anyone* you're doing this for me.",
+        dialogueComplete: "So, you saw it. Good. That confirms what I was told. The symbols are... interesting. Could be nothing, could be something big. Either way, the information is mine now. You did good work, kid. Here’s your payment. Now, let’s see if you’re ready for a real task—something that actually makes me money.",
+        objectives: [
+            "Find the bunker",
+            "Survive and Extract from the location"
+        ],
+        rewards: [
+            { type: "roubles", amount: 5000 },
+            { type: "item", name: "6 Bundles of wires", icon: "icon-wires.png" },
+            { type: "item", name: "2 PC CPU", icon: "icon-cpu.png" },
+            { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png" }
+        ]
+    },
+    {
+        id: "Pest Control",
+        trader: "Therapist",
+        title: "Pest Control",
+        objectiveSummary: "Eliminate 15 Scavs on Shoreline.",
+        map: "Shoreline",
+        requirements: ["Antibiotics - Part 1"],
+        initial_equipment: [],
+        walkthrough: "Shoreline is a large map, but Scavs are most common around the cottages, the gas station, and the pier/scav island. Focus on those areas to efficiently clear 15 targets.",
+        dialogueInitial: "I need some relief around the Sanatorium area. The Scavs are becoming too numerous and they're harassing my runners who are bringing in supplies. This is not about healing; it's about making our work environment safe. Go to Shoreline and neutralize fifteen of those pests. Make sure they know they're not welcome near my jurisdiction.",
+        dialogueComplete: "The reports confirm a reduction in hostile activity on Shoreline. Thank you. This small action helps keep my supply lines open and safe. Your willingness to get your hands dirty for the greater good of my work is appreciated. Use these meds to keep yourself patched up.",
+        objectives: [
+            "Eliminate 15 Scavs on Shoreline"
+        ],
+        rewards: [
+            { type: "roubles", amount: 9000 },
+            { type: "item", name: "1 Car first aid kit", icon: "icon-car-medkit.png" },
+            { type: "item", name: "1 Tourniquet", icon: "icon-tourniquet.png" }
+        ]
+    },
     {
         id: "Important Business",
         trader: "Peacekeeper",
@@ -109,27 +168,45 @@ const TASKS_DATA = [
             "Plant 3 F-1 hand grenades on the first floor of the 3 story dorms",
             "Plant 3 F-1 hand grenades on the second floor of the 3 story dorms",
             "Plant 3 F-1 hand grenades on the third floor of the 3 story dorms",
-
             "Survive and Extract from the location"
         ],
         rewards: [
             { type: "dollars", amount: 50 },
             { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" },
-            { type: "item", name: "1 Gas analyzer", icon: "icon-gas-analyzer.png }
+            { type: "item", name: "1 Gas analyzer", icon: "icon-gas-analyzer.png" } // <-- FIXED ERROR HERE
         ]
     },
-    
+    {
+        id: "What's on the Inside?",
+        trader: "Skier",
+        title: "What's on the Inside?",
+        objectiveSummary: "Hand over 3 found in-raid PC CPU and 3 Bundles of wires.",
+        map: "Any",
+        requirements: ["LL1", "Strange Symbol - Part 1"],
+        initial_equipment: [],
+        walkthrough: "CPU's and Wires are most often found in PC Blocks, which spawn in offices and tech stores across all maps. Customs (Dorms/Offices) and Interchange (Tech stores) are good bets. Both items must be Found In Raid.",
+        dialogueInitial: "The information you brought back about the symbols... it wasn't free. I need to process it, and that takes computing power I don't currently have. Get me three **PC CPU** units and three **Bundles of wires**. I need them found in raid, so get moving. Don't ask what it's for. Just know that if I can decrypt this information, we both stand to gain.",
+        dialogueComplete: "These components are sufficient for now. I'll have my tech guy work on the data. For your services, you get this. Come back later; once I've pieced together the real meaning of those symbols, I'll have a much more profitable job for you.",
+        objectives: [
+            "Hand over 3 found in-raid PC CPU",
+            "Hand over 3 found in-raid Bundles of wires"
+        ],
+        rewards: [
+            { type: "roubles", amount: 15000 },
+            { type: "item", name: "1 60-round 5.45x39 magazine for AK-74 and compatibles", icon: "icon-ak-mag.png" }
+        ]
+    },
     {
         id: "Cleanup Crew",
         trader: "Peacekeeper",
         title: "Cleanup Crew",
-        objectiveSummary: "Eliminate 5 PMCs with an MP5.",
+        objectiveSummary: "Eliminate 8 PMCs with an MP5 and hand over 8 found in-raid dogtags.",
         map: "Any",
         requirements: ["LL1", "Important Business"],
         initial_equipment: [
             { name: "3 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
         ],
-        walkthrough: "",
+        walkthrough: "The MP5's provided should be enough to get you started, but you'll need to acquire more. Focus on maps with high PMC density like Customs, Interchange, or Ground Zero. You must kill the PMCs with the MP5, and then find and hand over 8 dogtags (any faction, FIR).",
         dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize eight hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
         dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's eight fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 150 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
         objectives: [
@@ -141,29 +218,5 @@ const TASKS_DATA = [
             { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" },
             { type: "item", name: "1 Military power filter", icon: "icon-mpf.png" }
         ]
-    },
-
-    {
-        id: "Strange Symbol - Part 1",
-        trader: "Skier",
-        title: "Strange Symbol - Part 1",
-        objectiveSummary: "Investigate the strange markings in the bunker at Sniper Rock.",
-        map: "Woods",
-        requirements: ["Antibiotics - Part 1"],
-        initial_equipment: [],
-        walkthrough: "",
-        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
-        dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
-        objectives: [
-            "Find the bunker",
-            "Survive and Extract from the location"
-        ],
-        rewards: [
-            { type: "roubles", amount: 5000 },
-            { type: "item", name: "6 Bundles of wires", icon: "icon-wires.png" },
-            { type: "item", name: "2 PC CPU", icon: "icon-cpu.png" },
-            { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png" }
-        ]
     }
-    
 ];
