@@ -23,7 +23,8 @@ const TASKS_DATA = [
         title: "Emergency Repairs",
         objectiveSummary: "Repair 2 generators on Factory located at Medical Tent.",
         map: "Factory",
-        requirements: ["LL1", "Target Practice", "1 Toolset"],
+        // The task dependency is now correctly referencing the task title as the ID
+        requirements: ["LL1", "Target Practice", "1 Toolset"], 
         dialogueInitial: "I've got a problem over on Factory. Those stupid generators near the med tent are offline...",
         dialogueComplete: "The power's back on? Excellent. You saved me a trip and a headache. Take your reward, you've earned it.",
         objectives: [
@@ -36,3 +37,5 @@ const TASKS_DATA = [
             { type: "rep", trader: "Prapor", amount: 0.01 }
         ]
     }
+    // ... Add the rest of your TASKS_DATA here
+];
