@@ -85,8 +85,8 @@ function generateTaskCards() {
         let rewardRoubles = 0;
         let rewardDollars = 0;
         let rewardEuros = 0;
-
-        // Map rewards array to HTML list items
+        
+        // --- 1. Generate Rewards List HTML ---
         const rewardsHTML = task.rewards.map(reward => {
             let itemText = '';
             let dataAttr = '';
@@ -111,49 +111,68 @@ function generateTaskCards() {
                 itemText = reward.name;
                 dataAttr = `data-item="item"`;
                 
-                // *** MODIFIED LOGIC: Check for a specific icon in tasksData.js ***
                 if (reward.icon) {
-                    iconPath = `images/${reward.icon}`; // Use the custom icon name
+                    iconPath = `images/${reward.icon}`; 
                 } else {
-                    iconPath = 'images/icon-item.png'; // Fallback to generic icon
+                    iconPath = 'images/icon-item.png'; 
                 }
-                // *** END MODIFIED LOGIC ***
             }
             // Rep rewards are explicitly ignored
             
-            // Return statement now includes an <img> for the icon and a <span> for the text
             const iconHTML = iconPath ? `<img src="${iconPath}" alt="${reward.type} icon" class="reward-icon">` : '';
             return `<li ${dataAttr}>${iconHTML}<span class="reward-text">${itemText}</span></li>`;
 
         }).join('');
-
-        // Determine requirement summary text for the collapsed view
-        let collapsedReqText = 'LL: N/A | Task Required: None';
-        const llReq = task.requirements.find(r => r.startsWith('LL'));
         
-        // Find the task dependency (by checking if the requirement is a task ID)
-        const taskReq = task.requirements.find(r => 
-            r !== 'None' && 
-            !r.startsWith('LL') && 
-            !/^\d+ .*/.test(r) && // Ignore item requirements like "1 Toolset"
-            TASKS_DATA.some(t => t.id === r)
-        );
-        
-        if (llReq) {
-            collapsedReqText = `LL: ${llReq.replace('LL', '')}`;
-            if (taskReq) {
-                const requiredTask = TASKS_DATA.find(t => t.id === taskReq);
-                const taskName = requiredTask ? requiredTask.title : taskReq;
-                collapsedReqText += ` | Task Required: ${taskName}`;
-            } else {
-                collapsedReqText += ` | Task Required: None`;
-            }
-        } else if (taskReq) {
-            const requiredTask = TASKS_DATA.find(t => t.id === taskReq);
-            const taskName = requiredTask ? requiredTask.title : taskReq;
-            collapsedReqText = `LL: N/A | Task Required: ${taskName}`;
+        // --- 2. Generate Initial Equipment List HTML ---
+        let initialEquipmentHTML = '';
+        if (task.initial_equipment && task.initial_equipment.length > 0) {
+             const itemsHTML = task.initial_equipment.map(item => {
+                const iconPath = item.icon ? `images/${item.icon}` : 'images/icon-item.png';
+                const iconHTML = `<img src="${iconPath}" alt="${item.name} icon" class="reward-icon">`;
+                return `<li>${iconHTML}<span class="reward-text">${item.name}</span></li>`;
+            }).join('');
+            
+            initialEquipmentHTML = `
+                <h4 class="equipment-heading">Initial Equipment Given:</h4>
+                <ul class="initial-equipment-list rewards-list">
+                    ${itemsHTML}
+                </ul>
+            `;
         }
+
+        // --- 3. Determine Collapsed Requirement Text (NEW FORMAT) ---
         
+        // Default values
+        let llReqText = 'N/A';
+        let taskReqText = 'None';
+        let itemReqText = 'None';
+        const mapText = task.map || 'N/A';
+        
+        const requirements = task.requirements || [];
+        let itemReqCount = 0;
+
+        requirements.forEach(req => {
+            const reqText = req.trim();
+
+            if (reqText.startsWith('LL')) {
+                llReqText = reqText.replace('LL', '');
+            } else if (/^\d+ .*/.test(reqText)) {
+                itemReqCount++;
+            } else {
+                const requiredTask = TASKS_DATA.find(t => t.id === reqText); 
+                if (requiredTask) {
+                    taskReqText = requiredTask.title;
+                }
+            }
+        });
+        
+        itemReqText = itemReqCount > 0 ? `${itemReqCount} item(s)` : 'None';
+        
+        // Final collapsed summary format
+        const collapsedReqText = `LL: ${llReqText} | Task Required: ${taskReqText} | Item Requirement: ${itemReqText} | Map: ${mapText}`;
+
+
         // Set Data Attributes
         card.setAttribute('data-task-id', task.id);
         card.setAttribute('data-trader', task.trader);
@@ -162,6 +181,7 @@ function generateTaskCards() {
         card.setAttribute('data-dialogue-complete', task.dialogueComplete);
         card.setAttribute('data-objective-list', task.objectives.join(';'));
         card.setAttribute('data-task-requirements', task.requirements.join(';'));
+        card.setAttribute('data-task-walkthrough', task.walkthrough || ''); // NEW: walkthrough attribute
         
         // Construct Inner HTML
         card.innerHTML = `
@@ -183,28 +203,51 @@ function generateTaskCards() {
                         <p class="dialogue-text"></p>
                     </div>
                     
-                    <h4 class="requirements-heading">Requirements:</h4>
+                    ${initialEquipmentHTML} <h4 class="requirements-heading">Requirements:</h4>
                     <div class="task-requirements-list"></div>
 
                     <h4 class="objectives-heading">Objectives:</h4>
                     <div class="objective-checklist"></div>
-
+                    
                     <h4 class="rewards-heading">Rewards:</h4>
                     <ul class="rewards-list">
                         ${rewardsHTML}
                     </ul>
-                    <button class="task-toggle-btn complete-btn" 
-                            data-reward-roubles="${rewardRoubles}" 
-                            data-reward-dollars="${rewardDollars}"
-                            data-reward-euros="${rewardEuros}">
-                        Mark as Complete
-                    </button>
+                    
+                    <div class="task-buttons-group">
+                        <button class="task-toggle-btn complete-btn" 
+                                data-reward-roubles="${rewardRoubles}" 
+                                data-reward-dollars="${rewardDollars}"
+                                data-reward-euros="${rewardEuros}">
+                            Mark as Complete
+                        </button>
+                        <button class="guide-toggle-btn">Guide</button>
+                    </div>
+                    
+                    <div class="walkthrough-box hidden-detail" style="display: none;">
+                        <h4>Walkthrough / Hint:</h4>
+                        <p class="walkthrough-text">${task.walkthrough || 'No specific guide available for this task.'}</p>
+                    </div>
+                    
                 </div>
             </div>
         `;
         
         tasksSection.appendChild(card);
     });
+}
+
+// --- NEW: Toggle Guide/Walkthrough ---
+function handleGuideToggle(event) {
+    const button = event.target;
+    const taskCard = button.closest('.task-card');
+    const walkthroughBox = taskCard.querySelector('.walkthrough-box');
+    
+    if (walkthroughBox) {
+        const isHidden = window.getComputedStyle(walkthroughBox).display === 'none';
+        walkthroughBox.style.display = isHidden ? 'block' : 'none'; 
+    }
+    event.stopPropagation();
 }
 
 // --- NEW: Add all necessary event listeners after cards are generated ---
@@ -226,13 +269,18 @@ function addEventListeners() {
     document.querySelectorAll('.quick-slot-btn').forEach(button => {
         button.addEventListener('click', handleQuickSlotToggle);
     });
+    document.querySelectorAll('.guide-toggle-btn').forEach(button => { // NEW: Guide button listener
+        button.addEventListener('click', handleGuideToggle);
+    });
     
     // Expand/Collapse Listener (Re-attaching to new cards)
     document.querySelectorAll('.task-card.expandable').forEach(card => {
         card.addEventListener('click', (event) => {
+            // Check if the click target is any interactive element
             if (event.target.classList.contains('task-toggle-btn') || 
                 event.target.closest('.task-toggle-btn') || 
                 event.target.closest('.quick-slot-btn') || 
+                event.target.closest('.guide-toggle-btn') || // NEW: Exclude Guide button
                 event.target.type === 'checkbox' || 
                 event.target.closest('.objective-item') || 
                 event.target.closest('.collapsed-requirements')) {
@@ -294,7 +342,7 @@ function checkRequirementsAndGenerateList(taskCard) {
     let allUnlockRequirementsMet = true; // Only checks LL and Task dependencies
     const traderName = taskCard.getAttribute('data-trader');
 
-    if (requirementsAttribute === 'None' || !requirementsAttribute) {
+    if (requirementsAttribute === 'N/A' || requirementsAttribute === 'None' || !requirementsAttribute) {
         requirementsContainer.innerHTML = '<div class="requirement-item met">No prerequisites.</div>';
         return true;
     }
@@ -342,7 +390,7 @@ function checkRequirementsAndGenerateList(taskCard) {
                 } else {
                     statusClass = 'met';
                 }
-            } else if (reqText !== 'None' && reqText.length > 0) {
+            } else if (reqText !== 'None' && reqText.length > 0 && reqText !== 'N/A') {
                  // Unknown/general text, display as unmet
                 displayReqText = reqText;
                 statusClass = 'unmet';
@@ -485,7 +533,7 @@ function updateTaskStatus(taskCard) {
         toggleButton.style.display = 'none'; 
     } else {
         taskCard.classList.remove('task-locked');
-        toggleButton.style.display = 'block'; 
+        toggleButton.style.display = 'inline-block'; // Set to inline-block for button group
     }
 
     // 3. Manage Complete/Incomplete State (only if unlocked)
