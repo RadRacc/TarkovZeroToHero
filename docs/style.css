@@ -85,7 +85,7 @@ h2 {
     background-color: #F5B925;
 }
 
-/* --- Filter and Search Controls --- */
+/* --- Filter and Search Controls (UPDATED) --- */
 #filter-controls {
     display: flex;
     gap: 15px;
@@ -169,14 +169,15 @@ h2 {
     margin-top: 10px;
     margin-bottom: 5px;
 }
-/* --- Trader Icons and Images --- */
+
+
+/* --- Trader Icons and Images (FIXED) --- */
 .trader-icon-small, .trader-image-box {
     background-size: cover; /* Use cover to ensure image fills the box */
     background-repeat: no-repeat;
     background-position: center;
     background-color: #333;
     border-radius: 4px;
-    /* Removed the border from small icon here, will add it back specifically for small icon */
 }
 .trader-icon-small {
     min-width: 40px;
@@ -190,8 +191,8 @@ h2 {
     background-size: cover;
 }
 
-/* --- TRADER ICON MAPPING (FIX) --- */
-/* Update the paths below to match your actual file names (e.g., .png or .jpg) */
+/* TRADER ICON MAPPING */
+/* Paths assume your style.css is in the root and images are in root/docs/images/ */
 [data-trader-id="Prapor"] { 
     background-image: url('docs/images/Prapor_icon.png');
     background-color: #c0392b; 
