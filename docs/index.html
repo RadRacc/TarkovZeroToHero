@@ -3,48 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFT Zero to Hero: Task Tracker</title>
+    <title>EFT Task Tracker</title>
     
     <link rel="stylesheet" href="style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header id="landing-bar">
-        <h1 class="header-title">EFT Zero to Hero</h1>
-        <nav>
-            <button class="nav-btn" data-page="tasks">Tasks</button>
-            <button class="nav-btn" data-page="hideout">Hideout</button>
-            <button class="nav-btn" data-page="stats">Stat Tracking</button>
-            <button class="nav-btn" data-page="store">Store</button>
-            <button class="nav-btn" data-page="taxes">Taxes</button>  <button class="nav-btn" data-page="debt">Debt</button>    </nav>
-    </header>
-
     <div class="container">
-        <div id="status-bar">
-            <div class="currency-tracker">
-                <p class="currency-label">Roubles: <span id="roubles-display">0</span> ₽</p>
-                <div class="currency-input-group">
-                    <input type="number" id="roubles-amount" placeholder="Amount" min="1">
-                    <button class="action-btn" data-currency="roubles" data-action="add">+</button>
-                    <button class="action-btn" data-currency="roubles" data-action="subtract">-</button>
-                </div>
-            </div>
+        <header>
+            <h1 class="header-title">EFT Task Tracker</h1>
+        </header>
 
-            <div class="currency-tracker">
-                <p class="currency-label">Debt: <span id="debt-display">0</span> ₽</p>
-                <div class="currency-input-group">
-                    <input type="number" id="debt-amount" placeholder="Amount" min="1">
-                    <button class="action-btn" data-currency="debt" data-action="add">+</button>
-                    <button class="action-btn" data-currency="debt" data-action="subtract">-</button>
-                </div>
-            </div>
-            
-            <button id="save-btn" class="complete-btn">Save Progress</button>
-        </div>
-        
         <section id="tasks" class="page-content active-page">
             <h2>🎯 Phase 1: Prapor's Initial Orders</h2>
+
             <div class="task-card expandable" data-task-id="task-1">
                 <div class="collapsed-view">
                     <span class="trader-name">Prapor</span>
@@ -65,6 +38,7 @@
                     <button class="task-toggle-btn complete-btn" data-reward-roubles="5000">Mark as Complete</button>
                 </div>
             </div>
+            
             <div class="task-card expandable" data-task-id="task-2">
                 <div class="collapsed-view">
                     <span class="trader-name">Prapor</span>
@@ -85,47 +59,6 @@
                     <button class="task-toggle-btn complete-btn" data-reward-roubles="6000">Mark as Complete</button>
                 </div>
             </div>
-        </section>
-
-        <section id="hideout" class="page-content hidden-page">
-            <h2>🛠️ Hideout Progression</h2>
-            <p>Track your Hideout module upgrades here. (Coming Soon!)</p>
-        </section>
-
-        <section id="stats" class="page-content hidden-page">
-            <h2>📈 Overall Stats</h2>
-            <p>Monitor your overall progress, survival rate, and other non-currency metrics. (Coming Soon!)</p>
-        </section>
-
-        <section id="store" class="page-content hidden-page">
-            <h2>🛍️ Store / Inventory</h2>
-            <p>Track purchased gear, current loadouts, and total inventory value here. (Coming Soon!)</p>
-        </section>
-
-        <section id="taxes" class="page-content hidden-page">
-            <h2>💸 Custom Tax Calculator</h2>
-            <p>Log all Flea Market sales taxes or custom fees here using your calculated amounts.</p>
-
-            <div class="taxes-tracker">
-                <p>Total Taxes Paid: <span id="taxes-paid-display">0</span> ₽</p>
-                <div class="currency-input-group">
-                    <input type="number" id="tax-amount" placeholder="Tax Amount Paid" min="1">
-                    <button id="add-tax-btn" class="action-btn" data-currency="taxes" data-action="add">Log Tax</button>
-                </div>
-                <h3 style="margin-top: 30px;">Custom Formula Inputs</h3>
-                <p>Area for your specific tax formula inputs (e.g., item price, quantity, tax rate) will go here.</p>
-            </div>
-        </section>
-        
-        <section id="debt" class="page-content hidden-page">
-            <h2>📉 Debt Management</h2>
-            <p>Current Debt: <span id="debt-status-display" style="color: #FF4500;">0</span> ₽</p>
-            
-            <h3 style="margin-top: 20px;">Repay Debt</h3>
-            <p>Use the input fields above in the status bar to easily add to or subtract from your current debt total.</p>
-            
-            <h3 style="margin-top: 20px;">Debt History</h3>
-            <p>Future area to log when and why debt was incurred/repaid.</p>
         </section>
 
     </div>
