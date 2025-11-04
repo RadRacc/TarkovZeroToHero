@@ -214,21 +214,49 @@ body {
     display: none;
 }
 
-/* Trader Icon/Image Box */
+/* Trader Icon/Image Box - COLLAPSED VIEW STYLES (UPDATED) */
 .trader-icon-small {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: #555;
+    /* Remove background-color: #555; */
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.8em;
+    
+    /* Image Specific Properties */
+    background-size: cover; /* Ensures the image covers the circle */
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #F5B925; /* Added a border to make them pop */
+
+    /* Ensure no text content shows up */
+    display: block; 
+    text-indent: -9999px; /* Hides any text content */
 }
 
-/* Updated Trader Image Box for Portraits */
+/* Trader Portrait Image Links for COLLAPSED ICONS */
+.trader-icon-small[data-trader-id="Prapor"] { 
+    background-image: url('./images/prapor-portrait.png'); 
+}
+.trader-icon-small[data-trader-id="Skier"] { 
+    background-image: url('./images/skier-portrait.png'); 
+}
+.trader-icon-small[data-trader-id="Therapist"] { 
+    background-image: url('./images/therapist-portrait.png'); 
+}
+.trader-icon-small[data-trader-id="Peacekeeper"] { 
+    background-image: url('./images/peacekeeper-portrait.png'); 
+}
+.trader-icon-small[data-trader-id="Mechanic"] { 
+    background-image: url('./images/mechanic-portrait.png'); 
+}
+.trader-icon-small[data-trader-id="Ragman"] { 
+    background-image: url('./images/ragman-portrait.png'); 
+}
+.trader-icon-small[data-trader-id="Jaeger"] { 
+    background-image: url('./images/jaeger-portrait.png'); 
+}
+
+/* Trader Icon/Image Box - EXPANDED VIEW STYLES */
 .trader-image-box {
     width: 100px;
     height: 100px;
@@ -244,13 +272,7 @@ body {
     border: 1px solid #666;
 }
 
-/* Small icons fallback (no image yet) */
-.trader-icon-small::after {
-    content: attr(data-trader-id);
-    color: white;
-}
-
-/* Trader Portrait Image Links - Using explicit relative path (./) */
+/* Trader Portrait Image Links for EXPANDED BOXES */
 .trader-image-box[data-trader-id="Prapor"] { 
     background-image: url('./images/prapor-portrait.png'); 
 }
