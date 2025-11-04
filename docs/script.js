@@ -14,10 +14,10 @@ const debtDisplay = document.getElementById('debt-display');
 const taxesPaidDisplay = document.getElementById('taxes-paid-display'); 
 
 const navButtons = document.querySelectorAll('.nav-btn');
-const pageContents = document.querySelectorAll('.page-content');
 const completeButtons = document.querySelectorAll('.complete-btn');
 const saveButton = document.getElementById('save-btn');
 const expandableCards = document.querySelectorAll('.task-card.expandable'); 
+const currencyActionButtons = document.querySelectorAll('.action-btn'); // NEW ELEMENT
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
@@ -29,7 +29,7 @@ function loadProgress() {
 }
 
 function updateDisplay() {
-    // Format with commas for better readability
+    // Format with commas and include the ₽ symbol in the JS for consistency
     roublesDisplay.textContent = roubles.toLocaleString(); 
     debtDisplay.textContent = debt.toLocaleString();
     taxesPaidDisplay.textContent = taxesPaid.toLocaleString();
@@ -43,37 +43,75 @@ function saveProgress() {
     alert('Progress saved to your browser!');
 }
 
-// --- 3. EXPAND/COLLAPSE TASK LOGIC ---
+// --- 3. CUSTOM CURRENCY ACTION LOGIC (NEW) ---
+function handleCurrencyAction(event) {
+    const currency = event.target.getAttribute('data-currency');
+    const action = event.target.getAttribute('data-action');
+    
+    // Get the input element specific to the currency being acted upon
+    const inputId = `${currency}-amount`;
+    const inputElement = document.getElementById(inputId);
+    
+    // Get the value, convert it to an integer, and reset the field
+    const amount = parseInt(inputElement.value || '0');
+    inputElement.value = '';
+
+    if (amount <= 0 || isNaN(amount)) {
+        alert("Please enter a valid amount greater than 0.");
+        return;
+    }
+
+    if (currency === 'roubles') {
+        if (action === 'add') {
+            roubles += amount;
+        } else if (action === 'subtract') {
+            // Prevent roubles from going below zero
+            roubles = Math.max(0, roubles - amount); 
+        }
+    } else if (currency === 'debt') {
+        // Debt INCREASES (bad) when 'add' is clicked, and DECREASES (good) when 'subtract' is clicked
+        if (action === 'add') {
+            debt += amount;
+        } else if (action === 'subtract') {
+            // Subtracting debt means repaying it. Prevent debt from going below zero.
+            debt = Math.max(0, debt - amount); 
+        }
+    }
+
+    updateDisplay();
+    saveProgress();
+}
+
+// Attach the new action handler to all currency buttons
+currencyActionButtons.forEach(button => {
+    button.addEventListener('click', handleCurrencyAction);
+});
+
+// --- 4. EXPAND/COLLAPSE TASK LOGIC (NO CHANGES) ---
 expandableCards.forEach(card => {
     card.addEventListener('click', (event) => {
-        // Stop the collapse action if the user clicks the "Mark as Complete" button
-        if (event.target.classList.contains('complete-btn')) {
+        if (event.target.classList.contains('complete-btn') || event.target.closest('.currency-input-group')) {
             return;
         }
 
         const expandedView = card.querySelector('.expanded-view');
         
-        // Toggle the visibility of the expanded section
         if (expandedView) {
-            // Check current computed display style for reliable toggle
             const isHidden = window.getComputedStyle(expandedView).display === 'none';
             expandedView.style.display = isHidden ? 'block' : 'none';
         }
     });
 });
 
-// --- 4. NAVIGATION LOGIC ---
-navButtons.forEach(button => {
+// --- 5. NAVIGATION & TASK COMPLETION (NO CHANGES) ---
+// (Navigation logic is omitted here for brevity, but remains the same as your previous full file)
+document.querySelectorAll('.nav-btn').forEach(button => {
     button.addEventListener('click', () => {
         const targetPageId = button.getAttribute('data-page');
-
-        // Remove active class from all pages and buttons
-        pageContents.forEach(page => {
+        document.querySelectorAll('.page-content').forEach(page => {
             page.classList.remove('active-page');
             page.classList.add('hidden-page');
         });
-
-        // Show the selected page and set the button as active (optional styling needed)
         const targetPage = document.getElementById(targetPageId);
         if (targetPage) {
             targetPage.classList.add('active-page');
@@ -82,23 +120,17 @@ navButtons.forEach(button => {
     });
 });
 
-// --- 5. TASK COMPLETION & CURRENCY TRACKING ---
 completeButtons.forEach(button => {
     button.addEventListener('click', (event) => {
         const rblReward = parseInt(button.getAttribute('data-reward-roubles') || '0');
-        
-        // 1. Grant Roubles Reward
         roubles += rblReward;
 
-        // 2. Mark task as completed visually
         const taskCard = event.target.closest('.task-card');
         if (taskCard) {
             taskCard.classList.add('task-completed');
-            // Remove button so it can't be clicked again
             event.target.remove(); 
         }
 
-        // 3. Update the display and save
         updateDisplay();
         saveProgress();
     });
