@@ -14,10 +14,11 @@ const debtDisplay = document.getElementById('debt-display');
 const taxesPaidDisplay = document.getElementById('taxes-paid-display'); 
 
 const navButtons = document.querySelectorAll('.nav-btn');
+const pageContents = document.querySelectorAll('.page-content'); // Used for navigation
 const completeButtons = document.querySelectorAll('.complete-btn');
 const saveButton = document.getElementById('save-btn');
 const expandableCards = document.querySelectorAll('.task-card.expandable'); 
-const currencyActionButtons = document.querySelectorAll('.action-btn'); // NEW ELEMENT
+const currencyActionButtons = document.querySelectorAll('.action-btn'); 
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
@@ -29,7 +30,7 @@ function loadProgress() {
 }
 
 function updateDisplay() {
-    // Format with commas and include the ₽ symbol in the JS for consistency
+    // Format with commas 
     roublesDisplay.textContent = roubles.toLocaleString(); 
     debtDisplay.textContent = debt.toLocaleString();
     taxesPaidDisplay.textContent = taxesPaid.toLocaleString();
@@ -43,12 +44,12 @@ function saveProgress() {
     alert('Progress saved to your browser!');
 }
 
-// --- 3. CUSTOM CURRENCY ACTION LOGIC (NEW) ---
+// --- 3. CUSTOM CURRENCY ACTION LOGIC ---
 function handleCurrencyAction(event) {
     const currency = event.target.getAttribute('data-currency');
     const action = event.target.getAttribute('data-action');
     
-    // Get the input element specific to the currency being acted upon
+    // Get the input element specific to the currency
     const inputId = `${currency}-amount`;
     const inputElement = document.getElementById(inputId);
     
@@ -69,7 +70,7 @@ function handleCurrencyAction(event) {
             roubles = Math.max(0, roubles - amount); 
         }
     } else if (currency === 'debt') {
-        // Debt INCREASES (bad) when 'add' is clicked, and DECREASES (good) when 'subtract' is clicked
+        // 'add' increases debt (e.g., failed loan/loss), 'subtract' decreases debt (e.g., repayment)
         if (action === 'add') {
             debt += amount;
         } else if (action === 'subtract') {
@@ -87,9 +88,10 @@ currencyActionButtons.forEach(button => {
     button.addEventListener('click', handleCurrencyAction);
 });
 
-// --- 4. EXPAND/COLLAPSE TASK LOGIC (NO CHANGES) ---
+// --- 4. EXPAND/COLLAPSE TASK LOGIC ---
 expandableCards.forEach(card => {
     card.addEventListener('click', (event) => {
+        // Stop the collapse action if the user clicks a button or input field inside the card
         if (event.target.classList.contains('complete-btn') || event.target.closest('.currency-input-group')) {
             return;
         }
@@ -97,21 +99,25 @@ expandableCards.forEach(card => {
         const expandedView = card.querySelector('.expanded-view');
         
         if (expandedView) {
+            // Check current computed display style for reliable toggle
             const isHidden = window.getComputedStyle(expandedView).display === 'none';
             expandedView.style.display = isHidden ? 'block' : 'none';
         }
     });
 });
 
-// --- 5. NAVIGATION & TASK COMPLETION (NO CHANGES) ---
-// (Navigation logic is omitted here for brevity, but remains the same as your previous full file)
-document.querySelectorAll('.nav-btn').forEach(button => {
+// --- 5. NAVIGATION & TASK COMPLETION ---
+navButtons.forEach(button => {
     button.addEventListener('click', () => {
         const targetPageId = button.getAttribute('data-page');
-        document.querySelectorAll('.page-content').forEach(page => {
+
+        // Hide all pages
+        pageContents.forEach(page => {
             page.classList.remove('active-page');
             page.classList.add('hidden-page');
         });
+
+        // Show the selected page
         const targetPage = document.getElementById(targetPageId);
         if (targetPage) {
             targetPage.classList.add('active-page');
