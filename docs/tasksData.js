@@ -26,7 +26,7 @@ const TASKS_DATA = [
         title: "First Aid Supplies",
         objectiveSummary: "Deliver 2 Salewa first aid kit to Emercom Checkpoint on Ground Zero.",
         map: "Ground Zero",
-        requirements: ["Target Practice", "2 Salewa first aid kit"],
+        requirements: ["Target Practice"],
         initial_equipment: [ 
             { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
         ],
@@ -49,7 +49,7 @@ const TASKS_DATA = [
         title: "Emergency Repairs",
         objectiveSummary: "Repair 2 generators on Factory located at Medical Tent.",
         map: "Factory",
-        requirements: ["Target Practice", "2 Toolset"],
+        requirements: ["Target Practice"],
         initial_equipment: [],
         walkthrough: "The first generator can be located inside the Medical Tent in the right corner. The second is just outside to the left next to a pillar.",
         dialogueInitial: "Listen, I've got a problem over on Factory. Not my problem, mind you, but I need it fixed. Those stupid generators near the med tent are offline, and I had some... equipment running off that grid. It's a simple job: you need to go there and get two of those things repaired. I don't care if you have to slap them with a wrench or yell at them, just make them work. It's a busy spot, I know, but you need to get used to the noise. Get in, fix the power, and get out. Don't come back without that juice flowing, or you'll be fixing my mood next.",
