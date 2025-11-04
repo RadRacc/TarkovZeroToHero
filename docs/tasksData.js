@@ -127,19 +127,42 @@ const TASKS_DATA = [
         map: "Any",
         requirements: ["LL1", "Important Business"],
         initial_equipment: [
-            { name: "2 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
+            { name: "3 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
         ],
         walkthrough: "",
-        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
-        dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
+        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize eight hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
+        dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's eight fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 150 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
         objectives: [
-            "Eliminate 5 PMCs with an MP5",
-            "Hand over 5 found in-raid dogtags"
+            "Eliminate 8 PMCs with an MP5",
+            "Hand over 8 found in-raid dogtags"
         ],
         rewards: [
             { type: "dollars", amount: 150 },
             { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" },
             { type: "item", name: "1 Military power filter", icon: "icon-mpf.png" }
+        ]
+    },
+
+    {
+        id: "Strange Symbol - Part 1",
+        trader: "Skier",
+        title: "Strange Symbol - Part 1",
+        objectiveSummary: "Investigate the strange markings in the bunker at Sniper Rock.",
+        map: "Woods",
+        requirements: ["Antibiotics - Part 1"],
+        initial_equipment: [],
+        walkthrough: "",
+        dialogueInitial: "We have extraneous assets operating in the area of operation. They are causing friction and disrupting the necessary equilibrium. Your task is a simple stabilization action: neutralize five hostile operators—PMCs. I don't care which faction they belong to, only that they cease function. Consider it a necessary sanitation protocol. Keep your gear light, minimize collateral, and bring me proof of successful completion. The sooner the sector is clean, the sooner you get paid.",
+        dialogueComplete: "Confirmation received. The noise floor in the hot zones has dropped significantly since your last deployment. Efficient work. That's five fewer obstacles preventing the zone from reaching its required stability level. Here is the agreed-upon transfer: 120 USD. And take this bottle. It’s a bonus for maintaining operational security. Get some rest; the grid is never clean for long.",
+        objectives: [
+            "Find the bunker",
+            "Survive and Extract from the location"
+        ],
+        rewards: [
+            { type: "roubles", amount: 5000 },
+            { type: "item", name: "6 Bundles of wires", icon: "icon-wires.png" },
+            { type: "item", name: "2 PC CPU", icon: "icon-cpu.png" },
+            { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png }
         ]
     }
     
