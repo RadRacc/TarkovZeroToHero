@@ -216,20 +216,24 @@ body {
 
 /* Trader Icon/Image Box - COLLAPSED VIEW STYLES (UPDATED) */
 .trader-icon-small {
+    /* Base dimensions and circle shape */
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: #555; /* Add a fallback color for empty space */
-    flex-shrink: 0;
+    background-color: #555; 
     
-    /* CRITICAL UPDATE: Prevent stretching/distortion */
-    background-size: contain; 
+    /* CRITICAL FIX: Prevent stretching/manipulation in flex container */
+    flex-shrink: 0; 
+    flex-grow: 0; /* Ensures it stays exactly 30px wide */
+    
+    /* Image Scaling and Positioning */
+    background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
     
     border: 1px solid #F5B925; 
 
-    /* Ensure no text content shows up */
+    /* Hides any text content (like the old initial text) */
     display: block; 
     text-indent: -9999px; 
 }
