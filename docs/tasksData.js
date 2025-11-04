@@ -23,19 +23,23 @@ const TASKS_DATA = [
         id: "Emergency Repairs",
         trader: "Prapor",
         title: "Emergency Repairs",
-        objectiveSummary: "Find and hand over 3 Toolsets.",
-        map: "Any",
-        requirements: ["LL1"], // This task is typically locked by LL1
+        objectiveSummary: "Repair 2 generators on Factory located at Medical Tent.",
+        map: "Factory",
+        requirements: ["Target Practice", { type: "item", name: "2 Toolset", icon: "icon-toolset.png" }],
         initial_equipment: [],
-        walkthrough: "Toolsets can be found in toolboxes and technical supply crates across all maps, or bought on the Flea Market. Hand them over to Prapor via the task menu.",
-        dialogueInitial: "We need some work done on our gear, and my team is short on supplies. There are toolsets lying around the city. Bring me three of them. I can't wait; it's an emergency, or we'll be fighting with broken rifles.",
-        dialogueComplete: "Perfect! These will keep us running for a while. You've proven you can procure vital resources. Take this as a thank you.",
+        walkthrough: "The first generator can be located inside the Medical Tent in the right corner. The second is just outside to the left next to a pillar.",
+        dialogueInitial: "Listen, I've got a problem over on Factory. Not my problem, mind you, but I need it fixed. Those stupid generators near the med tent are offline, and I had some... equipment running off that grid. It's a simple job: you need to go there and get two of those things repaired. I don't care if you have to slap them with a wrench or yell at them, just make them work. It's a busy spot, I know, but you need to get used to the noise. Get in, fix the power, and get out. Don't come back without that juice flowing, or you'll be fixing my mood next.",
+        dialogueComplete: "The lights are back on. Good. So you managed to survive a few minutes inside that scrap heap. You see? You're tougher than you look. Getting those things running means my contacts can get back to their operations, which means more roubles for me. And for you, I suppose. Take this cash—it's yours. And here's some scav armor; it's ugly, but it's better than nothing for your next run. Don't break it before you get home.",
         objectives: [
-            "Hand over 3 Toolset"
+            "Locate and Repair Generator 1",
+            "Locate and Repair Generator 2"
         ],
         rewards: [
-            { type: "roubles", amount: 8000 },
-            { type: "item", name: "1 AK-74 / RPK-16 polymer Zenit RP-1 charging handle", icon: "icon-ak-handle.png" } 
+            { type: "roubles", amount: 10000 },
+            { type: "item", name: "2 Electronic Components", icon: "icon-electronic-components.png" },
+            { type: "item", name: "1 Screwdriver", icon: "icon-screwdriver.png" },
+            { type: "item", name: "1 Silicon Tube", icon: "icon-silicon-tube.png" },
+            { type: "item", name: "1 PACA Soft Armor", icon: "icon-paca.png" }
         ]
     },
     {
