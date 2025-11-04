@@ -345,8 +345,6 @@ h2 {
     object-fit: contain;
 }
 
-/* REMOVED: Old ::before styles that conflict with the new image icon */
-
 /* CURRENCY COLORS (Now only applies to text color if desired) */
 .rewards-list li[data-item="roubles"] { color: #2ecc71; } 
 .rewards-list li[data-item="dollars"] { color: #5897FB; } 
