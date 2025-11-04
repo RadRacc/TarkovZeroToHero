@@ -16,42 +16,66 @@
             <button class="nav-btn" data-page="tasks">Tasks</button>
             <button class="nav-btn" data-page="hideout">Hideout</button>
             <button class="nav-btn" data-page="stats">Stat Tracking</button>
-            <button class="nav-btn" data-page="store">Store/Taxes</button>
+            <button class="nav-btn" data-page="store">Store</button>
+            <button class="nav-btn" data-page="taxes">Taxes/Debt</button>
         </nav>
     </header>
 
     <div class="container">
         <div id="status-bar">
             <p>Roubles: <span id="roubles-display">0</span></p>
-            <p>Licenses: <span id="licenses-display">0</span></p>
+            <p>Debt: <span id="debt-display">0</span></p> 
             <button id="save-btn" class="complete-btn">Save Progress</button>
         </div>
         
         <section id="tasks" class="page-content active-page">
             <h2>🎯 Phase 1: Prapor's Initial Orders</h2>
 
-            <div class="task-card task-completed" data-task-id="task-1">
-                <span class="trader-name">Prapor</span>
-                <h3 class="task-title">Target Practice (Completed)</h3>
-                <p class="task-description">Eliminate 10 Scavs and Sell 5 Scav weapons to Prapor.</p>
-                <h4>Rewards:</h4>
-                <ul class="rewards-list">
-                    <li>5,000 Roubles</li>
-                    <li>2 Bolts</li>
-                </ul>
+            <div class="task-card expandable task-completed" data-task-id="task-1">
+                <div class="collapsed-view">
+                    <span class="trader-name">Prapor</span>
+                    <h3 class="task-title">Target Practice</h3>
+                    <p class="task-objective">Eliminate 10 Scavs and Sell 5 Scav weapons to Prapor.</p>
+                </div>
+
+                <div class="expanded-view hidden-detail">
+                    <div class="dialogue-box">
+                        <h4>Dialogue (Prapor)</h4>
+                        <p>"Listen up, my friend. We need to remind the local scavs who runs this corner of the woods..."</p>
+                    </div>
+
+                    <h4 class="rewards-heading">Rewards:</h4>
+                    <ul class="rewards-list">
+                        <li data-item="roubles">5,000 Roubles</li>
+                        <li data-item="bolt">2 Bolts</li>
+                        <li data-item="rep-prapor">+0.01 Prapor Rep</li>
+                    </ul>
+                    
+                    </div>
             </div>
             
-            <div class="task-card" data-task-id="task-2">
-                <span class="trader-name">Prapor</span>
-                <h3 class="task-title">Emergency Repairs (Active)</h3>
-                <p class="task-description">Repair 2 generators on Factory located at med tent.</p>
-                <h4>Rewards:</h4>
-                <ul class="rewards-list">
-                    <li>6,000 Roubles</li>
-                    <li>1 6B47 Helmet</li>
-                </ul>
-                
-                <button class="complete-btn" data-reward-roubles="6000" data-reward-licenses="0">Mark as Complete</button>
+            <div class="task-card expandable" data-task-id="task-2">
+                <div class="collapsed-view">
+                    <span class="trader-name">Prapor</span>
+                    <h3 class="task-title">Emergency Repairs</h3>
+                    <p class="task-objective">Repair 2 generators on Factory located at med tent.</p>
+                </div>
+
+                <div class="expanded-view hidden-detail">
+                    <div class="dialogue-box">
+                        <h4>Dialogue (Prapor)</h4>
+                        <p>"I've got a problem over on Factory. Those stupid generators near the med tent are offline..."</p>
+                    </div>
+
+                    <h4 class="rewards-heading">Rewards:</h4>
+                    <ul class="rewards-list">
+                        <li data-item="roubles">6,000 Roubles</li>
+                        <li data-item="helmet-6b47">1 6B47 Helmet</li>
+                        <li data-item="rep-prapor">+0.01 Prapor Rep</li>
+                    </ul>
+                    
+                    <button class="complete-btn" data-reward-roubles="6000">Mark as Complete</button>
+                </div>
             </div>
         </section>
 
@@ -66,10 +90,15 @@
         </section>
 
         <section id="store" class="page-content hidden-page">
-            <h2>💰 Store & Taxes</h2>
-            <p>Record your purchases, calculate your 'Flea Market Tax' (in-game or custom), and track inventory value. (Coming Soon!)</p>
-            <p>Total Taxes Paid: <span id="taxes-paid-display">0</span> Roubles</p>
+            <h2>🛍️ Store / Inventory</h2>
+            <p>Track purchased gear, current loadouts, and total inventory value here. (Coming Soon!)</p>
         </section>
+
+        <section id="taxes" class="page-content hidden-page">
+            <h2>💸 Taxes & Debt Repayment</h2>
+            <p>Use this page to log repayments against your debt and track Flea Market taxes paid.</p>
+            <p>Total Taxes Paid: <span id="taxes-paid-display">0</span> Roubles</p>
+            </section>
 
     </div>
 
