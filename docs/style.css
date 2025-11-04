@@ -4,10 +4,10 @@ body {
     font-family: 'Roboto Mono', monospace, Arial, sans-serif; 
     background-color: hsl(0, 0%, 10%); /* Very dark grey/black background */
     color: #E0E0E0; /* Off-white text for readability */
-    padding: 0; /* Removed padding to allow header full width */
+    padding: 0; 
     margin: 0;
     line-height: 1.6;
-    min-height: 100vh; /* Ensure body covers the viewport height */
+    min-height: 100vh;
 }
 
 /* Ensure all elements calculate size based on borders and padding */
@@ -67,7 +67,7 @@ nav .nav-btn:hover {
 }
 
 
-/* --- 2. Status Bar (Roubles/Debt) - UPDATED FOR INPUTS --- */
+/* --- 2. Status Bar (Roubles/Debt) --- */
 #status-bar {
     display: flex;
     justify-content: space-between; 
@@ -78,7 +78,7 @@ nav .nav-btn:hover {
     border: 1px dashed #555;
     font-weight: bold;
     font-size: 1.1em;
-    flex-wrap: wrap; /* Added for responsiveness */
+    flex-wrap: wrap;
 }
 
 .currency-tracker {
@@ -86,21 +86,21 @@ nav .nav-btn:hover {
     flex-direction: column;
     align-items: center;
     margin: 5px 10px;
-    min-width: 250px; /* Ensure space for the inputs */
+    min-width: 250px;
 }
 
 .currency-label {
     margin: 0 0 5px 0;
-    white-space: nowrap; /* Prevent "Roubles" from wrapping */
+    white-space: nowrap;
 }
 
 #roubles-display {
-    color: #70E670; /* Green for current money */
+    color: #70E670;
     margin-left: 5px;
 }
 
 #debt-display {
-    color: #FF4500; /* Red-Orange for debt */
+    color: #FF4500;
     margin-left: 5px;
 }
 
@@ -110,7 +110,7 @@ nav .nav-btn:hover {
     align-items: center;
 }
 
-#roubles-amount, #debt-amount {
+#roubles-amount, #debt-amount, #tax-amount {
     background-color: #333;
     color: #E0E0E0;
     border: 1px solid #555;
@@ -134,7 +134,7 @@ nav .nav-btn:hover {
     height: 30px;
 }
 
-.action-btn:first-of-type { /* Style the ADD button (greenish for profit) */
+.action-btn:first-of-type {
     background-color: #006400; 
     border-color: #00FF00;
 }
@@ -142,7 +142,6 @@ nav .nav-btn:hover {
     background-color: #008000;
 }
 
-/* Style the SUBTRACT button (reddish for loss/payment) */
 .action-btn:last-of-type {
     background-color: #8B0000;
     border-color: #FF0000;
@@ -233,13 +232,13 @@ h3 {
 .task-completed {
     opacity: 0.5; /* Fade completed tasks */
     border-left-color: #555; /* Mute the accent color */
-    text-decoration: line-through;
+    /* text-decoration: line-through; (Handled by JS to allow text to be legible) */
 }
 
 .task-completed .trader-name, 
 .task-completed .task-title,
 .task-completed .rewards-list li {
-    text-decoration: none; /* Only strikethrough the card, not the text */
+    text-decoration: none;
 }
 
 
@@ -253,7 +252,7 @@ h3 {
 .rewards-list li {
     color: #70E670; 
     font-size: 0.9em;
-    padding-left: 35px; /* Create space for the image/icon */
+    padding-left: 35px;
     background-repeat: no-repeat;
     background-position: left center;
     background-size: 25px; 
@@ -274,11 +273,8 @@ h3 {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="60" fill="%235897FB">★</text></svg>');
 }
 
-/* --- Button Style --- */
-.complete-btn {
-    background-color: #8B0000;
-    color: white;
-    border: 1px solid #FF0000;
+/* --- Task Toggle Button Styles (Mark Complete/Uncomplete) --- */
+.task-toggle-btn {
     padding: 8px 15px;
     cursor: pointer;
     text-transform: uppercase;
@@ -287,8 +283,26 @@ h3 {
     font-family: inherit;
 }
 
+/* Style for Mark as Complete (same as previous .complete-btn) */
+.complete-btn {
+    background-color: #006400;
+    color: white;
+    border: 1px solid #00FF00;
+}
+
 .complete-btn:hover {
-    background-color: #A00000;
+    background-color: #008000;
+}
+
+/* NEW: Style for Mark as Uncomplete */
+.uncomplete-btn {
+    background-color: #4B0000;
+    color: #FFC0CB; /* Light pink/red to contrast */
+    border: 1px solid #FF4500;
+}
+
+.uncomplete-btn:hover {
+    background-color: #600000;
 }
 
 /* --- Page Visibility (For JS Routing) --- */
