@@ -102,7 +102,9 @@ const TASKS_DATA = [
         objectives: [
             "Plant 3 F-1 hand grenades on the first floor of the 3 story dorms",
             "Plant 3 F-1 hand grenades on the second floor of the 3 story dorms",
-            "Plant 3 F-1 hand grenades on the third floor of the 3 story dorms"
+            "Plant 3 F-1 hand grenades on the third floor of the 3 story dorms",
+
+            "Survive and Extract from the location"
         ],
         rewards: [
             { type: "dollars", amount: 100 },
