@@ -36,7 +36,7 @@ function checkRequirementsAndGenerateList(taskCard) {
     const requirementsAttribute = taskCard.getAttribute('data-task-requirements');
     const requirementsContainer = taskCard.querySelector('.task-requirements-list');
     
-    requirementsContainer.innerHTML = ''; // Clear previous list
+    requirementsContainer.innerHTML = ''; 
     let allRequirementsMet = true;
 
     if (requirementsAttribute === 'None' || !requirementsAttribute) {
@@ -55,12 +55,13 @@ function checkRequirementsAndGenerateList(taskCard) {
             const requiredTaskId = reqText.replace('Complete ', '').trim();
             isMet = completedTasks[requiredTaskId] === true;
         } else if (reqText.includes('LL')) {
-            // Loyalty Level Requirement: 'Prapor LL1'
-            // For now, assume LL requirements are UNMET until a full LL tracker is implemented.
-            isMet = false; // <<< THIS IS THE FIX, ASSUMING LL IS UNMET
+            // Loyalty Level Requirement: 'LL1', 'LL2', etc.
+            // TEMPORARY FIX: Assume LL requirements are NOT met until a proper LL tracker is built.
+            // This ensures the task stays locked if an LL is required.
+            isMet = false; 
         } else {
-            // Handle other custom requirements (e.g., must be PMC, etc.)
-            isMet = false; // Default to unmet for unknown/untracked requirements
+            // Handle other custom requirements
+            isMet = true; // Assume any other requirement is met for simplicity
         }
 
         if (!isMet) {
@@ -75,15 +76,6 @@ function checkRequirementsAndGenerateList(taskCard) {
         requirementsContainer.appendChild(requirementItem);
     });
     
-    // Now that we've checked the requirements, we need to handle the locking situation:
-    // If the task is locked ONLY by a task dependency, we want to allow it to be unlocked.
-    // However, if it's also locked by 'Prapor LL1', it will remain locked.
-    
-    // TEMPORARY OVERRIDE: If the only *unmet* requirement is a LL requirement, we'll allow
-    // the task to unlock if the user decides to ignore LL tracking for now.
-    // However, since Task 2 has both, it will remain locked until Task-1 is complete AND 
-    // the LL requirement is removed from the HTML for testing.
-
     return allRequirementsMet;
 }
 
@@ -186,7 +178,7 @@ traderFilter.addEventListener('change', filterTasks);
 taskSearch.addEventListener('keyup', filterTasks);
 
 
-// --- 6. TASK STATUS MANAGEMENT (No changes) ---
+// --- 6. TASK STATUS MANAGEMENT ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
@@ -272,10 +264,11 @@ document.querySelectorAll('.task-toggle-btn').forEach(button => {
 });
 
 
-// --- 7. EXPAND/COLLAPSE TASK LOGIC (No changes) ---
+// --- 7. EXPAND/COLLAPSE TASK LOGIC ---
 expandableCards.forEach(card => {
     card.addEventListener('click', (event) => {
-        if (event.target.classList.contains('task-toggle-btn') || event.target.closest('.task-toggle-btn') || event.target.type === 'checkbox') {
+        // Stop expansion/collapse if clicking on interactive elements
+        if (event.target.classList.contains('task-toggle-btn') || event.target.closest('.task-toggle-btn') || event.target.type === 'checkbox' || event.target.closest('.objective-item') || event.target.closest('.collapsed-requirements')) {
             return;
         }
 
