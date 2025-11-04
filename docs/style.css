@@ -232,7 +232,6 @@ h3 {
 .task-completed {
     opacity: 0.5; /* Fade completed tasks */
     border-left-color: #555; /* Mute the accent color */
-    /* text-decoration: line-through; (Handled by JS to allow text to be legible) */
 }
 
 .task-completed .trader-name, 
