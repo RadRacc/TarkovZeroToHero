@@ -1,19 +1,52 @@
 // --- 1. INITIALIZATION AND DATA KEYS ---
 const COMPLETED_TASKS_KEY = 'eftZthCompletedTasksMinimal';
 const COMPLETED_OBJECTIVES_KEY = 'eftZthCompletedObjectives'; 
+const TRADER_LL_KEY = 'eftZthTraderLL'; 
 
 let completedTasks = {}; 
 let completedObjectives = {}; 
+let traderLL = {}; 
 
 // DOM Elements
 const expandableCards = document.querySelectorAll('.task-card.expandable'); 
 const traderFilter = document.getElementById('trader-filter');
 const taskSearch = document.getElementById('task-search');
+const llCheckboxes = document.querySelectorAll('#ll-tracker input[type="checkbox"]');
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
     completedTasks = JSON.parse(localStorage.getItem(COMPLETED_TASKS_KEY) || '{}');
     completedObjectives = JSON.parse(localStorage.getItem(COMPLETED_OBJECTIVES_KEY) || '{}'); 
+    
+    // Initialize all 7 traders in the default data structure
+    const defaultData = { 
+        Prapor: { 1: false, 2: false, 3: false, 4: false }, 
+        Skier: { 1: false, 2: false, 3: false, 4: false },
+        Therapist: { 1: false, 2: false, 3: false, 4: false },
+        Peacekeeper: { 1: false, 2: false, 3: false, 4: false },
+        Mechanic: { 1: false, 2: false, 3: false, 4: false },   
+        Ragman: { 1: false, 2: false, 3: false, 4: false },     
+        Jaeger: { 1: false, 2: false, 3: false, 4: false }      
+    };
+
+    traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
+
+    // Ensure newly added traders exist if old data was loaded
+    const defaultLL = { 1: false, 2: false, 3: false, 4: false };
+    if (!traderLL.Peacekeeper) traderLL.Peacekeeper = {...defaultLL};
+    if (!traderLL.Mechanic) traderLL.Mechanic = {...defaultLL};
+    if (!traderLL.Ragman) traderLL.Ragman = {...defaultLL};
+    if (!traderLL.Jaeger) traderLL.Jaeger = {...defaultLL};
+
+
+    // Apply saved LL status to checkboxes
+    llCheckboxes.forEach(checkbox => {
+        const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader');
+        const ll = checkbox.getAttribute('data-ll');
+        if (traderLL[trader] && traderLL[trader][ll]) {
+            checkbox.checked = true;
+        }
+    });
 
     updateAllTaskStatuses(); 
     filterTasks(); 
@@ -22,10 +55,49 @@ function loadProgress() {
 function saveProgress() {
     localStorage.setItem(COMPLETED_TASKS_KEY, JSON.stringify(completedTasks));
     localStorage.setItem(COMPLETED_OBJECTIVES_KEY, JSON.stringify(completedObjectives)); 
+    localStorage.setItem(TRADER_LL_KEY, JSON.stringify(traderLL)); 
     console.log('Task and objective status saved.'); 
 }
 
-// --- 3. REQUIREMENTS CHECK AND GENERATION (FIXED LOGIC) ---
+// --- 3. LOYALTY LEVEL TRACKER HANDLER ---
+
+function handleLLToggle(event) {
+    const checkbox = event.target;
+    const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader');
+    const ll = checkbox.getAttribute('data-ll');
+    const isChecked = checkbox.checked;
+    
+    // 1. Update the data model
+    traderLL[trader][ll] = isChecked;
+
+    // 2. Enforce LL Hierarchy: If LL_X is checked, all lower levels must be checked. 
+    // If LL_X is unchecked, all higher levels must be unchecked.
+    const allLLCheckboxes = checkbox.closest('.ll-checkbox-group').querySelectorAll('input[type="checkbox"]');
+    
+    allLLCheckboxes.forEach(cb => {
+        const cbLL = parseInt(cb.getAttribute('data-ll'));
+
+        if (isChecked && cbLL < parseInt(ll)) {
+            // Check lower levels
+            cb.checked = true;
+            traderLL[trader][cbLL] = true;
+        } else if (!isChecked && cbLL > parseInt(ll)) {
+            // Uncheck higher levels
+            cb.checked = false;
+            traderLL[trader][cbLL] = false;
+        }
+    });
+
+    saveProgress();
+    updateAllTaskStatuses(); // Re-check task requirements after LL change
+}
+
+llCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', handleLLToggle);
+});
+
+
+// --- 4. REQUIREMENTS CHECK AND GENERATION (UPDATED) ---
 
 /**
  * Checks all prerequisites for a task and updates the requirements list display.
@@ -38,6 +110,7 @@ function checkRequirementsAndGenerateList(taskCard) {
     
     requirementsContainer.innerHTML = ''; 
     let allRequirementsMet = true;
+    const traderName = taskCard.getAttribute('data-trader');
 
     if (requirementsAttribute === 'None' || !requirementsAttribute) {
         requirementsContainer.innerHTML = '<div class="requirement-item met">No prerequisites.</div>';
@@ -54,14 +127,13 @@ function checkRequirementsAndGenerateList(taskCard) {
             // Task Dependency: 'Complete task-X'
             const requiredTaskId = reqText.replace('Complete ', '').trim();
             isMet = completedTasks[requiredTaskId] === true;
-        } else if (reqText.includes('LL')) {
+        } else if (reqText.startsWith('LL')) {
             // Loyalty Level Requirement: 'LL1', 'LL2', etc.
-            // TEMPORARY FIX: Assume LL requirements are NOT met until a proper LL tracker is built.
-            // This ensures the task stays locked if an LL is required.
-            isMet = false; 
+            const requiredLL = reqText.replace('LL', '');
+            // Check the new LL data model
+            isMet = traderLL[traderName] && traderLL[traderName][requiredLL] === true;
         } else {
-            // Handle other custom requirements
-            isMet = true; // Assume any other requirement is met for simplicity
+            isMet = true; 
         }
 
         if (!isMet) {
@@ -80,8 +152,7 @@ function checkRequirementsAndGenerateList(taskCard) {
 }
 
 
-// --- 4. CHECKLIST GENERATION AND MANAGEMENT (No changes) ---
-
+// --- 5. CHECKLIST GENERATION AND MANAGEMENT ---
 function generateChecklist(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const objectivesList = taskCard.getAttribute('data-objective-list');
@@ -148,7 +219,7 @@ function handleObjectiveToggle(event) {
 }
 
 
-// --- 5. FILTERING AND SEARCHING LOGIC (No changes) ---
+// --- 6. FILTERING AND SEARCHING LOGIC ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
     const searchTerm = taskSearch.value.toLowerCase().trim();
@@ -173,12 +244,11 @@ function filterTasks() {
     });
 }
 
-// Attach filter/search listeners
 traderFilter.addEventListener('change', filterTasks);
 taskSearch.addEventListener('keyup', filterTasks);
 
 
-// --- 6. TASK STATUS MANAGEMENT ---
+// --- 7. TASK STATUS MANAGEMENT ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
@@ -228,29 +298,26 @@ function handleTaskToggle(event) {
     const taskCard = button.closest('.task-card');
     const taskId = taskCard.getAttribute('data-task-id');
     
-    // Prevent toggling if the task is visually locked (safety check)
     if (taskCard.classList.contains('task-locked')) {
         event.stopPropagation();
         return;
     }
     
-    // Toggle the main task status
     completedTasks[taskId] = !completedTasks[taskId];
 
-    // If task is UNMARKED, reset sub-objectives
     if (!completedTasks[taskId] && completedObjectives[taskId]) {
+        // If uncompleting task, uncheck all objectives
         Object.keys(completedObjectives[taskId]).forEach(key => {
             completedObjectives[taskId][key] = false;
         });
     }
 
-    // If task is MARKED, ensure all sub-objectives are marked (manual override)
     if (completedTasks[taskId] && completedObjectives[taskId]) {
+        // If completing task, check all objectives
         Object.keys(completedObjectives[taskId]).forEach(key => {
             completedObjectives[taskId][key] = true;
         });
     }
-
 
     updateTaskStatus(taskCard);
     saveProgress();
@@ -258,16 +325,15 @@ function handleTaskToggle(event) {
     event.stopPropagation(); 
 }
 
-// Attach the toggle handler to all task buttons
 document.querySelectorAll('.task-toggle-btn').forEach(button => {
     button.addEventListener('click', handleTaskToggle);
 });
 
 
-// --- 7. EXPAND/COLLAPSE TASK LOGIC ---
+// --- 8. EXPAND/COLLAPSE TASK LOGIC ---
 expandableCards.forEach(card => {
     card.addEventListener('click', (event) => {
-        // Stop expansion/collapse if clicking on interactive elements
+        // Don't toggle expansion if clicking on a button, checkbox, or related element
         if (event.target.classList.contains('task-toggle-btn') || event.target.closest('.task-toggle-btn') || event.target.type === 'checkbox' || event.target.closest('.objective-item') || event.target.closest('.collapsed-requirements')) {
             return;
         }
