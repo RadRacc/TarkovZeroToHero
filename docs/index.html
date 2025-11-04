@@ -39,7 +39,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-                
+
                 <div class="trader-ll-group" data-trader="Therapist">
                     <h3>Therapist</h3>
                     <div class="ll-checkbox-group">
@@ -59,7 +59,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-                
+
                 <div class="trader-ll-group" data-trader="Mechanic">
                     <h3>Mechanic</h3>
                     <div class="ll-checkbox-group">
@@ -91,8 +91,9 @@
                 </div>
             </aside>
             
-            <main id="task-content">
-            
+            <main id="task-area">
+                
+                <!-- Filter Controls -->
                 <div id="filter-controls">
                     <select id="trader-filter">
                         <option value="all">Filter by Trader (All)</option>
@@ -118,14 +119,16 @@
                     <input type="text" id="task-search" placeholder="Search task title or objective...">
                 </div>
 
+                <!-- Task cards will be dynamically inserted here by script.js -->
                 <section id="tasks" class="page-content active-page">
                     <h2>Task Progression</h2>
-                    </section>
+                </section>
             
             </main>
         </div>
     </div>
 
+    <!-- Script files must be loaded in order: Data first, then Logic -->
     <script src="tasksData.js"></script>
     <script src="script.js"></script>
 </body>
