@@ -47,7 +47,7 @@
         <section id="tasks" class="page-content active-page">
             <h2>🎯 Phase 1: Prapor's Initial Orders</h2>
 
-            <div class="task-card expandable task-completed" data-task-id="task-1">
+            <div class="task-card expandable" data-task-id="task-1">
                 <div class="collapsed-view">
                     <span class="trader-name">Prapor</span>
                     <h3 class="task-title">Target Practice</h3>
@@ -64,6 +64,7 @@
                         <li data-item="bolt">2 Bolts</li>
                         <li data-item="rep-prapor">+0.01 Prapor Rep</li>
                     </ul>
+                    <button class="task-toggle-btn complete-btn" data-reward-roubles="5000">Mark as Complete</button>
                 </div>
             </div>
             
@@ -84,7 +85,7 @@
                         <li data-item="helmet-6b47">1 6B47 Helmet</li>
                         <li data-item="rep-prapor">+0.01 Prapor Rep</li>
                     </ul>
-                    <button class="complete-btn" data-reward-roubles="6000">Mark as Complete</button>
+                    <button class="task-toggle-btn complete-btn" data-reward-roubles="6000">Mark as Complete</button>
                 </div>
             </div>
         </section>
@@ -105,9 +106,20 @@
         </section>
 
         <section id="taxes" class="page-content hidden-page">
-            <h2>💸 Taxes & Debt Repayment</h2>
-            <p>Use this page to log repayments against your debt and track Flea Market taxes paid.</p>
-            <p>Total Taxes Paid: <span id="taxes-paid-display">0</span> Roubles</p>
+            <h2>💸 Custom Taxes & Debt Repayment</h2>
+            <p>Use this page for manual debt management and custom tax calculations based on your formulas.</p>
+
+            <div class="taxes-tracker">
+                <p>Total Taxes Paid: <span id="taxes-paid-display">0</span> ₽</p>
+                <div class="currency-input-group">
+                    <input type="number" id="tax-amount" placeholder="Tax Amount Paid" min="1">
+                    <button id="add-tax-btn" class="action-btn" data-currency="taxes" data-action="add">Log Tax</button>
+                </div>
+
+                <h3 style="margin-top: 30px;">Debt Repayment</h3>
+                <p>Current Debt: <span style="color: #FF4500;">0</span> ₽ (Use status bar to pay down)</p>
+                <p>Tax/Debt Formula Area Coming Soon.</p>
+            </div>
         </section>
 
     </div>
