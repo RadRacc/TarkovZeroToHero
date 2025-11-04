@@ -56,7 +56,9 @@ const TASKS_DATA = [
         dialogueComplete: "The lights are back on. Good. So you managed to survive a few minutes inside that scrap heap. You see? You're tougher than you look. Getting those things running means my contacts can get back to their operations, which means more roubles for me. And for you, I suppose. Take this cash—it's yours. And here's some scav armor; it's ugly, but it's better than nothing for your next run. Don't break it before you get home.",
         objectives: [
             "Locate and Repair Generator 1",
-            "Locate and Repair Generator 2"
+            "Locate and Repair Generator 2",
+            "",
+            "Survive and Extract from the location"
         ],
         rewards: [
             { type: "roubles", amount: 8000 },
