@@ -25,7 +25,7 @@ const TASKS_DATA = [
         objectiveSummary: "Repair 2 generators on Factory located at Medical Tent.",
         map: "Factory",
         // This task requires LL1, previous task completion, and a physical item (Toolset)
-        requirements: ["LL1", "Target Practice", "2 Toolset"], 
+        requirements: ["Target Practice", "2 Toolset"], 
         dialogueInitial: "Listen, I've got a problem over on Factory. Not my problem, mind you, but I need it fixed. Those stupid generators near the med tent are offline, and I had some... equipment running off that grid. It's a simple job: you need to go there and get two of those things repaired. I don't care if you have to slap them with a wrench or yell at them, just make them work. It's a busy spot, I know, but you need to get used to the noise. Get in, fix the power, and get out. Don't come back without that juice flowing, or you'll be fixing my mood next.",
         dialogueComplete: "The lights are back on. Good. So you managed to survive a few minutes inside that scrap heap. You see? You're tougher than you look. Getting those things running means my contacts can get back to their operations, which means more roubles for me. And for you, I suppose. Take this cash—it's yours. And here's some scav armor; it's ugly, but it's better than nothing for your next run. Don't break it before you get home.",
         objectives: [
@@ -34,10 +34,11 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 10000 },
-            { type: "item", name: "1 Electrical Components" },
-            { type: "item", name: "1 Screwdriver" }
+            { type: "item", name: "2 Electrical Components" },
+            { type: "item", name: "1 Screwdriver" },
+            { type: "item", name: "1 Silicon Tube" }
             // Trader Rep reward is removed
         ]
     }
-    // Add the rest of your TASKS_DATA here
+    
 ];
