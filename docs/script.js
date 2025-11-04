@@ -2,26 +2,27 @@
 const COMPLETED_TASKS_KEY = 'eftZthCompletedTasksMinimal';
 const COMPLETED_OBJECTIVES_KEY = 'eftZthCompletedObjectives'; 
 const TRADER_LL_KEY = 'eftZthTraderLL'; 
-const QUICK_SLOT_KEY = 'eftZthQuickSlotTasks'; // <-- NEW KEY
+const QUICK_SLOT_KEY = 'eftZthQuickSlotTasks'; 
 
 let completedTasks = {}; 
 let completedObjectives = {}; 
 let traderLL = {}; 
-let quickSlottedTasks = {}; // <-- NEW DATA STRUCTURE
+let quickSlottedTasks = {}; 
 
 // DOM Elements
-const expandableCards = document.querySelectorAll('.task-card.expandable'); 
+// expandableCards will be populated after tasks are generated
+let expandableCards = []; 
 const traderFilter = document.getElementById('trader-filter');
+const mapFilter = document.getElementById('map-filter'); // <-- NEW MAP FILTER
 const taskSearch = document.getElementById('task-search');
 const llCheckboxes = document.querySelectorAll('#ll-tracker input[type="checkbox"]');
-const tasksSection = document.getElementById('tasks'); // <-- New reference for sorting
+const tasksSection = document.getElementById('tasks'); 
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
     completedTasks = JSON.parse(localStorage.getItem(COMPLETED_TASKS_KEY) || '{}');
     completedObjectives = JSON.parse(localStorage.getItem(COMPLETED_OBJECTIVES_KEY) || '{}'); 
     
-    // Initialize all 7 traders in the default data structure (FIXED)
     const defaultData = { 
         Prapor: { 1: false, 2: false, 3: false, 4: false }, 
         Skier: { 1: false, 2: false, 3: false, 4: false },
@@ -33,17 +34,14 @@ function loadProgress() {
     };
 
     traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
-    quickSlottedTasks = JSON.parse(localStorage.getItem(QUICK_SLOT_KEY) || '{}'); // <-- NEW LOAD
+    quickSlottedTasks = JSON.parse(localStorage.getItem(QUICK_SLOT_KEY) || '{}'); 
 
-    // Ensure newly added traders exist if old data was loaded (FIXED)
     const defaultLL = { 1: false, 2: false, 3: false, 4: false };
     if (!traderLL.Peacekeeper) traderLL.Peacekeeper = {...defaultLL};
     if (!traderLL.Mechanic) traderLL.Mechanic = {...defaultLL};
     if (!traderLL.Ragman) traderLL.Ragman = {...defaultLL};
     if (!traderLL.Jaeger) traderLL.Jaeger = {...defaultLL};
 
-
-    // Apply saved LL status to checkboxes
     llCheckboxes.forEach(checkbox => {
         const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader');
         const ll = checkbox.getAttribute('data-ll');
@@ -52,17 +50,171 @@ function loadProgress() {
         }
     });
 
+    // START OF DYNAMIC GENERATION FLOW
+    generateTaskCards();
+    
+    // Re-initialize expandableCards now that they exist in the DOM
+    expandableCards = document.querySelectorAll('.task-card.expandable'); 
+    
+    // Add event listeners to dynamically created elements
+    addEventListeners(); 
+
     updateAllTaskStatuses(); 
     filterTasks(); 
-    sortTasks(); // <-- NEW: Sort after loading and status update
+    sortTasks(); 
 }
 
 function saveProgress() {
     localStorage.setItem(COMPLETED_TASKS_KEY, JSON.stringify(completedTasks));
     localStorage.setItem(COMPLETED_OBJECTIVES_KEY, JSON.stringify(completedObjectives)); 
     localStorage.setItem(TRADER_LL_KEY, JSON.stringify(traderLL)); 
-    localStorage.setItem(QUICK_SLOT_KEY, JSON.stringify(quickSlottedTasks)); // <-- NEW SAVE
+    localStorage.setItem(QUICK_SLOT_KEY, JSON.stringify(quickSlottedTasks)); 
     console.log('Task and objective status saved.'); 
+}
+
+// --- NEW: DYNAMIC TASK CARD GENERATION ---
+
+function generateTaskCards() {
+    tasksSection.innerHTML = '<h2>🎯 Task Progression</h2>'; 
+    
+    TASKS_DATA.forEach(task => {
+        const card = document.createElement('div');
+        card.classList.add('task-card', 'expandable');
+        
+        // Map rewards array to HTML list items
+        const rewardsHTML = task.rewards.map(reward => {
+            let itemText = '';
+            let dataAttr = '';
+            
+            if (reward.type === 'roubles') {
+                itemText = `${reward.amount.toLocaleString()} Roubles`;
+                dataAttr = `data-item="roubles"`;
+            } else if (reward.type === 'dollars') {
+                itemText = `${reward.amount.toLocaleString()} Dollars`;
+                dataAttr = `data-item="dollars"`;
+            } else if (reward.type === 'rep') {
+                itemText = `+${reward.amount.toFixed(2)} ${reward.trader} Rep`;
+                dataAttr = `data-item="rep-${reward.trader.toLowerCase()}"`;
+            } else if (reward.type === 'item') {
+                itemText = reward.name;
+                dataAttr = `data-item="${reward.name.toLowerCase().replace(/[^a-z0-9]/g, '')}"`;
+            }
+            return `<li ${dataAttr}>${itemText}</li>`;
+        }).join('');
+
+        // Determine requirement summary text for the collapsed view
+        let collapsedReqText = 'LL: N/A | Task Required: None';
+        const llReq = task.requirements.find(r => r.startsWith('LL'));
+        const taskReq = task.requirements.find(r => r.startsWith('task-'));
+        
+        if (llReq) {
+            collapsedReqText = `LL: ${llReq.replace('LL', '')}`;
+            if (taskReq) {
+                // Find the task name for the required task ID
+                const requiredTask = TASKS_DATA.find(t => t.id === taskReq);
+                const taskName = requiredTask ? requiredTask.title : taskReq;
+                collapsedReqText += ` | Task Required: ${taskName}`;
+            } else {
+                collapsedReqText += ` | Task Required: None`;
+            }
+        } else if (taskReq) {
+            const requiredTask = TASKS_DATA.find(t => t.id === taskReq);
+            const taskName = requiredTask ? requiredTask.title : taskReq;
+            collapsedReqText = `LL: N/A | Task Required: ${taskName}`;
+        }
+        
+        // Find the amount for roubles to put on the toggle button (for old logic)
+        const roublesReward = task.rewards.find(r => r.type === 'roubles');
+        const roublesAmount = roublesReward ? roublesReward.amount : 0;
+        
+        // Set Data Attributes
+        card.setAttribute('data-task-id', task.id);
+        card.setAttribute('data-trader', task.trader);
+        card.setAttribute('data-map', task.map); // <-- NEW MAP DATA ATTRIBUTE
+        card.setAttribute('data-dialogue-initial', task.dialogueInitial);
+        card.setAttribute('data-dialogue-complete', task.dialogueComplete);
+        card.setAttribute('data-objective-list', task.objectives.join(';'));
+        card.setAttribute('data-task-requirements', task.requirements.join(';'));
+        
+        // Construct Inner HTML
+        card.innerHTML = `
+            <div class="collapsed-view">
+                <div class="trader-icon-small" data-trader-id="${task.trader}"></div>
+                <div class="collapsed-text-group">
+                    <span class="trader-name">${task.trader}</span>
+                    <p class="collapsed-requirements">${collapsedReqText}</p>
+                    <h3 class="task-title">${task.title}</h3>
+                    <p class="task-objective">${task.objectiveSummary}</p>
+                </div>
+                <button class="quick-slot-btn" aria-label="Quick Slot Task">☆</button>
+            </div>
+            <div class="expanded-view hidden-detail">
+                <div class="trader-image-box" data-trader-id="${task.trader}"></div>
+                <div>
+                    <div class="dialogue-box">
+                        <h4>Dialogue (${task.trader})</h4>
+                        <p class="dialogue-text"></p>
+                    </div>
+                    
+                    <h4 class="requirements-heading">Requirements:</h4>
+                    <div class="task-requirements-list"></div>
+
+                    <h4 class="objectives-heading">Objectives:</h4>
+                    <div class="objective-checklist"></div>
+
+                    <h4 class="rewards-heading">Rewards:</h4>
+                    <ul class="rewards-list">
+                        ${rewardsHTML}
+                    </ul>
+                    <button class="task-toggle-btn complete-btn" data-reward-roubles="${roublesAmount}">Mark as Complete</button>
+                </div>
+            </div>
+        `;
+        
+        tasksSection.appendChild(card);
+    });
+}
+
+// --- NEW: Add all necessary event listeners after cards are generated ---
+function addEventListeners() {
+    // LL Tracker (already on static elements)
+    llCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', handleLLToggle);
+    });
+    
+    // Filters and Search (already on static elements)
+    traderFilter.addEventListener('change', filterTasks);
+    mapFilter.addEventListener('change', filterTasks); // <-- NEW LISTENER
+    taskSearch.addEventListener('keyup', filterTasks);
+    
+    // Buttons and Task Clicks (on dynamically created elements)
+    document.querySelectorAll('.task-toggle-btn').forEach(button => {
+        button.addEventListener('click', handleTaskToggle);
+    });
+    document.querySelectorAll('.quick-slot-btn').forEach(button => {
+        button.addEventListener('click', handleQuickSlotToggle);
+    });
+    
+    // Expand/Collapse Listener (Re-attaching to new cards)
+    document.querySelectorAll('.task-card.expandable').forEach(card => {
+        card.addEventListener('click', (event) => {
+            if (event.target.classList.contains('task-toggle-btn') || 
+                event.target.closest('.task-toggle-btn') || 
+                event.target.closest('.quick-slot-btn') || 
+                event.target.type === 'checkbox' || 
+                event.target.closest('.objective-item') || 
+                event.target.closest('.collapsed-requirements')) {
+                return;
+            }
+
+            const expandedView = card.querySelector('.expanded-view');
+            
+            if (expandedView) {
+                const isHidden = window.getComputedStyle(expandedView).display === 'none';
+                expandedView.style.display = isHidden ? 'grid' : 'none'; 
+            }
+        });
+    });
 }
 
 // --- 3. LOYALTY LEVEL TRACKER HANDLER ---
@@ -73,37 +225,27 @@ function handleLLToggle(event) {
     const ll = checkbox.getAttribute('data-ll');
     const isChecked = checkbox.checked;
     
-    // 1. Update the data model
     traderLL[trader][ll] = isChecked;
 
-    // 2. Enforce LL Hierarchy: If LL_X is checked, all lower levels must be checked. 
-    // If LL_X is unchecked, all higher levels must be unchecked.
     const allLLCheckboxes = checkbox.closest('.ll-checkbox-group').querySelectorAll('input[type="checkbox"]');
     
     allLLCheckboxes.forEach(cb => {
         const cbLL = parseInt(cb.getAttribute('data-ll'));
 
         if (isChecked && cbLL < parseInt(ll)) {
-            // Check lower levels
             cb.checked = true;
             traderLL[trader][cbLL] = true;
         } else if (!isChecked && cbLL > parseInt(ll)) {
-            // Uncheck higher levels
             cb.checked = false;
             traderLL[trader][cbLL] = false;
         }
     });
 
     saveProgress();
-    updateAllTaskStatuses(); // Re-check task requirements after LL change
+    updateAllTaskStatuses(); 
 }
 
-llCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', handleLLToggle);
-});
-
-
-// --- 4. REQUIREMENTS CHECK AND GENERATION (UPDATED) ---
+// --- 4. REQUIREMENTS CHECK AND GENERATION ---
 
 /**
  * Checks all prerequisites for a task and updates the requirements list display.
@@ -114,7 +256,6 @@ function checkRequirementsAndGenerateList(taskCard) {
     const requirementsAttribute = taskCard.getAttribute('data-task-requirements');
     const requirementsContainer = taskCard.querySelector('.task-requirements-list');
     
-    // Safety check for null/missing elements (FIXED)
     if (!requirementsContainer) return true; 
 
     requirementsContainer.innerHTML = ''; 
@@ -132,29 +273,42 @@ function checkRequirementsAndGenerateList(taskCard) {
         const reqText = req.trim();
         let isMet = true;
         
-        if (reqText.startsWith('Complete task-')) {
-            // Task Dependency: 'Complete task-X'
-            const requiredTaskId = reqText.replace('Complete ', '').trim();
-            isMet = completedTasks[requiredTaskId] === true;
+        if (reqText.startsWith('task-')) {
+            // Task Dependency: 'task-X'
+            isMet = completedTasks[reqText] === true;
+            
+            // Find the task title for display
+            const requiredTask = TASKS_DATA.find(t => t.id === reqText);
+            const displayReqText = `Complete: ${requiredTask ? requiredTask.title : reqText}`;
+            
+            if (!isMet) allRequirementsMet = false;
+
+            const statusClass = isMet ? 'met' : 'unmet';
+            const requirementItem = document.createElement('div');
+            requirementItem.classList.add('requirement-item', statusClass);
+            requirementItem.textContent = displayReqText;
+            requirementsContainer.appendChild(requirementItem);
+
         } else if (reqText.startsWith('LL')) {
             // Loyalty Level Requirement: 'LL1', 'LL2', etc.
             const requiredLL = reqText.replace('LL', '');
-            // Check the new LL data model
             isMet = traderLL[traderName] && traderLL[traderName][requiredLL] === true;
+            
+            const displayReqText = `${traderName} LL${requiredLL}`;
+
+            if (!isMet) allRequirementsMet = false;
+
+            const statusClass = isMet ? 'met' : 'unmet';
+            const requirementItem = document.createElement('div');
+            requirementItem.classList.add('requirement-item', statusClass);
+            requirementItem.textContent = displayReqText;
+            requirementsContainer.appendChild(requirementItem);
+
         } else {
+            // Handle 'None' or other explicit requirements that aren't LL/Task
             isMet = true; 
         }
 
-        if (!isMet) {
-            allRequirementsMet = false;
-        }
-
-        const statusClass = isMet ? 'met' : 'unmet';
-        
-        const requirementItem = document.createElement('div');
-        requirementItem.classList.add('requirement-item', statusClass);
-        requirementItem.textContent = reqText;
-        requirementsContainer.appendChild(requirementItem);
     });
     
     return allRequirementsMet;
@@ -167,7 +321,6 @@ function generateChecklist(taskCard) {
     const objectivesList = taskCard.getAttribute('data-objective-list');
     const checklistContainer = taskCard.querySelector('.objective-checklist');
     
-    // Safety check for null/missing elements (FIXED)
     if (!checklistContainer) return; 
 
     checklistContainer.innerHTML = ''; 
@@ -196,6 +349,7 @@ function generateChecklist(taskCard) {
     });
     
     checklistContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.removeEventListener('change', handleObjectiveToggle); // Defensive
         checkbox.addEventListener('change', handleObjectiveToggle);
     });
 }
@@ -208,22 +362,18 @@ function handleObjectiveToggle(event) {
     
     completedObjectives[taskId][index] = checkbox.checked;
     
-    if (checkbox.checked) {
-        const allCheckboxes = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
-        let allCompleted = true;
-        allCheckboxes.forEach(cb => {
-            if (!cb.checked) {
-                allCompleted = false;
-            }
-        });
+    const allCheckboxes = taskCard.querySelectorAll('.objective-checklist input[type="checkbox"]');
+    let allCompleted = true;
+    allCheckboxes.forEach(cb => {
+        if (!cb.checked) {
+            allCompleted = false;
+        }
+    });
 
-        if (allCompleted) {
-            completedTasks[taskId] = true;
-        }
+    if (allCompleted) {
+        completedTasks[taskId] = true;
     } else {
-        if (completedTasks[taskId]) {
-             completedTasks[taskId] = false;
-        }
+        completedTasks[taskId] = false;
     }
 
     updateTaskStatus(taskCard); 
@@ -231,14 +381,19 @@ function handleObjectiveToggle(event) {
 }
 
 
-// --- 6. FILTERING AND SEARCHING LOGIC ---
+// --- 6. FILTERING AND SEARCHING LOGIC (UPDATED WITH MAP FILTER) ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
+    const selectedMap = mapFilter.value; // <-- NEW
     const searchTerm = taskSearch.value.toLowerCase().trim();
 
-    expandableCards.forEach(card => {
+    // Re-select cards in case the DOM was updated
+    const currentCards = document.querySelectorAll('.task-card.expandable'); 
+
+    currentCards.forEach(card => {
         const trader = card.getAttribute('data-trader');
-        // Safety checks for missing elements (FIXED)
+        const map = card.getAttribute('data-map'); // <-- NEW
+        
         const titleElement = card.querySelector('.task-title');
         const objectiveElement = card.querySelector('.task-objective');
 
@@ -246,13 +401,14 @@ function filterTasks() {
         const objective = objectiveElement ? objectiveElement.textContent.toLowerCase() : '';
 
         let matchesTrader = (selectedTrader === 'all' || trader === selectedTrader);
+        let matchesMap = (selectedMap === 'all' || map === selectedMap || map === 'Any'); // 'Any' map tasks show up on all map filters
         let matchesSearch = true;
 
         if (searchTerm.length > 0) {
             matchesSearch = title.includes(searchTerm) || objective.includes(searchTerm);
         }
 
-        if (matchesTrader && matchesSearch) {
+        if (matchesTrader && matchesMap && matchesSearch) { // <-- NEW MAP CHECK
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
@@ -260,22 +416,17 @@ function filterTasks() {
     });
 }
 
-traderFilter.addEventListener('change', filterTasks);
-taskSearch.addEventListener('keyup', filterTasks);
-
-
 // --- 7. TASK STATUS MANAGEMENT ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
-    const isQuickSlotted = quickSlottedTasks[taskId] === true; // <-- NEW: Check quick slot status
+    const isQuickSlotted = quickSlottedTasks[taskId] === true; 
     
-    // Safety checks for missing elements (FIXED)
     const toggleButton = taskCard.querySelector('.task-toggle-btn');
     const dialogueTextElement = taskCard.querySelector('.dialogue-text'); 
-    const quickSlotButton = taskCard.querySelector('.quick-slot-btn'); // <-- NEW: Get quick slot button
+    const quickSlotButton = taskCard.querySelector('.quick-slot-btn'); 
     
-    if (!toggleButton || !dialogueTextElement) return; // Exit if critical elements are missing
+    if (!toggleButton || !dialogueTextElement) return; 
 
     // 1. Check Requirements
     const isUnlocked = checkRequirementsAndGenerateList(taskCard);
@@ -291,14 +442,12 @@ function updateTaskStatus(taskCard) {
 
     // 3. Manage Complete/Incomplete State (only if unlocked)
     if (completedTasks[taskId] && isUnlocked) {
-        // MARKED AS COMPLETE
         taskCard.classList.add('task-completed');
         toggleButton.textContent = 'Mark as Uncomplete';
         toggleButton.classList.remove('complete-btn'); 
         toggleButton.classList.add('uncomplete-btn');
         dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-complete'); 
     } else {
-        // MARKED AS INCOMPLETE or UNLOCKED
         taskCard.classList.remove('task-completed');
         toggleButton.textContent = 'Mark as Complete';
         toggleButton.classList.remove('uncomplete-btn');
@@ -306,16 +455,16 @@ function updateTaskStatus(taskCard) {
         dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-initial'); 
     }
     
-    // 4. Manage Quick Slot State (NEW)
+    // 4. Manage Quick Slot State
     if (quickSlotButton) {
         if (isQuickSlotted) {
             taskCard.classList.add('task-quick-slotted');
             quickSlotButton.classList.add('slotted-active');
-            quickSlotButton.innerHTML = '★'; // Solid star
+            quickSlotButton.innerHTML = '★'; 
         } else {
             taskCard.classList.remove('task-quick-slotted');
             quickSlotButton.classList.remove('slotted-active');
-            quickSlotButton.innerHTML = '☆'; // Hollow star
+            quickSlotButton.innerHTML = '☆'; 
         }
     }
     
@@ -324,8 +473,8 @@ function updateTaskStatus(taskCard) {
 }
 
 function updateAllTaskStatuses() {
-    expandableCards.forEach(updateTaskStatus);
-    sortTasks(); // <-- NEW: Sort after all statuses are applied
+    document.querySelectorAll('.task-card.expandable').forEach(updateTaskStatus);
+    sortTasks(); 
 }
 
 
@@ -341,98 +490,64 @@ function handleTaskToggle(event) {
     
     completedTasks[taskId] = !completedTasks[taskId];
 
-    if (!completedTasks[taskId] && completedObjectives[taskId]) {
+    const objectiveCount = taskCard.getAttribute('data-objective-list').split(';').length;
+    
+    if (!completedTasks[taskId]) {
         // If uncompleting task, uncheck all objectives
-        Object.keys(completedObjectives[taskId]).forEach(key => {
-            completedObjectives[taskId][key] = false;
-        });
-    }
-
-    if (completedTasks[taskId] && completedObjectives[taskId]) {
+        for (let i = 0; i < objectiveCount; i++) {
+            completedObjectives[taskId][i] = false;
+        }
+    } else {
         // If completing task, check all objectives
-        Object.keys(completedObjectives[taskId]).forEach(key => {
-            completedObjectives[taskId][key] = true;
-        });
+        for (let i = 0; i < objectiveCount; i++) {
+            completedObjectives[taskId][i] = true;
+        }
     }
 
     updateTaskStatus(taskCard);
     saveProgress();
     
+    // Re-evaluate dependencies of ALL tasks
+    updateAllTaskStatuses(); 
+    
     event.stopPropagation(); 
 }
 
-document.querySelectorAll('.task-toggle-btn').forEach(button => {
-    button.addEventListener('click', handleTaskToggle);
-});
 
-
-// --- 8. EXPAND/COLLAPSE TASK LOGIC ---
-expandableCards.forEach(card => {
-    card.addEventListener('click', (event) => {
-        // Don't toggle expansion if clicking on a button, checkbox, or related element
-        if (event.target.classList.contains('task-toggle-btn') || 
-            event.target.closest('.task-toggle-btn') || 
-            event.target.closest('.quick-slot-btn') || // <-- NEW: Ignore quick slot button
-            event.target.type === 'checkbox' || 
-            event.target.closest('.objective-item') || 
-            event.target.closest('.collapsed-requirements')) {
-            return;
-        }
-
-        const expandedView = card.querySelector('.expanded-view');
-        
-        if (expandedView) {
-            const isHidden = window.getComputedStyle(expandedView).display === 'none';
-            expandedView.style.display = isHidden ? 'grid' : 'none'; 
-        }
-    });
-});
-
-// --- 9. QUICK SLOT SYSTEM HANDLER (NEW SECTION) ---
+// --- 8. QUICK SLOT SYSTEM HANDLER ---
 
 function handleQuickSlotToggle(event) {
     const button = event.target.closest('.quick-slot-btn');
     const taskCard = button.closest('.task-card');
     const taskId = taskCard.getAttribute('data-task-id');
     
-    // Toggle the state
     quickSlottedTasks[taskId] = !quickSlottedTasks[taskId];
     if (!quickSlottedTasks[taskId]) {
-        delete quickSlottedTasks[taskId]; // Clean up if unslotted
+        delete quickSlottedTasks[taskId]; 
     }
 
-    // Update UI and save
     updateTaskStatus(taskCard);
     saveProgress();
-    sortTasks(); // <-- NEW: Sort immediately after toggling
+    sortTasks(); 
     
-    event.stopPropagation(); // Prevent the card from expanding/collapsing
+    event.stopPropagation(); 
 }
 
-document.querySelectorAll('.quick-slot-btn').forEach(button => {
-    button.addEventListener('click', handleQuickSlotToggle);
-});
-
-// --- 10. TASK SORTING LOGIC (NEW SECTION) ---
+// --- 9. TASK SORTING LOGIC ---
 
 function sortTasks() {
-    // Collect all task cards
     const allCards = document.querySelectorAll('.task-card.expandable'); 
     
     const sortedCards = Array.from(allCards).sort((a, b) => {
-        // Determine quick slot status
         const aIsSlotted = a.classList.contains('task-quick-slotted');
         const bIsSlotted = b.classList.contains('task-quick-slotted');
         
-        // Slotted tasks should come first (order: -1)
-        if (aIsSlotted && !bIsSlotted) return -1; // a goes before b
-        if (!aIsSlotted && bIsSlotted) return 1; // b goes before a
+        if (aIsSlotted && !bIsSlotted) return -1; 
+        if (!aIsSlotted && bIsSlotted) return 1; 
         
-        // Keep original DOM order for tasks that are not pinned
         return 0; 
     });
 
-    // Re-append cards to the tasks section in the sorted order
     sortedCards.forEach(card => {
         tasksSection.appendChild(card);
     });
