@@ -30,7 +30,7 @@ const TASKS_DATA = [
         requirements: ["N/A"],
         // NEW: Initial equipment array (the items you receive to deliver)
         initial_equipment: [ 
-            { name: "2 Salewa First Aid Kits", icon: "icon-salewa.png" }
+            { name: "2 Salewa First Aid Kits", icon: "icon-sfak.png" }
         ],
         walkthrough: "The Salewas are given to you at the start. To complete the task, you only need to survive the raid (or buy them from the Flea Market/trade if you lose them) and hand them over to Therapist through the task completion menu.", // NEW: Walkthrough
         dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
