@@ -1,4 +1,4 @@
-/* --- Global Styles & Reset --- */
+/* --- Global Styles & Resets --- */
 body {
     font-family: 'Roboto Mono', monospace, Arial, sans-serif; 
     background-color: hsl(0, 0%, 10%); 
@@ -250,27 +250,27 @@ body {
     color: white;
 }
 
-/* Trader Portrait Image Links - Relative to docs/style.css */
+/* Trader Portrait Image Links - Using explicit relative path (./) */
 .trader-image-box[data-trader-id="Prapor"] { 
-    background-image: url('images/prapor-portrait.png'); 
+    background-image: url('./images/prapor-portrait.png'); 
 }
 .trader-image-box[data-trader-id="Skier"] { 
-    background-image: url('images/skier-portrait.png'); 
+    background-image: url('./images/skier-portrait.png'); 
 }
 .trader-image-box[data-trader-id="Therapist"] { 
-    background-image: url('images/therapist-portrait.png'); 
+    background-image: url('./images/therapist-portrait.png'); 
 }
 .trader-image-box[data-trader-id="Peacekeeper"] { 
-    background-image: url('images/peacekeeper-portrait.png'); 
+    background-image: url('./images/peacekeeper-portrait.png'); 
 }
 .trader-image-box[data-trader-id="Mechanic"] { 
-    background-image: url('images/mechanic-portrait.png'); 
+    background-image: url('./images/mechanic-portrait.png'); 
 }
 .trader-image-box[data-trader-id="Ragman"] { 
-    background-image: url('images/ragman-portrait.png'); 
+    background-image: url('./images/ragman-portrait.png'); 
 }
 .trader-image-box[data-trader-id="Jaeger"] { 
-    background-image: url('images/jaeger-portrait.png'); 
+    background-image: url('./images/jaeger-portrait.png'); 
 }
 
 
