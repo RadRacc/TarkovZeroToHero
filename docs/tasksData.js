@@ -89,27 +89,6 @@ const TASKS_DATA = [
         ]
     },
     {
-        id: "Delivery from the Past",
-        trader: "Prapor",
-        title: "Delivery from the Past",
-        objectiveSummary: "Find the secure folder in the Customs offices and deliver it to Prapor's delivery point on Factory.",
-        map: "Customs/Factory",
-        requirements: ["Emergency Repairs"],
-        initial_equipment: [],
-        walkthrough: "The secure folder is found on a desk on the second floor of the main Customs office building (next to the gas station). Once found, it must be put into your secure container and then placed in the hidden cache on Factory. You must survive the raid after placing the item.",
-        dialogueInitial: "I have a small delivery that needs to be made. A contact left a secure folder in the Customs offices—it has some... old maps. You need to pick it up, take it to the Factory, and put it in the cache near the tunnels. I don't want anyone to know I was involved, so you're my mule. Get it done, and I'll make sure you're compensated for the risk. But lose that folder, and you owe me.",
-        dialogueComplete: "The folder is secured. Good. You have proven you can handle multiple points of contact without messing up the drop. This is just the beginning of what I have planned for you. Take the cash.",
-        objectives: [
-            "Find the secure folder in the Customs offices",
-            "Place the secure folder in the Factory cache",
-            "Survive and Extract from the location"
-        ],
-        rewards: [
-            { type: "roubles", amount: 10000 },
-            { type: "item", name: "1 AKM/AK-74/RPK-16 'Zenit' RK-3 pistol grip", icon: "icon-rk3-grip.png" }
-        ]
-    },
-    {
         id: "Strange Symbol - Part 1",
         trader: "Skier",
         title: "Strange Symbol - Part 1",
@@ -129,6 +108,34 @@ const TASKS_DATA = [
             { type: "item", name: "6 Bundles of wires", icon: "icon-wires.png" },
             { type: "item", name: "2 PC CPU", icon: "icon-cpu.png" },
             { type: "item", name: "2 Metal spare parts", icon: "icon-metal-spare-parts.png" }
+        ]
+    },
+    {
+        id: "Strange Symbol - Part 2",
+        trader: "Skier",
+        title: "Strange Symbol - Part 2",
+        objectiveSummary: "Investigate the strange markings in the bunker behind Sniper Rock.",
+        map: "Woods",
+        requirements: ["Strange Symbol - Part 1"],
+        initial_equipment: [],
+        
+        // New Walkthrough
+        walkthrough: "This bunker is separate from the first one. It's located just south and slightly to the east of Sniper Rock, often referred to as the 'Old Log Camp' bunker. The markings are an interaction point found on the wall inside the bunker's main room. Visit the location and survive the raid to complete the task.",
+        
+        // New Dialogue
+        dialogueInitial: "The first set of symbols—they're complex. Too complex for a typical ritual, maybe. But the report I got says there’s a second set of markings, deeper in the woods, near a secondary bunker system. This one is less obvious, hidden near an old logging operation. You need to go back out there, find those new symbols, and confirm if they match the first set, or if they tell a different part of the story. Same rule as last time: eyes only. Get me the data, and get out clean.",
+        
+        // New Dialogue
+        dialogueComplete: "Two separate locations, two sets of symbols. Interesting. They point to something... organized. I’m starting to see a pattern, but I need a lot more components to figure it out fully. You've earned this pay—it's worth more than the dirt you walked through. Don't worry, the next step involves less walking and more profit, assuming you can keep your mouth shut.",
+        
+        objectives: [
+            "Find the bunker",
+            "Survive and Extract from the location"
+        ],
+        rewards: [
+            { type: "roubles", amount: 6000 },
+            { type: "item", name: "1 Golden neck chain", icon: "icon-gold-chain.png" },
+            { type: "item", name: "4 Light bulb", icon: "icon-light-bulb.png" }
         ]
     },
     {
