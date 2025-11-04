@@ -67,12 +67,32 @@ const TASKS_DATA = [
         ]
     },
     {
+        id: "Antibiotics - Part 1",
+        trader: "Therapist",
+        title: "Antibiotics - Part 1",
+        objectiveSummary: "Hand over 5 Found in Raid Analgin painkillers.", 
+        map: "Any",
+        requirements: ["First Aid Supplies"], 
+        initial_equipment: [],
+        walkthrough: "Analgin painkillers are common medical spawns. Look for them in medicine bags, ambulances, and inside medical supply crates, particularly on Shoreline and Interchange. Ensure they are Found In Raid (FIR). Once you have 5, hand them over to Therapist.", 
+        dialogueInitial: "The situation is worsening. I'm seeing more infected wounds than ever before. To treat these, I need a reliable supply of basic pain management drugs, and my reserves are almost gone. I need you to find me **five packs of Analgin painkillers**, and they must be **Found in Raid**. I can't risk using anything that's been tampered with. This is a simple collection job, but a vital one for the rest of my patients.",
+        dialogueComplete: "Excellent, you procured them quickly. Analgin is a start, it helps ease the worst of the pain while we prepare for more complex treatments. I appreciate your discretion and promptness. Here, take these medical supplies; you'll likely need them more than I do right now. Be ready for the next phase of this operation.",
+        objectives: [
+            "Hand over 5 found in raid Analgin painkillers"
+        ],
+        rewards: [
+            { type: "roubles", amount: 5000 },
+            { type: "item", name: "2 Bottle of hydrogen peroxide", icon: "icon-hydrogen-peroxide.png" },
+            { type: "item", name: "1 Aseptic bandage", icon: "icon-aseptic-bandage.png" },
+        ]
+    },
+    {
         id: "Cleanup Crew",
         trader: "Peacekeeper",
         title: "Cleanup Crew",
         objectiveSummary: "Eliminate 5 PMCs with an MP5.",
         map: "Any",
-        requirements: ["Emergency Repairs", "5 Dogtags"],
+        requirements: ["LL1", "Emergency Repairs", "5 Dogtags"],
         initial_equipment: [
             { name: "2 HK MP5 9x19 submachine gun (Navy 3 Round Burst)", icon: "icon-mp5.png" }
         ],
