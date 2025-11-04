@@ -476,7 +476,7 @@ function updateTaskStatus(taskCard) {
     // 3. Manage Complete/Incomplete State (only if unlocked)
     if (completedTasks[taskId] && isUnlocked) {
         taskCard.classList.add('task-completed');
-        toggleButton.textContent = 'Mark as Uncomplete';
+        toggleButton.textContent = 'Mark as Incomplete';
         toggleButton.classList.remove('complete-btn'); 
         toggleButton.classList.add('uncomplete-btn');
         dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-complete'); 
