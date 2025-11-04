@@ -10,10 +10,9 @@ let traderLL = {};
 let quickSlottedTasks = {}; 
 
 // DOM Elements
-// expandableCards will be populated after tasks are generated
 let expandableCards = []; 
 const traderFilter = document.getElementById('trader-filter');
-const mapFilter = document.getElementById('map-filter'); // <-- NEW MAP FILTER
+const mapFilter = document.getElementById('map-filter'); 
 const taskSearch = document.getElementById('task-search');
 const llCheckboxes = document.querySelectorAll('#ll-tracker input[type="checkbox"]');
 const tasksSection = document.getElementById('tasks'); 
@@ -36,6 +35,7 @@ function loadProgress() {
     traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
     quickSlottedTasks = JSON.parse(localStorage.getItem(QUICK_SLOT_KEY) || '{}'); 
 
+    // Safety check for traders added late
     const defaultLL = { 1: false, 2: false, 3: false, 4: false };
     if (!traderLL.Peacekeeper) traderLL.Peacekeeper = {...defaultLL};
     if (!traderLL.Mechanic) traderLL.Mechanic = {...defaultLL};
@@ -50,6 +50,13 @@ function loadProgress() {
         }
     });
 
+    // CRITICAL: Ensure TASKS_DATA is defined
+    if (typeof TASKS_DATA === 'undefined') {
+         tasksSection.innerHTML = '<h2>🎯 Task Progression</h2><p style="color:red;">FATAL ERROR: TASKS_DATA is missing. Ensure `tasksData.js` is loaded before `script.js` in your index.html file.</p>';
+         console.error("FATAL ERROR: TASKS_DATA is undefined. Ensure tasksData.js is loaded before script.js.");
+         return;
+    }
+    
     // START OF DYNAMIC GENERATION FLOW
     generateTaskCards();
     
@@ -105,12 +112,17 @@ function generateTaskCards() {
         // Determine requirement summary text for the collapsed view
         let collapsedReqText = 'LL: N/A | Task Required: None';
         const llReq = task.requirements.find(r => r.startsWith('LL'));
-        const taskReq = task.requirements.find(r => r.startsWith('task-'));
+        
+        // FIX: Find the task dependency by checking if the requirement is a task ID (a string that matches an existing task ID)
+        const taskReq = task.requirements.find(r => 
+            r !== 'None' && 
+            !r.startsWith('LL') && 
+            TASKS_DATA.some(t => t.id === r)
+        );
         
         if (llReq) {
             collapsedReqText = `LL: ${llReq.replace('LL', '')}`;
             if (taskReq) {
-                // Find the task name for the required task ID
                 const requiredTask = TASKS_DATA.find(t => t.id === taskReq);
                 const taskName = requiredTask ? requiredTask.title : taskReq;
                 collapsedReqText += ` | Task Required: ${taskName}`;
@@ -130,7 +142,7 @@ function generateTaskCards() {
         // Set Data Attributes
         card.setAttribute('data-task-id', task.id);
         card.setAttribute('data-trader', task.trader);
-        card.setAttribute('data-map', task.map); // <-- NEW MAP DATA ATTRIBUTE
+        card.setAttribute('data-map', task.map); 
         card.setAttribute('data-dialogue-initial', task.dialogueInitial);
         card.setAttribute('data-dialogue-complete', task.dialogueComplete);
         card.setAttribute('data-objective-list', task.objectives.join(';'));
@@ -184,7 +196,7 @@ function addEventListeners() {
     
     // Filters and Search (already on static elements)
     traderFilter.addEventListener('change', filterTasks);
-    mapFilter.addEventListener('change', filterTasks); // <-- NEW LISTENER
+    mapFilter.addEventListener('change', filterTasks); 
     taskSearch.addEventListener('keyup', filterTasks);
     
     // Buttons and Task Clicks (on dynamically created elements)
@@ -245,7 +257,7 @@ function handleLLToggle(event) {
     updateAllTaskStatuses(); 
 }
 
-// --- 4. REQUIREMENTS CHECK AND GENERATION ---
+// --- 4. REQUIREMENTS CHECK AND GENERATION (FIXED LOGIC) ---
 
 /**
  * Checks all prerequisites for a task and updates the requirements list display.
@@ -273,13 +285,14 @@ function checkRequirementsAndGenerateList(taskCard) {
         const reqText = req.trim();
         let isMet = true;
         
-        if (reqText.startsWith('task-')) {
-            // Task Dependency: 'task-X'
-            isMet = completedTasks[reqText] === true;
+        // FIX: Look up the requirement text in the TASKS_DATA array
+        const requiredTask = TASKS_DATA.find(t => t.id === reqText); 
+        
+        if (requiredTask) {
+            // Task Dependency: Uses the task title/ID
+            isMet = completedTasks[requiredTask.id] === true;
             
-            // Find the task title for display
-            const requiredTask = TASKS_DATA.find(t => t.id === reqText);
-            const displayReqText = `Complete: ${requiredTask ? requiredTask.title : reqText}`;
+            const displayReqText = `Complete: ${requiredTask.title}`;
             
             if (!isMet) allRequirementsMet = false;
 
@@ -304,11 +317,21 @@ function checkRequirementsAndGenerateList(taskCard) {
             requirementItem.textContent = displayReqText;
             requirementsContainer.appendChild(requirementItem);
 
-        } else {
-            // Handle 'None' or other explicit requirements that aren't LL/Task
-            isMet = true; 
-        }
+        } else if (reqText !== 'None' && reqText.length > 0) {
+            // Other item/requirement (e.g., '1 Toolset', handled as general unmet for display)
+             // We assume that if it's not LL or a Task ID, it is an item requirement 
+            // which we treat as met for unlocking purposes (otherwise all tasks would stay locked)
+            isMet = true; // Assume met for display purposes unless you want complex item checks
+            
+            // To display item requirements as un-met by default, change isMet to false here
+            // isMet = false; 
 
+            const statusClass = isMet ? 'met' : 'unmet';
+            const requirementItem = document.createElement('div');
+            requirementItem.classList.add('requirement-item', statusClass);
+            requirementItem.textContent = `Hand over: ${reqText}`;
+            requirementsContainer.appendChild(requirementItem);
+        }
     });
     
     return allRequirementsMet;
@@ -381,10 +404,10 @@ function handleObjectiveToggle(event) {
 }
 
 
-// --- 6. FILTERING AND SEARCHING LOGIC (UPDATED WITH MAP FILTER) ---
+// --- 6. FILTERING AND SEARCHING LOGIC ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
-    const selectedMap = mapFilter.value; // <-- NEW
+    const selectedMap = mapFilter.value; 
     const searchTerm = taskSearch.value.toLowerCase().trim();
 
     // Re-select cards in case the DOM was updated
@@ -392,7 +415,7 @@ function filterTasks() {
 
     currentCards.forEach(card => {
         const trader = card.getAttribute('data-trader');
-        const map = card.getAttribute('data-map'); // <-- NEW
+        const map = card.getAttribute('data-map'); 
         
         const titleElement = card.querySelector('.task-title');
         const objectiveElement = card.querySelector('.task-objective');
@@ -408,7 +431,7 @@ function filterTasks() {
             matchesSearch = title.includes(searchTerm) || objective.includes(searchTerm);
         }
 
-        if (matchesTrader && matchesMap && matchesSearch) { // <-- NEW MAP CHECK
+        if (matchesTrader && matchesMap && matchesSearch) { 
             card.style.display = 'block';
         } else {
             card.style.display = 'none';
@@ -490,8 +513,13 @@ function handleTaskToggle(event) {
     
     completedTasks[taskId] = !completedTasks[taskId];
 
-    const objectiveCount = taskCard.getAttribute('data-objective-list').split(';').length;
+    const objectiveListAttr = taskCard.getAttribute('data-objective-list');
+    const objectiveCount = objectiveListAttr ? objectiveListAttr.split(';').length : 0;
     
+    if (!completedObjectives[taskId]) {
+        completedObjectives[taskId] = {};
+    }
+
     if (!completedTasks[taskId]) {
         // If uncompleting task, uncheck all objectives
         for (let i = 0; i < objectiveCount; i++) {
