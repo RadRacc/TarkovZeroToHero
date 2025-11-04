@@ -17,7 +17,8 @@ const TASKS_DATA = [
         rewards: [
             { type: "roubles", amount: 6000 },
             { type: "item", name: "2 Bolts", icon: "icon-bolts.png" },
-            { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png" }
+            { type: "item", name: "1 Weapon Parts", icon: "icon-weapon-parts.png" },
+            { type: "item", name: "1 Emergency water ration", icon: "icon-emr.png" }
         ]
     },
 
@@ -112,8 +113,9 @@ const TASKS_DATA = [
             "Survive and Extract from the location"
         ],
         rewards: [
-            { type: "dollars", amount: 100 },
-            { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" }
+            { type: "dollars", amount: 50 },
+            { type: "item", name: "2 Xenomorph sealing foam", icon: "icon-xenomorph.png" },
+            { type: "item", name: "1 Gas analyzer", icon: "icon-gas-analyzer.png }
         ]
     },
     
