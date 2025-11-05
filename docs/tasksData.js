@@ -1,7 +1,3 @@
-// ... (script.js content)
-    // Load progress when the page first loads
-    loadProgress();
-
 const TASKS_DATA = [
     // --------------------------------------------------------------------------------------------------
     // CORE STARTER QUEST
