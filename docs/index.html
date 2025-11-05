@@ -30,8 +30,8 @@
                     </div>
                 </div>
 
-                <div class="trader-ll-group" data-trader="Skier">
-                    <h3>Skier</h3>
+                <div class="trader-ll-group" data-trader="Therapist">
+                    <h3>Therapist</h3>
                     <div class="ll-checkbox-group">
                         <label><input type="checkbox" data-ll="1"> LL1</label>
                         <label><input type="checkbox" data-ll="2"> LL2</label>
@@ -40,8 +40,8 @@
                     </div>
                 </div>
 
-                <div class="trader-ll-group" data-trader="Therapist">
-                    <h3>Therapist</h3>
+                <div class="trader-ll-group" data-trader="Skier">
+                    <h3>Skier</h3>
                     <div class="ll-checkbox-group">
                         <label><input type="checkbox" data-ll="1"> LL1</label>
                         <label><input type="checkbox" data-ll="2"> LL2</label>
@@ -59,7 +59,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
                 <div class="trader-ll-group" data-trader="Mechanic">
                     <h3>Mechanic</h3>
                     <div class="ll-checkbox-group">
@@ -69,7 +69,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
                 <div class="trader-ll-group" data-trader="Ragman">
                     <h3>Ragman</h3>
                     <div class="ll-checkbox-group">
@@ -79,7 +79,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-                
+
                 <div class="trader-ll-group" data-trader="Jaeger">
                     <h3>Jaeger</h3>
                     <div class="ll-checkbox-group">
@@ -89,41 +89,24 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-            </aside>
-            
-            <aside id="stats-tracker">
-                <h2>Personal Stats</h2>
-                <div id="currency-display" class="stat-group">
-                    <h4>Total Earned Wallet</h4>
-                    <p>₽ <span id="stat-roubles">0</span></p>
-                    <p>$ <span id="stat-dollars">0</span></p>
-                    <p>€ <span id="stat-euros">0</span></p>
-                </div>
-                <div id="survival-streak" class="stat-group">
-                    <h4>Survival Streak</h4>
-                    <p><span id="streak-count">0</span> raids</p>
-                    <div class="button-group">
-                        <button id="streak-survived" class="complete-btn small-btn">Survived</button>
-                        <button id="streak-kia" class="uncomplete-btn small-btn">K.I.A.</button>
-                    </div>
-                </div>
+
             </aside>
 
-            <main class="main-content-area">
-                
-                <div id="tab-navigation">
-                    <button data-tab="tasks" class="tab-button active">Task Tracker</button>
-                    <button data-tab="stash-tools" class="tab-button">Stash & Tools</button>
-                    <button data-tab="hideout-perks" class="tab-button">Hideout & Perks</button>
-                </div>
-                
+            <main>
+                <nav id="tab-navigation">
+                    <button data-tab="tasks" class="active">🎯 Task Progression</button>
+                    <button data-tab="stats-tracker">💰 Stats & Streak</button>
+                    <button data-tab="stash-tools">📦 Virtual Stash & Tools</button>
+                </nav>
+
                 <section id="tasks" class="page-content active-page">
-                    <div class="filter-group">
+                    <h2>Task Progression</h2>
+                    <div id="filter-controls">
                         <select id="trader-filter">
                             <option value="all">Filter by Trader (All)</option>
                             <option value="Prapor">Prapor</option>
-                            <option value="Skier">Skier</option>
                             <option value="Therapist">Therapist</option>
+                            <option value="Skier">Skier</option>
                             <option value="Peacekeeper">Peacekeeper</option>
                             <option value="Mechanic">Mechanic</option>
                             <option value="Ragman">Ragman</option>
@@ -134,48 +117,76 @@
                             <option value="Any">Any Map</option>
                             <option value="Customs">Customs</option>
                             <option value="Factory">Factory</option>
+                            <option value="Ground Zero">Ground Zero</option>
                             <option value="Interchange">Interchange</option>
+                            <option value="Lighthouse">Lighthouse</option>
                             <option value="Reserve">Reserve</option>
                             <option value="Shoreline">Shoreline</option>
+                            <option value="Streets of Tarkov">Streets of Tarkov</option>
                             <option value="The Lab">The Lab</option>
                             <option value="Woods">Woods</option>
                         </select>
                         <input type="text" id="task-search" placeholder="Search task title or objective...">
                     </div>
+                    </section>
 
-                    <h2>Task Progression</h2>
-                </section>
-                
-                <section id="stash-tools" class="page-content hidden-page">
-                    <h2>Virtual Stash (Locker)</h2>
-                    <p class="section-description">Keep track of key items you've found for quests or hideout to save space in your in-game stash.</p>
-                    <div id="stash-input">
-                        <input type="text" id="stash-item-name" placeholder="Item Name (e.g., LEDX)">
-                        <input type="number" id="stash-item-count" value="1" min="1" max="99">
-                        <button id="add-stash-item" class="complete-btn small-btn">Add to Locker</button>
-                    </div>
-                    <div id="virtual-stash-list">
+                <section id="stats-tracker" class="page-content">
+                    <h2>💰 Stats & Streak Tracker</h2>
+                    <div id="stats-container">
+                        <div class="stat-card">
+                            <h3>Roubles (₽)</h3>
+                            <p id="stat-roubles">0</p>
                         </div>
+                        <div class="stat-card">
+                            <h3>Dollars ($)</h3>
+                            <p id="stat-dollars">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Euros (€)</h3>
+                            <p id="stat-euros">0</p>
+                        </div>
+                        <div class="stat-card streak-card">
+                            <h3>Survival Streak</h3>
+                            <p id="streak-count">0</p>
+                            <div class="streak-buttons">
+                                <button id="streak-survived" class="complete-btn">Survived</button>
+                                <button id="streak-kia" class="uncomplete-btn">KIA</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                    <h2 style="margin-top: 30px;">Flea Market Tax Calculator</h2>
-                    <p class="section-description">Calculate the approximate tax on a sale to determine your net profit.</p>
-                    <div id="tax-calculator-container">
-                        <input type="number" id="input-base-price" placeholder="Item Base Price (V) - Use Wiki Value" min="1">
-                        <input type="number" id="input-sell-price" placeholder="Proposed Sale Price (P)" min="1">
-                        <button id="calculate-tax" class="guide-toggle-btn small-btn">Calculate Net Profit</button>
-                        <div id="tax-results">
+                <section id="stash-tools" class="page-content">
+                    <h2>📦 Virtual Stash & Tools</h2>
+
+                    <div class="tool-section">
+                        <h3>Virtual Stash Locker</h3>
+                        <div class="stash-input-group">
+                            <input type="text" id="stash-item-name" placeholder="Item Name (e.g., GPU)">
+                            <input type="number" id="stash-item-count" value="1" min="1">
+                            <button id="add-stash-item" class="complete-btn">Add Item</button>
+                        </div>
+                        <div id="virtual-stash-list">
                             </div>
                     </div>
-                </section>
 
-                <section id="hideout-perks" class="page-content hidden-page">
-                    <h2>Hideout & Trader Perks</h2>
-                    <p class="section-description">Future section to track your Hideout modules and unlock custom site-side perks like tax reduction or enhanced LL status.</p>
-                    <div class="hideout-content-placeholder">
-                        <p>Planning for Hideout Modules and related Trader Perks will appear here soon.</p>
+                    <div class="tool-section">
+                        <h3>Flea Market Tax Calculator</h3>
+                        <div class="tax-input-group">
+                            <label for="input-base-price">Item Base Price (V):</label>
+                            <input type="number" id="input-base-price" placeholder="e.g., 50000" min="1">
+                        </div>
+                        <div class="tax-input-group">
+                            <label for="input-sell-price">Proposed Sell Price (P):</label>
+                            <input type="number" id="input-sell-price" placeholder="e.g., 75000" min="1">
+                        </div>
+                        <button id="calculate-tax" class="guide-toggle-btn">Calculate Tax</button>
+                        <div id="tax-results">
+                            <p>Enter prices above to calculate estimated tax and net profit.</p>
+                        </div>
                     </div>
                 </section>
-
+            
             </main>
         </div>
     </div>
