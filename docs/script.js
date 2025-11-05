@@ -319,6 +319,7 @@ function handleTabToggle(event) {
         if (page.id === 'tasks' || page.id === 'filter-controls') {
             const isActive = targetTabId === 'tasks';
             page.classList.toggle('active-page', isActive);
+            // 'tasks' is block, 'filter-controls' is flex
             page.style.display = isActive ? (page.id === 'tasks' ? 'block' : 'flex') : 'none';
         } else {
             // Handle other pages
@@ -776,7 +777,8 @@ function handleStreakButton(result) {
     if (result === 'survived') {
         statTracker.streak += 1;
         
-        // Decrease sales tax by (0.5 * multiplier)
+        // Sales Tax - (Sales Tax Reduction * Survival Streak Multiplier)
+        // You mentioned 0.5 reduction, so we'll use that as the base reduction.
         const taxDecrease = 0.5 * currentMultiplier;
         statTracker.salesTax = Math.max(2, statTracker.salesTax - taxDecrease);
         
@@ -826,13 +828,14 @@ function calculateFleaTax() {
     }
     
     // 3. Calculate INCOME TAX and FINAL PROFIT
+    // FST - Income Tax% = Income  (FST is preIncomeTaxes)
     const incomeTaxAmount = preIncomeTaxes * incomeTaxRate;
     const netProfit = preIncomeTaxes - incomeTaxAmount;
     
     taxResults.innerHTML = `
         <p>Amount to Tax (P): <span class="currency-rouble">${P.toLocaleString()}₽</span></p>
         <p>Sales Tax (Divisor): <span class="currency-rouble">÷ ${ST.toFixed(2)}</span></p>
-        <p>Pre-Income Taxes (PIT): <span class="currency-rouble">${Math.round(preIncomeTaxes).toLocaleString()}₽</span></p>
+        <p>Pre-Income Taxes (FST): <span class="currency-rouble">${Math.round(preIncomeTaxes).toLocaleString()}₽</span></p>
         <hr style="border-color:#444;">
         <p>Income Tax (${(incomeTaxRate * 100).toFixed(0)}%): <span class="currency-rouble">- ${Math.round(incomeTaxAmount).toLocaleString()}₽</span></p>
         <p class="result-net">Final Income: <span class="currency-rouble">${Math.round(netProfit).toLocaleString()}₽</span></p>
