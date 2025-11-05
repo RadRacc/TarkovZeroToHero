@@ -56,8 +56,9 @@ const TASKS_DATA = [
         initial_equipment: [
             { name: "2 Salewa first aid kits", icon: "icon-sfak.png" }
         ],
-        dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
-        dialogueComplete: "The Salewas arrived just in time. Excellent work. Your reliability is noted, and I can assure you that this small favor will be remembered. This is your payment, use it wisely.",
+        // UPDATED DIALOGUE
+        dialogueInitial: "The team at Emercom Checkpoint is critically low on trauma supplies, and their usual resupply route is compromised. I've prepared two **Salewa First Aid Kits** here for you. Your task is to act as a courier: take these kits and deliver them to the designated dead drop near the checkpoint on **Ground Zero**. This is urgent. Do not lose the equipment I give you.",
+        dialogueComplete: "The packages arrived safely at the checkpoint. Good. Your timely delivery has potentially saved several lives. Consider this task a demonstration of your reliability under pressure. This payment is well-earned.",
         objectives: [
             "Deliver 2 Salewa first aid kits to Emercom Checkpoint (Ground Zero)"
         ],
@@ -89,7 +90,6 @@ const TASKS_DATA = [
         rewards: [
             { type: "roubles", amount: 5500 },
             { type: "item", name: "2 Capacitors", icon: "icon-capacitor.png" },
-            // RENAMED icon-insulating-tape.png to icon-tape.png
             { type: "item", name: "1 Insulating Tape", icon: "icon-tape.png" } 
         ]
     },
@@ -192,7 +192,6 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 25000 },
-            // RENAMED icon-meds-case.png to icon-medicine-case.png
             { type: "item", name: "1 Meds Case", icon: "icon-medicine-case.png" } 
         ]
     },
