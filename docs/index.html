@@ -127,6 +127,10 @@
                             <option value="Woods">Woods</option>
                         </select>
                         <input type="text" id="task-search" placeholder="Search task title or objective...">
+                        
+                        <div id="hide-locked-container">
+                            <label><input type="checkbox" id="hide-locked-tasks"> Hide Locked Tasks</label>
+                        </div>
                     </div>
                     </section>
 
@@ -172,6 +176,11 @@
 
                     <div class="tool-section">
                         <h3>Flea Market Tax Calculator</h3>
+                        <div class="tax-input-group">
+                            <label>Current Sales Tax Rate (Dynamic):</label>
+                            <p id="current-sales-tax-rate" class="currency-rouble"></p>
+                        </div>
+                        
                         <div class="tax-input-group">
                             <label for="input-base-price">Item Base Price (V):</label>
                             <input type="number" id="input-base-price" placeholder="e.g., 50000" min="1">
