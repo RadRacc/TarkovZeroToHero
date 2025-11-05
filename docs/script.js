@@ -109,7 +109,7 @@ function saveProgress() {
     console.log('Task, objective, stats, and stash status saved.'); 
 }
 
-// --- NEW: DYNAMIC TASK CARD GENERATION (Unchanged from original script) ---
+// --- NEW: DYNAMIC TASK CARD GENERATION (Unchanged from previous version) ---
 function generateTaskCards() {
     tasksSection.innerHTML = '<h2>Task Progression</h2>'; 
     
@@ -285,7 +285,7 @@ function handleGuideToggle(event) {
     event.stopPropagation();
 }
 
-// --- NEW: Toggle Tab Navigation ---
+// --- NEW: Toggle Tab Navigation (Unchanged) ---
 function handleTabToggle(event) {
     const targetTab = event.target.dataset.tab;
     
@@ -304,7 +304,7 @@ function handleTabToggle(event) {
 }
 
 
-// --- NEW: Add all necessary event listeners after cards are generated ---
+// --- NEW: Add all necessary event listeners after cards are generated (Unchanged) ---
 function addEventListeners() {
     // LL Tracker (already on static elements)
     llCheckboxes.forEach(checkbox => {
@@ -564,7 +564,7 @@ function handleObjectiveToggle(event) {
 }
 
 
-// --- 6. FILTERING AND SEARCHING LOGIC (Unchanged) ---
+// --- 6. FILTERING AND SEARCHING LOGIC (MODIFIED) ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
     const selectedMap = mapFilter.value; 
@@ -573,6 +573,15 @@ function filterTasks() {
     const currentCards = document.querySelectorAll('.task-card.expandable'); 
 
     currentCards.forEach(card => {
+        
+        // 1. Primary Visibility Check: HIDE LOCKED TASKS
+        // If the task is locked, keep it hidden and skip the secondary filters.
+        if (card.classList.contains('hidden-locked')) {
+            card.style.display = 'none';
+            return; // Don't process further filters for a locked task
+        }
+        
+        // 2. Apply Secondary Filters (Trader/Map/Search) to UNLOCKED tasks.
         const trader = card.getAttribute('data-trader');
         const map = card.getAttribute('data-map'); 
         
@@ -598,7 +607,7 @@ function filterTasks() {
     });
 }
 
-// --- 7. TASK STATUS MANAGEMENT (Modified to call updateStatsDisplay) ---
+// --- 7. TASK STATUS MANAGEMENT (MODIFIED) ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
@@ -619,6 +628,9 @@ function updateTaskStatus(taskCard) {
         taskCard.classList.add('task-locked'); 
         toggleButton.style.display = 'none'; 
         
+        // NEW LOGIC: Hide the card if it's locked
+        taskCard.classList.add('hidden-locked');
+        
         // --- NEW LOGIC: RESET PROGRESS IF LOCKED ---
         if (completedTasks[taskId] === true) {
             completedTasks[taskId] = false; // Un-complete the main task
@@ -635,6 +647,7 @@ function updateTaskStatus(taskCard) {
 
     } else {
         taskCard.classList.remove('task-locked');
+        taskCard.classList.remove('hidden-locked'); // UNLOCKED tasks are now available/visible
         toggleButton.style.display = 'inline-block'; // Set to inline-block for button group
     }
 
@@ -696,6 +709,7 @@ function updateTaskStatus(taskCard) {
 function updateAllTaskStatuses() {
     document.querySelectorAll('.task-card.expandable').forEach(updateTaskStatus);
     updateStatsDisplay(); // NEW: Update the stats display after task status check
+    filterTasks(); // Re-run filters to hide the newly hidden-locked tasks
     sortTasks(); 
 }
 
@@ -802,7 +816,7 @@ function sortTasks() {
 }
 
 
-// --- 10. NEW: STATS TRACKER LOGIC ---
+// --- 10. NEW: STATS TRACKER LOGIC (Unchanged) ---
 
 function updateStatsDisplay() {
     document.getElementById('stat-roubles').textContent = statTracker.roubles.toLocaleString();
@@ -822,7 +836,7 @@ function handleStreakButton(result) {
 }
 
 
-// --- 11. NEW: VIRTUAL STASH LOGIC ---
+// --- 11. NEW: VIRTUAL STASH LOGIC (Unchanged) ---
 
 function generateStash() {
     virtualStashList.innerHTML = '';
@@ -906,7 +920,7 @@ function handleStashToggle(event) {
 }
 
 
-// --- 12. NEW: TAX CALCULATOR LOGIC ---
+// --- 12. NEW: TAX CALCULATOR LOGIC (Unchanged) ---
 
 function calculateFleaTax() {
     const V = parseFloat(inputBasePrice.value); // Item Base Price (V)
@@ -918,8 +932,6 @@ function calculateFleaTax() {
     }
     
     // The actual EFT tax formula is complex. This uses a standard, accepted approximation:
-    // Tax = P * k^R1 + V * k^R2 where k, R1, R2 are constants (log/exp math).
-    // Using a simpler, highly functional approximation often used by players:
     // Fee depends on the profit margin (P/V ratio).
     
     // CONSTANTS (Approximated for a reasonable example):
@@ -930,7 +942,6 @@ function calculateFleaTax() {
     
     if (P > V) {
         // High profit margin, tax is higher
-        // Simple formula: T = P * 0.10 - V * 0.01 (approximates the log curve)
         // More robust approximation (to make it look like a log function):
         const logRatio = Math.log10(P / V);
         taxAmount = P * (0.01 + logRatio * 0.1) + V * (0.01 + logRatio * 0.1); 
