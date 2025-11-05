@@ -3,17 +3,17 @@ const COMPLETED_TASKS_KEY = 'eftZthCompletedTasksMinimal';
 const COMPLETED_OBJECTIVES_KEY = 'eftZthCompletedObjectives'; 
 const TRADER_LL_KEY = 'eftZthTraderLL'; 
 const QUICK_SLOT_KEY = 'eftZthQuickSlotTasks'; 
-const STAT_TRACKER_KEY = 'eftZthStatTracker'; // NEW
-const VIRTUAL_STASH_KEY = 'eftZthVirtualStash'; // NEW
-const HIDEOUT_KEY = 'eftZthHideoutPerks'; // NEW
+const STAT_TRACKER_KEY = 'eftZthStatTracker'; 
+const VIRTUAL_STASH_KEY = 'eftZthVirtualStash'; 
+const HIDEOUT_KEY = 'eftZthHideoutPerks'; 
 
 let completedTasks = {}; 
 let completedObjectives = {}; 
 let traderLL = {}; 
 let quickSlottedTasks = {}; 
-let statTracker = {}; // NEW
-let virtualStash = []; // NEW
-let hideoutPerks = {}; // NEW
+let statTracker = {}; 
+let virtualStash = []; 
+let hideoutPerks = {}; 
 
 // DOM Elements
 let expandableCards = []; 
@@ -62,9 +62,9 @@ function loadProgress() {
 
     traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
     quickSlottedTasks = JSON.parse(localStorage.getItem(QUICK_SLOT_KEY) || '{}'); 
-    statTracker = JSON.parse(localStorage.getItem(STAT_TRACKER_KEY) || JSON.stringify(defaultStats)); // NEW
-    virtualStash = JSON.parse(localStorage.getItem(VIRTUAL_STASH_KEY) || '[]'); // NEW
-    hideoutPerks = JSON.parse(localStorage.getItem(HIDEOUT_KEY) || '{}'); // NEW
+    statTracker = JSON.parse(localStorage.getItem(STAT_TRACKER_KEY) || JSON.stringify(defaultStats)); 
+    virtualStash = JSON.parse(localStorage.getItem(VIRTUAL_STASH_KEY) || '[]'); 
+    hideoutPerks = JSON.parse(localStorage.getItem(HIDEOUT_KEY) || '{}'); 
 
     // Sync LL checkboxes with loaded data
     llCheckboxes.forEach(checkbox => {
@@ -84,7 +84,6 @@ function loadProgress() {
     
     // START OF DYNAMIC GENERATION FLOW
     generateTaskCards();
-    generateStash(); // NEW
     
     // Re-initialize expandableCards now that they exist in the DOM
     expandableCards = document.querySelectorAll('.task-card.expandable'); 
@@ -92,7 +91,7 @@ function loadProgress() {
     // Add event listeners to dynamically created elements
     addEventListeners(); 
 
-    updateStatsDisplay(); // NEW
+    updateStatsDisplay(); 
     updateAllTaskStatuses(); 
     filterTasks(); 
     sortTasks(); 
@@ -103,15 +102,16 @@ function saveProgress() {
     localStorage.setItem(COMPLETED_OBJECTIVES_KEY, JSON.stringify(completedObjectives)); 
     localStorage.setItem(TRADER_LL_KEY, JSON.stringify(traderLL)); 
     localStorage.setItem(QUICK_SLOT_KEY, JSON.stringify(quickSlottedTasks)); 
-    localStorage.setItem(STAT_TRACKER_KEY, JSON.stringify(statTracker)); // NEW
-    localStorage.setItem(VIRTUAL_STASH_KEY, JSON.stringify(virtualStash)); // NEW
-    localStorage.setItem(HIDEOUT_KEY, JSON.stringify(hideoutPerks)); // NEW
+    localStorage.setItem(STAT_TRACKER_KEY, JSON.stringify(statTracker)); 
+    localStorage.setItem(VIRTUAL_STASH_KEY, JSON.stringify(virtualStash)); 
+    localStorage.setItem(HIDEOUT_KEY, JSON.stringify(hideoutPerks)); 
     console.log('Task, objective, stats, and stash status saved.'); 
 }
 
-// --- NEW: DYNAMIC TASK CARD GENERATION (Unchanged from previous version) ---
+// --- DYNAMIC TASK CARD GENERATION (Retained) ---
 function generateTaskCards() {
-    tasksSection.innerHTML = '<h2>Task Progression</h2>'; 
+    // Note: The H2 "Task Progression" is now in index.html, so we only clear the inner content
+    tasksSection.innerHTML = tasksSection.querySelector('h2').outerHTML + tasksSection.querySelector('#filter-controls').outerHTML;
     
     TASKS_DATA.forEach(task => {
         const card = document.createElement('div');
@@ -176,9 +176,8 @@ function generateTaskCards() {
             `;
         }
 
-        // --- 3. Determine Collapsed Requirement Text (NEW FORMAT) ---
+        // --- 3. Determine Collapsed Requirement Text ---
         
-        // Default values
         let llReqText = 'N/A';
         let taskReqText = 'None';
         let itemReqText = 'None';
@@ -216,7 +215,7 @@ function generateTaskCards() {
         card.setAttribute('data-dialogue-complete', task.dialogueComplete);
         card.setAttribute('data-objective-list', task.objectives.join(';'));
         card.setAttribute('data-task-requirements', task.requirements.join(';'));
-        card.setAttribute('data-task-walkthrough', task.walkthrough || ''); // NEW: walkthrough attribute
+        card.setAttribute('data-task-walkthrough', task.walkthrough || ''); 
         
         // Construct Inner HTML
         card.innerHTML = `
@@ -238,7 +237,8 @@ function generateTaskCards() {
                         <p class="dialogue-text"></p>
                     </div>
                     
-                    ${initialEquipmentHTML} <h4 class="requirements-heading">Requirements:</h4>
+                    ${initialEquipmentHTML} 
+                    <h4 class="requirements-heading">Requirements:</h4>
                     <div class="task-requirements-list"></div>
 
                     <h4 class="objectives-heading">Objectives:</h4>
@@ -272,7 +272,7 @@ function generateTaskCards() {
     });
 }
 
-// --- NEW: Toggle Guide/Walkthrough (Unchanged) ---
+// --- Toggle Guide/Walkthrough (Retained) ---
 function handleGuideToggle(event) {
     const button = event.target;
     const taskCard = button.closest('.task-card');
@@ -285,7 +285,7 @@ function handleGuideToggle(event) {
     event.stopPropagation();
 }
 
-// --- NEW: Toggle Tab Navigation (Unchanged) ---
+// --- Toggle Tab Navigation (Retained) ---
 function handleTabToggle(event) {
     const targetTab = event.target.dataset.tab;
     
@@ -304,7 +304,7 @@ function handleTabToggle(event) {
 }
 
 
-// --- NEW: Add all necessary event listeners after cards are generated (Unchanged) ---
+// --- Add all necessary event listeners (Retained) ---
 function addEventListeners() {
     // LL Tracker (already on static elements)
     llCheckboxes.forEach(checkbox => {
@@ -338,7 +338,7 @@ function addEventListeners() {
     document.querySelectorAll('.quick-slot-btn').forEach(button => {
         button.addEventListener('click', handleQuickSlotToggle);
     });
-    document.querySelectorAll('.guide-toggle-btn').forEach(button => { // NEW: Guide button listener
+    document.querySelectorAll('.guide-toggle-btn').forEach(button => { 
         button.addEventListener('click', handleGuideToggle);
     });
     
@@ -349,7 +349,7 @@ function addEventListeners() {
             if (event.target.classList.contains('task-toggle-btn') || 
                 event.target.closest('.task-toggle-btn') || 
                 event.target.closest('.quick-slot-btn') || 
-                event.target.closest('.guide-toggle-btn') || // NEW: Exclude Guide button
+                event.target.closest('.guide-toggle-btn') || 
                 event.target.type === 'checkbox' || 
                 event.target.closest('.objective-item') || 
                 event.target.closest('.collapsed-requirements')) {
@@ -366,7 +366,7 @@ function addEventListeners() {
     });
 }
 
-// --- 3. LOYALTY LEVEL TRACKER HANDLER (Unchanged) ---
+// --- LOYALTY LEVEL TRACKER HANDLER (Retained) ---
 
 function handleLLToggle(event) {
     const checkbox = event.target;
@@ -394,9 +394,7 @@ function handleLLToggle(event) {
     updateAllTaskStatuses(); 
 }
 
-// --- 4. REQUIREMENTS CHECK AND GENERATION (Unchanged) ---
-
-// --- 6. CORE REQUIREMENT CHECK (Modified to support Item Requirements) ---
+// --- CORE REQUIREMENT CHECK (Retained) ---
 
 // Function to check and update requirement status
 function checkRequirementsAndGenerateList(taskCard) {
@@ -408,7 +406,7 @@ function checkRequirementsAndGenerateList(taskCard) {
     let requiredListHTML = '';
     let llList = [];
     let taskList = [];
-    let itemRequirementsCount = 0; // New counter for items
+    let itemRequirementsCount = 0; 
 
     taskData.requirements.forEach(req => {
         let requirementMet = false;
@@ -426,18 +424,16 @@ function checkRequirementsAndGenerateList(taskCard) {
                 requirementMet = true;
             }
 
-        // 2. NEW: ITEM REQUIREMENT CHECK (New format: I:Item Name:Count)
+        // 2. ITEM REQUIREMENT CHECK (New format: I:Item Name:Count)
         } else if (req.startsWith('I:')) {
             const parts = req.split(':');
             const itemName = parts[1];
             const itemCount = parts[2];
             
-            itemRequirementsCount++; // Count the item for the summary
+            itemRequirementsCount++; 
             requirementText = `${itemCount}x ${itemName} (Required)`;
             
-            // CRITICAL LOGIC: Since we don't have separate item tracking UI,
-            // any item requirement in the 'requirements' array will keep the task locked
-            // until a future update is added to track its completion.
+            // Item requirements keep the task locked until UI is added
             requirementMet = false; 
 
         // 3. TASK DEPENDENCY CHECK (Task ID)
@@ -469,8 +465,8 @@ function checkRequirementsAndGenerateList(taskCard) {
         requirementsListElement.innerHTML = requiredListHTML || '<li>None</li>';
     }
     
-    // Update the collapsed summary (the text the user asked about)
-    const summaryElement = taskCard.querySelector('.collapsed-requirements'); // Corrected selector
+    // Update the collapsed summary
+    const summaryElement = taskCard.querySelector('.collapsed-requirements'); 
     if (summaryElement) {
         const llSummary = llList.length > 0 ? llList.join(', ') : 'N/A';
         const taskSummary = taskList.length > 0 ? taskList.length : 'None';
@@ -489,7 +485,7 @@ function checkRequirementsAndGenerateList(taskCard) {
     return isUnlocked;
 }
 
-// --- 5. CHECKLIST GENERATION AND MANAGEMENT (Unchanged) ---
+// --- CHECKLIST GENERATION AND MANAGEMENT (Retained) ---
 function generateChecklist(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const objectivesList = taskCard.getAttribute('data-objective-list');
@@ -558,13 +554,12 @@ function handleObjectiveToggle(event) {
     // 4. Save progress
     saveProgress();
     
-    // 5. CRITICAL FIX: Re-evaluate ALL tasks immediately
-    // This ensures tasks that DEPEND on this one are locked/unlocked correctly.
+    // 5. Re-evaluate ALL tasks immediately
     updateAllTaskStatuses(); 
 }
 
 
-// --- 6. FILTERING AND SEARCHING LOGIC (MODIFIED) ---
+// --- FILTERING AND SEARCHING LOGIC (Reverted) ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
     const selectedMap = mapFilter.value; 
@@ -574,14 +569,9 @@ function filterTasks() {
 
     currentCards.forEach(card => {
         
-        // 1. Primary Visibility Check: HIDE LOCKED TASKS
-        // If the task is locked, keep it hidden and skip the secondary filters.
-        if (card.classList.contains('hidden-locked')) {
-            card.style.display = 'none';
-            return; // Don't process further filters for a locked task
-        }
+        // 1. The HIDE LOCKED LOGIC IS REMOVED. All cards are subject to filters.
         
-        // 2. Apply Secondary Filters (Trader/Map/Search) to UNLOCKED tasks.
+        // 2. Apply Filters (Trader/Map/Search) to ALL tasks.
         const trader = card.getAttribute('data-trader');
         const map = card.getAttribute('data-map'); 
         
@@ -607,7 +597,7 @@ function filterTasks() {
     });
 }
 
-// --- 7. TASK STATUS MANAGEMENT (MODIFIED) ---
+// --- TASK STATUS MANAGEMENT (Reverted the locking/hiding logic) ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
@@ -628,10 +618,7 @@ function updateTaskStatus(taskCard) {
         taskCard.classList.add('task-locked'); 
         toggleButton.style.display = 'none'; 
         
-        // NEW LOGIC: Hide the card if it's locked
-        taskCard.classList.add('hidden-locked');
-        
-        // --- NEW LOGIC: RESET PROGRESS IF LOCKED ---
+        // --- LOGIC: RESET PROGRESS IF LOCKED (RETAINED FOR DATA CONSISTENCY) ---
         if (completedTasks[taskId] === true) {
             completedTasks[taskId] = false; // Un-complete the main task
         }
@@ -647,7 +634,6 @@ function updateTaskStatus(taskCard) {
 
     } else {
         taskCard.classList.remove('task-locked');
-        taskCard.classList.remove('hidden-locked'); // UNLOCKED tasks are now available/visible
         toggleButton.style.display = 'inline-block'; // Set to inline-block for button group
     }
 
@@ -666,7 +652,7 @@ function updateTaskStatus(taskCard) {
         dialogueTextElement.textContent = taskCard.getAttribute('data-dialogue-initial'); 
     }
     
-    // 4. Manage Quick Slot State (no change)
+    // 4. Manage Quick Slot State (Retained)
     if (quickSlotButton) {
         if (isQuickSlotted) {
             taskCard.classList.add('task-quick-slotted');
@@ -680,10 +666,9 @@ function updateTaskStatus(taskCard) {
     }
     
     // 5. Update Checklist
-    // This is crucial: it re-generates the checklist with the newly reset status
     generateChecklist(taskCard); 
 
-    // 6. UPDATE COLLAPSED REWARD SUMMARY (no change)
+    // 6. UPDATE COLLAPSED REWARD SUMMARY (Retained)
     const roubles = parseInt(toggleButton.dataset.rewardRoubles || 0);
     const dollars = parseInt(toggleButton.dataset.rewardDollars || 0);
     const euros = parseInt(toggleButton.dataset.rewardEuros || 0);
@@ -708,8 +693,8 @@ function updateTaskStatus(taskCard) {
 
 function updateAllTaskStatuses() {
     document.querySelectorAll('.task-card.expandable').forEach(updateTaskStatus);
-    updateStatsDisplay(); // NEW: Update the stats display after task status check
-    filterTasks(); // Re-run filters to hide the newly hidden-locked tasks
+    updateStatsDisplay(); 
+    filterTasks(); 
     sortTasks(); 
 }
 
@@ -774,7 +759,7 @@ function handleTaskToggle(event) {
 }
 
 
-// --- 8. QUICK SLOT SYSTEM HANDLER (Unchanged) ---
+// --- QUICK SLOT SYSTEM HANDLER (Retained) ---
 
 function handleQuickSlotToggle(event) {
     const button = event.target.closest('.quick-slot-btn');
@@ -793,7 +778,7 @@ function handleQuickSlotToggle(event) {
     event.stopPropagation(); 
 }
 
-// --- 9. TASK SORTING LOGIC (Unchanged) ---
+// --- TASK SORTING LOGIC (Retained) ---
 
 function sortTasks() {
     const allCards = document.querySelectorAll('.task-card.expandable'); 
@@ -816,7 +801,7 @@ function sortTasks() {
 }
 
 
-// --- 10. NEW: STATS TRACKER LOGIC (Unchanged) ---
+// --- STATS TRACKER LOGIC (Retained) ---
 
 function updateStatsDisplay() {
     document.getElementById('stat-roubles').textContent = statTracker.roubles.toLocaleString();
@@ -836,7 +821,7 @@ function handleStreakButton(result) {
 }
 
 
-// --- 11. NEW: VIRTUAL STASH LOGIC (Unchanged) ---
+// --- VIRTUAL STASH LOGIC (Retained) ---
 
 function generateStash() {
     virtualStashList.innerHTML = '';
@@ -846,6 +831,7 @@ function generateStash() {
         return;
     }
 
+    // Since items are added dynamically, we must re-generate the entire list
     virtualStash.forEach((item, index) => {
         const card = document.createElement('div');
         card.classList.add('stash-item-card', item.status);
@@ -920,7 +906,7 @@ function handleStashToggle(event) {
 }
 
 
-// --- 12. NEW: TAX CALCULATOR LOGIC (Unchanged) ---
+// --- TAX CALCULATOR LOGIC (Retained) ---
 
 function calculateFleaTax() {
     const V = parseFloat(inputBasePrice.value); // Item Base Price (V)
@@ -932,16 +918,9 @@ function calculateFleaTax() {
     }
     
     // The actual EFT tax formula is complex. This uses a standard, accepted approximation:
-    // Fee depends on the profit margin (P/V ratio).
-    
-    // CONSTANTS (Approximated for a reasonable example):
-    const TAX_RATE = 0.05; // 5% flat component for simplicity
-    const BASE_VALUE_PENALTY = 0.05; // 5% penalty based on base value for high profit
-    
     let taxAmount = 0;
     
     if (P > V) {
-        // High profit margin, tax is higher
         // More robust approximation (to make it look like a log function):
         const logRatio = Math.log10(P / V);
         taxAmount = P * (0.01 + logRatio * 0.1) + V * (0.01 + logRatio * 0.1); 
