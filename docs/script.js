@@ -91,7 +91,7 @@ function loadProgress() {
     }
 
     if (typeof TASKS_DATA === 'undefined') {
-          tasksSection.innerHTML = '<h2>🎯 Task Progression</h2><p style="color:red;">FATAL ERROR: TASKS_DATA is missing. Ensure `tasksData.js` is loaded before `script.js` in your index.html file.</p>';
+          tasksSection.innerHTML = '<h2>Task Progression</h2><p style="color:red;">FATAL ERROR: TASKS_DATA is missing. Ensure `tasksData.js` is loaded before `script.js` in your index.html file.</p>';
           console.error("FATAL ERROR: TASKS_DATA is undefined. Ensure tasksData.js is loaded before script.js.");
           return;
     }
@@ -819,7 +819,7 @@ function handleStreakButton(result) {
     const roundToTwo = (num) => Math.round(num * 100) / 100;
 
     if (result === 'survived') {
-        statTracker.streak += 1;
+        statTracker.streak += 0.1;
         
         // 1. Decrease sales tax by 0.5 * multiplier (min 2)
         const taxDecrease = 0.5 * statTracker.survivalStreakMultiplier;
