@@ -109,7 +109,7 @@
                 
                 <section id="stash-tracker" class="page-content" style="display:none;">
                     <h2>Virtual Stash Tracker</h2>
-                    <p>Use this to track items you need to keep for future tasks or hideout upgrades without taking up space in your actual stash.</p>
+                    <p>Track items you need to keep for future tasks or hideout upgrades.</p>
                     <div class="stash-input-group">
                         <input type="text" id="stash-item-name" placeholder="Item Name (e.g., Toolset)" required>
                         <input type="number" id="stash-item-count" placeholder="Count" value="1" min="1" required>
@@ -121,12 +121,13 @@
                 </section>
                 
                 <section id="stats-tracker" class="page-content" style="display:none;">
-                    <h2>Stats & Tax System</h2>
+                    
+                    <h2>📊 Stats Tracker</h2>
                     
                     <div class="stat-row">
-                        <h3>Current Roubles (₽): <span class="currency-rouble" id="stat-roubles">0</span></h3>
-                        <h3>Current Dollars ($): <span class="currency-dollar" id="stat-dollars">0</span></h3>
-                        <h3>Current Euros (€): <span class="currency-euro" id="stat-euros">0</span></h3>
+                        <h3>Roubles (₽): <span class="currency-rouble" id="stat-roubles">0</span></h3>
+                        <h3>Dollars ($): <span class="currency-dollar" id="stat-dollars">0</span></h3>
+                        <h3>Euros (€): <span class="currency-euro" id="stat-euros">0</span></h3>
                     </div>
                     
                     <div class="stat-group">
@@ -141,22 +142,9 @@
                     
                     <hr>
                     
-                    <h3>Found Roubles Tax (Keep 1/3rd)</h3>
-                    <p>Enter the total amount of Roubles found in a raid. Tax is a fixed 2/3rds.</p>
-                    <div class="tax-calculator-box">
-                        <div class="tax-inputs">
-                            <label for="input-found-roubles">Total Found Roubles:</label>
-                            <input type="number" id="input-found-roubles" placeholder="e.g., 90000" value="0" min="0">
-                        </div>
-                        <button id="calculate-found-roubles" class="complete-btn">Calculate Found Roubles</button>
-                        <div id="found-roubles-results" class="tax-results">
-                            <p>Your take-home profit will be calculated here.</p>
-                        </div>
-                    </div>
+                    <h2>💰 Tax Calculators</h2>
                     
-                    <hr>
-
-                    <h3>Flea Market Tax Calculator</h3>
+                    <h3>Flea Market Listing Tax</h3>
                     <p>Current Sales Tax Rate (Dynamic): <span class="currency-rouble" id="current-sales-tax-rate">6.00%</span></p>
                     <div class="tax-calculator-box">
                         <div class="tax-inputs">
@@ -166,6 +154,18 @@
                         <button id="calculate-flea-tax" class="complete-btn">Calculate Flea Tax</button>
                         <div id="tax-results" class="tax-results">
                             <p>Your net profit will be calculated here based on sales tax and income tax tiers.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Found Roubles Tax (Keep 1/3rd)</h3>
+                    <div class="tax-calculator-box">
+                        <div class="tax-inputs">
+                            <label for="input-found-roubles">Total Found Roubles:</label>
+                            <input type="number" id="input-found-roubles" placeholder="e.g., 90000" value="0" min="0">
+                        </div>
+                        <button id="calculate-found-roubles" class="complete-btn">Calculate Found Roubles</button>
+                        <div id="found-roubles-results" class="tax-results">
+                            <p>Your take-home profit will be calculated here.</p>
                         </div>
                     </div>
                 </section>
