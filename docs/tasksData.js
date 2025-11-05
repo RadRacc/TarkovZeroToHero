@@ -127,7 +127,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 6000 },
-            { type: "item", name: "1 Golden neck chain", icon: "icon-gold-chain.png" },
+            { type: "item", name: "1 Golden neck chain", icon: "icon-golden-chain.png" },
             { type: "item", name: "4 Light bulbs", icon: "icon-light-bulb.png" }
         ]
     },
