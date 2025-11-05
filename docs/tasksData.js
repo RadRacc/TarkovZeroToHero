@@ -50,21 +50,21 @@ const TASKS_DATA = [
         id: "First Aid Supplies",
         trader: "Therapist",
         title: "First Aid Supplies",
-        objectiveSummary: "Deliver 2 Salewa to Emercom Checkpoint on Ground Zero.",
+        objectiveSummary: "Deliver 2 Salewa first aid kits to Emercom Checkpoint on Ground Zero.",
         map: "Ground Zero",
         requirements: ["Target Practice"],
         initial_equipment: [
-            { name: "2 Salewa first aid kits", icon: "icon-salewa.png" }
+            { name: "2 Salewa first aid kits", icon: "icon-sfak.png" }
         ],
         dialogueInitial: "I am running low on certain field supplies, and supply lines are disrupted. I need two Salewa First Aid Kits. This is a simple retrieval and handover operation. I will provide the initial equipment. Bring them back to me in one piece, and I'll ensure you're compensated fairly. Do not fail this delivery, it is critical.",
         dialogueComplete: "The Salewas arrived just in time. Excellent work. Your reliability is noted, and I can assure you that this small favor will be remembered. This is your payment, use it wisely.",
         objectives: [
-            "Deliver 2 Salewa to Emercom Checkpoint (Ground Zero)"
+            "Deliver 2 Salewa first aid kits to Emercom Checkpoint (Ground Zero)"
         ],
         rewards: [
             { type: "roubles", amount: 3500 },
-            { type: "item", name: "2 Car first aid kit", icon: "icon-cfak.png" },
-            { type: "item", name: "2 Army Bandage", icon: "icon-army-bandage.png" }
+            { type: "item", name: "2 Car first aid kits", icon: "icon-cfak.png" },
+            { type: "item", name: "2 Army Bandages", icon: "icon-army-bandage.png" }
         ]
     },
     // --------------------------------------------------------------------------------------------------
