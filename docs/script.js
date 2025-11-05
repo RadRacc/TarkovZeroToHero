@@ -22,7 +22,8 @@ let expandableCards = [];
 const traderFilter = document.getElementById('trader-filter');
 const mapFilter = document.getElementById('map-filter'); 
 const taskSearch = document.getElementById('task-search');
-const llCheckboxes = document.querySelectorAll('#ll-tracker input[type="checkbox"]');
+// --- FIX APPLIED HERE: Only select checkboxes within .trader-ll-group ---
+const llCheckboxes = document.querySelectorAll('.trader-ll-group input[type="checkbox"]');
 const tasksSection = document.getElementById('tasks'); 
 
 // NEW DOM Elements
@@ -37,7 +38,7 @@ const virtualStashList = document.getElementById('virtual-stash-list');
 
 // Flea Tax Elements (UPDATED)
 const calculateFleaTaxBtn = document.getElementById('calculate-flea-tax');
-const inputAmountToTax = document.getElementById('input-amount-to-tax'); // Renamed input
+const inputAmountToTax = document.getElementById('input-amount-to-tax'); 
 const taxResults = document.getElementById('tax-results');
 
 // Found Roubles Elements (NEW)
@@ -89,7 +90,8 @@ function loadProgress() {
 
     // Sync LL checkboxes with loaded data
     llCheckboxes.forEach(checkbox => {
-        const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader');
+        // Line 92 (now fixed): closest() will always find a parent .trader-ll-group based on the new selector
+        const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader'); 
         const ll = checkbox.getAttribute('data-ll');
         if (traderLL[trader] && traderLL[trader][ll]) {
             checkbox.checked = true;
@@ -132,41 +134,54 @@ function saveProgress() {
     console.log('Task, objective, stats, and stash status saved.'); 
 }
 
-// ... (handleHideLockedToggle and generateTaskCards remain the same) ...
-
 function handleHideLockedToggle(event) {
     hideLockedTasks = event.target.checked;
     saveProgress();
     filterTasks();
 }
 
-// The full generateTaskCards function is omitted for brevity but should be present in your file.
+// NOTE: generateTaskCards, handleGuideToggle, handleLLToggle, checkRequirementsAndGenerateList, 
+// generateChecklist, handleObjectiveToggle, filterTasks, updateTaskStatus, updateAllTaskStatuses, 
+// handleTaskToggle, handleQuickSlotToggle, sortTasks (and all their helper functions) 
+// must be present here, which were omitted for brevity in the previous response but should be in your actual file.
+// Since I don't have the full code for generateTaskCards, I am providing a placeholder based on the previous context.
+
 function generateTaskCards() {
-    // NOTE: This function's full content is needed for the app to work, 
-    // The previous implementation must be included here.
     tasksSection.innerHTML = '<h2>Task Progression</h2>'; 
     
     TASKS_DATA.forEach(task => {
-        // (Full logic to create and append task cards)
         const card = document.createElement('div');
         card.classList.add('task-card', 'expandable');
+        card.setAttribute('data-task-id', task.id); // Add task ID here
         
         let rewardRoubles = 0;
         let rewardDollars = 0;
         let rewardEuros = 0;
         
-        // ... (Logic to calculate rewardsHTML, initialEquipmentHTML, collapsedReqText) ...
+        // Simplified content generation (Your actual implementation for this section must be in your file)
+        const rewardsHTML = task.rewards.map(reward => {
+            if (reward.type === 'roubles') { rewardRoubles = reward.amount; }
+            if (reward.type === 'dollars') { rewardDollars = reward.amount; }
+            if (reward.type === 'euros') { rewardEuros = reward.amount; }
+            const iconUrl = reward.icon ? `images/${reward.icon}` : '';
+            return `<li data-item="${reward.type}"><img src="${iconUrl}" class="reward-icon" alt="${reward.name || reward.type} Icon"> ${reward.name || ''} ${reward.amount ? reward.amount.toLocaleString() : ''}</li>`;
+        }).join('');
         
-        // Construct Inner HTML
+        const collapsedReqText = task.requirements.length > 0 && task.requirements[0] !== 'N/A' 
+                                 ? `Requires: ${task.requirements.join(', ')}` 
+                                 : 'Requirements: None';
+                                 
+        const rewardSummaryText = `R: <span class="currency-rouble">${rewardRoubles.toLocaleString()}₽</span> | D: <span class="currency-dollar">${rewardDollars.toLocaleString()}$</span> | E: <span class="currency-euro">${rewardEuros.toLocaleString()}€</span>`;
+
         card.innerHTML = `
             <div class="collapsed-view">
                 <div class="trader-icon-small" data-trader-id="${task.trader}"></div>
                 <div class="collapsed-text-group">
                     <span class="trader-name">${task.trader}</span>
-                    <p class="collapsed-requirements"></p>
+                    <p class="collapsed-requirements">${collapsedReqText}</p>
                     <h3 class="task-title">${task.title}</h3>
                     <p class="task-objective">${task.objectiveSummary}</p>
-                    <p class="reward-summary"></p> </div>
+                    <p class="reward-summary">${rewardSummaryText}</p> </div>
                 <button class="quick-slot-btn" aria-label="Quick Slot Task">☆</button>
             </div>
             <div class="expanded-view hidden-detail" style="display:none;">
@@ -174,10 +189,10 @@ function generateTaskCards() {
                 <div>
                     <div class="dialogue-box">
                         <h4>Dialogue (${task.trader})</h4>
-                        <p class="dialogue-text"></p>
+                        <p class="dialogue-text">${task.dialogueInitial}</p>
                     </div>
                     
-                    ${/* initialEquipmentHTML */''} <h4 class="requirements-heading">Requirements:</h4>
+                    <h4 class="requirements-heading">Requirements:</h4>
                     <div class="task-requirements-list"></div>
 
                     <h4 class="objectives-heading">Objectives:</h4>
@@ -185,7 +200,7 @@ function generateTaskCards() {
                     
                     <h4 class="rewards-heading">Rewards:</h4>
                     <ul class="rewards-list">
-                        ${/* rewardsHTML */''}
+                        ${rewardsHTML}
                     </ul>
                     
                     <div class="task-buttons-group">
@@ -210,9 +225,6 @@ function generateTaskCards() {
         tasksSection.appendChild(card);
     });
 }
-
-
-// ... (handleGuideToggle, handleLLToggle, checkRequirementsAndGenerateList, generateChecklist, handleObjectiveToggle, filterTasks, updateTaskStatus, updateAllTaskStatuses, handleTaskToggle, handleQuickSlotToggle, sortTasks remain the same) ...
 
 
 function addEventListeners() {
@@ -282,6 +294,403 @@ function addEventListeners() {
     });
 }
 
+// Placeholder for the remaining helper functions that need to be in your script.js file
+// --- Placeholder Functions (Ensure these are defined in your final script.js) ---
+
+function handleTabToggle(event) {
+    const targetTab = event.target.getAttribute('data-tab');
+
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    pages.forEach(page => {
+        page.classList.remove('active-page');
+        page.style.display = 'none';
+    });
+
+    // Handle the tasks and filter sections specially since they should display together
+    if (targetTab === 'tasks') {
+        document.getElementById('filter-controls').style.display = 'flex'; // Show filters
+        document.getElementById('tasks').style.display = 'block'; // Show tasks section
+    } else {
+        document.getElementById('filter-controls').style.display = 'none'; // Hide filters on other tabs
+        const targetElement = document.getElementById(targetTab);
+        if (targetElement) {
+            targetElement.style.display = 'block';
+            targetElement.classList.add('active-page');
+        }
+    }
+}
+
+function handleGuideToggle(event) {
+    const button = event.target.closest('.guide-toggle-btn');
+    const expandedView = button.closest('.expanded-view');
+    const walkthroughBox = expandedView.querySelector('.walkthrough-box');
+
+    if (walkthroughBox) {
+        const isHidden = window.getComputedStyle(walkthroughBox).display === 'none';
+        walkthroughBox.style.display = isHidden ? 'block' : 'none';
+        button.textContent = isHidden ? 'Hide Guide' : 'Guide';
+    }
+
+    event.stopPropagation();
+}
+
+function handleLLToggle(event) {
+    const checkbox = event.target;
+    const traderGroup = checkbox.closest('.trader-ll-group');
+    const trader = traderGroup.getAttribute('data-trader');
+    const ll = checkbox.getAttribute('data-ll');
+
+    traderLL[trader][ll] = checkbox.checked;
+    
+    // Handle sequential checking/unchecking
+    if (checkbox.checked) {
+        // Check all preceding levels if checked
+        for (let i = 1; i < parseInt(ll); i++) {
+            const prevCheckbox = traderGroup.querySelector(`input[data-ll="${i}"]`);
+            if (prevCheckbox && !prevCheckbox.checked) {
+                prevCheckbox.checked = true;
+                traderLL[trader][i.toString()] = true;
+            }
+        }
+    } else {
+        // Uncheck all succeeding levels if unchecked
+        for (let i = parseInt(ll) + 1; i <= 4; i++) {
+            const nextCheckbox = traderGroup.querySelector(`input[data-ll="${i}"]`);
+            if (nextCheckbox && nextCheckbox.checked) {
+                nextCheckbox.checked = false;
+                traderLL[trader][i.toString()] = false;
+            }
+        }
+    }
+
+    saveProgress();
+    updateAllTaskStatuses();
+}
+
+function getTaskById(taskId) {
+    return TASKS_DATA.find(task => task.id === taskId);
+}
+
+function checkRequirementsMet(task) {
+    if (!task.requirements || task.requirements.length === 0 || task.requirements[0] === 'N/A') {
+        return { isMet: true, unmet: [] };
+    }
+
+    const unmetRequirements = [];
+
+    task.requirements.forEach(req => {
+        // 1. Check Previous Task Completion
+        if (getTaskById(req)) {
+            if (!completedTasks[req]) {
+                unmetRequirements.push(`Task: ${req}`);
+            }
+        } 
+        // 2. Check Loyalty Level
+        else if (req.startsWith('LL')) {
+            const requiredLL = parseInt(req.substring(2));
+            const trader = task.trader;
+            
+            if (!traderLL[trader] || !traderLL[trader][requiredLL]) {
+                unmetRequirements.push(`${task.trader} ${req}`);
+            }
+        }
+    });
+
+    return {
+        isMet: unmetRequirements.length === 0,
+        unmet: unmetRequirements
+    };
+}
+
+function updateTaskStatus(taskCard) {
+    const taskId = taskCard.getAttribute('data-task-id');
+    const taskData = getTaskById(taskId);
+    
+    const isCompleted = completedTasks[taskId];
+    const { isMet, unmet } = checkRequirementsMet(taskData);
+    
+    // Status Classes
+    taskCard.classList.toggle('task-completed', isCompleted);
+    taskCard.classList.toggle('task-locked', !isMet && !isCompleted); // Cannot be locked if already completed
+    taskCard.classList.toggle('task-quick-slotted', !!quickSlottedTasks[taskId]);
+
+    // Update Text/Buttons based on status
+    const toggleButton = taskCard.querySelector('.task-toggle-btn');
+    const collapsedReqElement = taskCard.querySelector('.collapsed-requirements');
+    
+    if (isCompleted) {
+        toggleButton.textContent = 'Mark as Uncomplete';
+        toggleButton.classList.remove('complete-btn');
+        toggleButton.classList.add('uncomplete-btn');
+    } else if (isMet) {
+        toggleButton.textContent = 'Mark as Complete';
+        toggleButton.classList.remove('uncomplete-btn');
+        toggleButton.classList.add('complete-btn');
+    } else {
+        toggleButton.textContent = 'LOCKED';
+        toggleButton.classList.remove('complete-btn', 'uncomplete-btn');
+    }
+    
+    // Lock/Unlock interactivity
+    taskCard.style.pointerEvents = !isMet && !isCompleted ? 'none' : 'auto';
+    taskCard.style.opacity = !isMet && !isCompleted ? '0.4' : '1.0';
+    
+    // Update collapsed requirements text
+    if (collapsedReqElement) {
+        if (!isMet && !isCompleted) {
+            collapsedReqElement.textContent = `LOCKED. Needs: ${unmet.join(', ')}`;
+            collapsedReqElement.style.color = '#e74c3c'; // Red for unmet/locked
+        } else {
+            const baseText = taskData.requirements.length > 0 && taskData.requirements[0] !== 'N/A' 
+                            ? `Requires: ${taskData.requirements.join(', ')}` 
+                            : 'Requirements: None';
+            collapsedReqElement.textContent = baseText;
+            collapsedReqElement.style.color = isCompleted ? '#2ecc71' : '#999'; // Green if completed, grey otherwise
+        }
+    }
+    
+    // Regenerate expanded content to show requirement/objective status
+    checkRequirementsAndGenerateList(taskCard, taskData, isMet, unmet);
+    generateChecklist(taskCard, taskData);
+    
+    // Filter visibility check (needed for the hide locked logic)
+    filterTasks(false); // Do not reset filters, just re-run visibility
+}
+
+function checkRequirementsAndGenerateList(card, taskData, isMet, unmet) {
+    const listElement = card.querySelector('.task-requirements-list');
+    listElement.innerHTML = ''; 
+
+    if (!taskData.requirements || taskData.requirements[0] === 'N/A') {
+        listElement.innerHTML = '<div class="requirement-item met">No prerequisites.</div>';
+        return;
+    }
+
+    taskData.requirements.forEach(req => {
+        const item = document.createElement('div');
+        item.classList.add('requirement-item');
+        
+        let isReqMet = !unmet.includes(`Task: ${req}`) && !unmet.includes(`${taskData.trader} ${req}`);
+
+        if (isReqMet) {
+            item.classList.add('met');
+        } else {
+            item.classList.add('unmet');
+        }
+
+        item.textContent = req.startsWith('LL') ? `${taskData.trader} ${req}` : req;
+        listElement.appendChild(item);
+    });
+}
+
+function generateChecklist(card, taskData) {
+    const checklist = card.querySelector('.objective-checklist');
+    const taskId = taskData.id;
+    checklist.innerHTML = '';
+
+    if (!completedObjectives[taskId]) {
+        completedObjectives[taskId] = Array(taskData.objectives.length).fill(false);
+    }
+    
+    taskData.objectives.forEach((objective, index) => {
+        const isChecked = completedObjectives[taskId][index];
+        const item = document.createElement('div');
+        item.classList.add('objective-item');
+        item.innerHTML = `
+            <input type="checkbox" id="obj-${taskId}-${index}" data-task-id="${taskId}" data-index="${index}" ${isChecked ? 'checked' : ''}>
+            <label for="obj-${taskId}-${index}">${objective}</label>
+        `;
+        checklist.appendChild(item);
+    });
+    
+    // Attach listener for objective toggling
+    checklist.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', handleObjectiveToggle);
+    });
+}
+
+function handleObjectiveToggle(event) {
+    const checkbox = event.target;
+    const taskId = checkbox.getAttribute('data-task-id');
+    const index = parseInt(checkbox.getAttribute('data-index'));
+    
+    completedObjectives[taskId][index] = checkbox.checked;
+
+    // Check if all objectives are completed
+    const taskCard = checkbox.closest('.task-card');
+    const objectives = completedObjectives[taskId];
+    const allCompleted = objectives.every(status => status === true);
+    
+    if (allCompleted) {
+        // Automatically mark task complete if all objectives are checked
+        if (!completedTasks[taskId]) {
+            // Simulate clicking the complete button to apply rewards
+            const completeButton = taskCard.querySelector('.task-toggle-btn');
+            if (completeButton && completeButton.textContent.includes('Complete')) {
+                // Temporarily mark all objectives as uncomplete before calling handleTaskToggle
+                // to allow the toggle function to proceed to 'complete' state.
+                // This is a bit of a hack to ensure the completion logic (rewards, etc.) runs.
+                completedTasks[taskId] = false; 
+                handleTaskToggle({ target: completeButton, stopPropagation: () => {} });
+            } else {
+                 // If the task was already completed via the button, just ensure UI is updated.
+                 updateTaskStatus(taskCard);
+            }
+        }
+    } else {
+         // If an objective is unchecked, and the task was previously completed, uncomplete it.
+        if (completedTasks[taskId]) {
+            const toggleButton = taskCard.querySelector('.task-toggle-btn');
+             if (toggleButton) {
+                // Only toggle if the task is currently marked as completed (and thus the button says "Uncomplete")
+                handleTaskToggle({ target: toggleButton, stopPropagation: () => {} });
+            }
+        }
+    }
+
+    saveProgress();
+    updateAllTaskStatuses();
+    event.stopPropagation();
+}
+
+function updateAllTaskStatuses() {
+    document.querySelectorAll('.task-card.expandable').forEach(updateTaskStatus);
+}
+
+function handleTaskToggle(event) {
+    const button = event.target.closest('.task-toggle-btn');
+    const taskCard = button.closest('.task-card');
+    const taskId = taskCard.getAttribute('data-task-id');
+    
+    const isCompleted = completedTasks[taskId];
+    
+    const taskData = getTaskById(taskId);
+    if (!taskData) return;
+    
+    // Prevent uncompleting a task if objectives are still checked.
+    if (isCompleted && taskData.objectives) {
+        const objectivesChecked = completedObjectives[taskId].some(status => status === true);
+        if (objectivesChecked) {
+             alert("Cannot uncomplete task: Please uncheck all objectives first.");
+             event.stopPropagation();
+             return;
+        }
+    }
+    
+    // Toggle completion status
+    if (!isCompleted) {
+        // Mark as COMPLETE
+        completedTasks[taskId] = true;
+        
+        // Auto-check all objectives when marked complete via button
+        completedObjectives[taskId] = Array(taskData.objectives.length).fill(true);
+        
+        // Apply Rewards
+        const r = parseInt(button.getAttribute('data-reward-roubles') || 0);
+        const d = parseInt(button.getAttribute('data-reward-dollars') || 0);
+        const e = parseInt(button.getAttribute('data-reward-euros') || 0);
+        
+        statTracker.roubles += r;
+        statTracker.dollars += d;
+        statTracker.euros += e;
+        
+    } else {
+        // Mark as UNCOMPLETE
+        delete completedTasks[taskId];
+        
+        // Reset objectives to uncompleted
+        completedObjectives[taskId] = Array(taskData.objectives.length).fill(false);
+        
+        // Remove Rewards (Reverse the transaction)
+        const r = parseInt(button.getAttribute('data-reward-roubles') || 0);
+        const d = parseInt(button.getAttribute('data-reward-dollars') || 0);
+        const e = parseInt(button.getAttribute('data-reward-euros') || 0);
+        
+        statTracker.roubles -= r;
+        statTracker.dollars -= d;
+        statTracker.euros -= e;
+    }
+    
+    updateTaskStatus(taskCard);
+    updateStatsDisplay();
+    saveProgress();
+    
+    // Re-evaluate dependencies of ALL tasks
+    updateAllTaskStatuses(); 
+    
+    event.stopPropagation(); 
+}
+
+function handleQuickSlotToggle(event) {
+    const button = event.target.closest('.quick-slot-btn');
+    const taskCard = button.closest('.task-card');
+    const taskId = taskCard.getAttribute('data-task-id');
+    
+    quickSlottedTasks[taskId] = !quickSlottedTasks[taskId];
+    if (!quickSlottedTasks[taskId]) {
+        delete quickSlottedTasks[taskId]; 
+    }
+
+    updateTaskStatus(taskCard);
+    saveProgress();
+    sortTasks(); 
+    
+    event.stopPropagation(); 
+}
+
+function sortTasks() {
+    const allCards = document.querySelectorAll('.task-card.expandable'); 
+    const tasksContainer = document.getElementById('tasks');
+    
+    // Sort to put quick-slotted tasks first
+    const sortedCards = Array.from(allCards).sort((a, b) => {
+        const aIsSlotted = a.classList.contains('task-quick-slotted');
+        const bIsSlotted = b.classList.contains('task-quick-slotted');
+        
+        if (aIsSlotted && !bIsSlotted) return -1; 
+        if (!aIsSlotted && bIsSlotted) return 1; 
+        
+        // Secondary sort: keep existing order for unslotted tasks
+        return 0; 
+    });
+    
+    // Re-append cards in the sorted order
+    sortedCards.forEach(card => tasksContainer.appendChild(card));
+}
+
+function filterTasks(reset = true) {
+    if (reset) sortTasks(); // Sort before filtering
+    
+    const selectedTrader = traderFilter.value;
+    const selectedMap = mapFilter.value;
+    const searchTerm = taskSearch.value.toLowerCase();
+    const hideLocked = hideLockedTasks; 
+
+    document.querySelectorAll('.task-card.expandable').forEach(card => {
+        const taskId = card.getAttribute('data-task-id');
+        const taskData = getTaskById(taskId);
+        
+        if (!taskData) {
+            card.style.display = 'none';
+            return;
+        }
+
+        const isTraderMatch = selectedTrader === 'all' || taskData.trader === selectedTrader;
+        const isMapMatch = selectedMap === 'all' || taskData.map === selectedMap || selectedMap === 'Any' && taskData.map === 'Any';
+        const isSearchMatch = searchTerm === '' || 
+                              taskData.title.toLowerCase().includes(searchTerm) ||
+                              taskData.objectiveSummary.toLowerCase().includes(searchTerm) ||
+                              taskData.map.toLowerCase().includes(searchTerm);
+        
+        const isLocked = card.classList.contains('task-locked');
+
+        const isVisible = isTraderMatch && isMapMatch && isSearchMatch && !(hideLocked && isLocked);
+        
+        card.style.display = isVisible ? 'block' : 'none';
+    });
+}
 
 // --- STATS TRACKER LOGIC (Updated Display and Streak Logic) ---
 
@@ -343,7 +752,7 @@ function handleStreakButton(result) {
 }
 
 
-// --- VIRTUAL STASH LOGIC (Simplified, assuming helper functions exist) ---
+// --- VIRTUAL STASH LOGIC ---
 
 function handleAddItem() {
     const name = stashItemNameInput.value.trim();
