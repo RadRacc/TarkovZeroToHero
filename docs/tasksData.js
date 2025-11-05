@@ -192,7 +192,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 25000 },
-            { type: "item", name: "1 Meds Case", icon: "icon-medicine-case.png" } 
+            { type: "item", name: "1 Medicine Case", icon: "icon-medicine-case.png" } 
         ]
     },
     {
