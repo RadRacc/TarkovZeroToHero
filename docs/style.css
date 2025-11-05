@@ -21,14 +21,12 @@ body {
 }
 
 /* Main Header */
-header h1, header h4 {
-    text-align: center;
-}
 .header-title {
     color: #F5B925;
+    text-align: center;
     border-bottom: 2px solid #333;
     padding-bottom: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 
 /* --- MAIN CONTENT GRID LAYOUT --- */
@@ -48,251 +46,367 @@ h2 {
 
 /* --- LOYALTY LEVEL TRACKER STYLES --- */
 #ll-tracker {
-    background-color: #1e1e1e;
+    background-color: hsl(0, 0%, 15%);
     padding: 15px;
-    border-radius: 6px;
-    height: fit-content;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    height: fit-content; /* Only take up necessary height */
+    position: sticky; /* Keep it visible when scrolling */
+    top: 20px;
 }
-
-.trader-ll-group {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #333;
-}
-
-.trader-ll-group h3 {
+#ll-tracker h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
     color: #F5B925;
-    margin: 0 0 8px 0;
-    font-size: 1.1em;
 }
-
+.ll-checkbox-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
 .ll-checkbox-group label {
-    display: block;
-    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
     cursor: pointer;
-    user-select: none;
-    margin-left: 5px;
+    font-size: 0.9em;
 }
 .ll-checkbox-group input[type="checkbox"] {
-    margin-right: 5px;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #F5B925;
+    border-radius: 3px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    top: 1px;
+}
+.ll-checkbox-group input[type="checkbox"]:checked {
+    background-color: #F5B925;
 }
 
-.hide-locked-control {
-    margin-top: 10px;
-}
-
-/* --- TASK FILTERS --- */
+/* --- Filter and Search Controls --- */
 #filter-controls {
     display: flex;
     gap: 15px;
-    margin-bottom: 20px;
-    background-color: #1e1e1e;
-    padding: 15px;
-    border-radius: 6px;
-}
-
-#filter-controls select, #filter-controls input {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #333;
-    background-color: #2a2a2a;
-    color: #E0E0E0;
+    margin-bottom: 25px;
+    padding: 10px;
+    background-color: hsl(0, 0%, 15%);
     border-radius: 4px;
+}
+#trader-filter, #map-filter, #task-search { 
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #E0E0E0;
     font-family: 'Roboto Mono', monospace;
     font-size: 0.9em;
+}
+#task-search {
+    flex-grow: 1;
 }
 
 
 /* --- TASK CARD STYLES --- */
 .task-card {
-    background-color: #1e1e1e;
-    border: 1px solid #333;
+    background-color: hsl(0, 0%, 15%);
     border-radius: 6px;
     margin-bottom: 15px;
-    transition: background-color 0.2s, border-color 0.2s;
+    padding: 0; 
     cursor: pointer;
-    user-select: none;
-    position: relative;
-    padding: 15px; /* Base padding */
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+.task-card:hover:not(.task-locked) {
+    background-color: hsl(0, 0%, 18%);
 }
 
-.task-card:hover {
-    background-color: #2a2a2a;
-    border-color: #444;
-}
-
-/* Collapsed View (Always visible) */
+/* Collapsed View (always visible) */
 .collapsed-view {
-    display: grid;
-    grid-template-columns: 30px 1fr 40px; /* Icon | Text | Button */
-    gap: 10px;
+    display: flex;
     align-items: center;
-}
-
-.trader-icon-small {
-    width: 30px;
-    height: 30px;
-    background-color: #F5B925;
-    border-radius: 50%;
-    /* Image logic would go here */
+    padding: 15px;
+    gap: 15px;
+    border-radius: 4px;
 }
 
 .collapsed-text-group {
-    min-width: 0;
+    flex-grow: 1;
 }
 
 .task-title {
-    color: #F5B925;
-    margin: 0 0 5px 0;
-    font-size: 1.1em;
-}
-
-.task-objective, .collapsed-requirements {
-    font-size: 0.85em;
-    color: #ccc;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 1.1em;
+    color: #F5B925;
+}
+.task-objective {
+    margin: 0;
+    font-size: 0.85em;
+    color: #aaa;
+}
+.trader-name {
+    font-size: 0.8em;
+    color: #999;
+}
+.collapsed-requirements {
+    font-size: 0.75em;
+    color: #777;
+    margin-bottom: 2px;
 }
 
+/* Expanded View (Hidden by default, shown when clicked) */
+.expanded-view {
+    display: none; 
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    padding: 15px;
+    padding-top: 0;
+    border-top: 1px dashed #333;
+}
+.expanded-view h4 {
+    color: #F5B925;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+
+/* --- Trader Icons and Images --- */
+.trader-icon-small, .trader-image-box {
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #333;
+    border-radius: 4px;
+}
+.trader-icon-small {
+    min-width: 64px;
+    height: 64px;
+    border: 1px solid #F5B925; 
+}
+
+.trader-image-box {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+}
+
+/* TRADER ICON MAPPING */
+[data-trader-id="Prapor"] { 
+    background-image: url('images/prapor-portrait.png');
+    background-color: #c0392b; 
+}
+[data-trader-id="Skier"] { 
+    background-image: url('images/skier-portrait.png');
+    background-color: #2980b9; 
+}
+[data-trader-id="Therapist"] { 
+    background-image: url('images/therapist-portrait.png');
+    background-color: #27ae60; 
+}
+[data-trader-id="Peacekeeper"] { 
+    background-image: url('images/peacekeeper-portrait.png');
+    background-color: #f1c40f; 
+}
+[data-trader-id="Mechanic"] { 
+    background-image: url('images/mechanic-portrait.png');
+    background-color: #7f8c8d; 
+}
+[data-trader-id="Ragman"] { 
+    background-image: url('images/ragman-portrait.png');
+    background-color: #9b59b6; 
+}
+[data-trader-id="Jaeger"] { 
+    background-image: url('images/jaeger-portrait.png');
+    background-color: #d35400; 
+}
+
+
+/* --- Status Styles --- */
+
+/* Completed Task */
+.task-completed {
+    border-left: 5px solid #2ecc71;
+    opacity: 0.8;
+}
+.task-completed .task-title {
+    color: #2ecc71;
+}
+
+/* Locked Task */
+.task-locked {
+    border-left: 5px solid #777;
+    opacity: 0.4;
+    pointer-events: none; /* Disable clicking */
+    cursor: default;
+}
+.task-locked .task-title {
+    color: #777;
+}
+
+/* --- Quick Slot Styles --- */
+.task-quick-slotted {
+    border-color: #F5B925; /* Gold border for quick slot */
+    background-color: hsl(45, 10%, 18%); /* Slightly warmer background */
+}
+.quick-slot-btn {
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555; /* Hollow Star default */
+    transition: color 0.1s;
+    padding: 5px;
+}
+.quick-slot-btn:hover {
+    color: #F5B925;
+}
+.quick-slot-btn.slotted-active {
+    color: #F5B925; /* Solid Star */
+}
+
+
+/* --- Requirement and Objective Lists --- */
+.requirement-item {
+    font-size: 0.8em;
+    padding: 3px 0;
+    border-bottom: 1px dotted #222;
+}
+.requirement-item.met {
+    color: #2ecc71;
+}
+.requirement-item.unmet {
+    color: #e74c3c;
+}
+/* ITEM REQUIREMENT STYLES (Blue for item handovers) */
+.requirement-item.item-handover {
+    color: #5897FB; 
+    font-weight: bold;
+}
+
+.objective-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    padding: 4px 0;
+}
+.objective-checklist input[type="checkbox"] {
+    cursor: pointer;
+}
+.objective-checklist label {
+    cursor: pointer;
+}
+.objective-checklist input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: #777;
+}
+
+/* --- Rewards, Initial Equipment, and Dialogue --- */
+.dialogue-box {
+    background-color: #222;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.dialogue-box h4 {
+    color: #999;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #444;
+}
+.dialogue-text {
+    font-size: 0.9em;
+    margin: 0;
+    font-style: italic;
+}
+.rewards-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    font-size: 1em;
+}
+
+/* Style for the Initial Equipment Section */
+.initial-equipment-list {
+    margin-bottom: 15px; 
+    border: 1px dashed #444;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+.equipment-heading {
+    color: #9b59b6; /* Purple color for visibility */
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* MODIFIED: Use Flexbox on the list item to align icon and text */
+.rewards-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+    position: relative;
+    color: #E0E0E0;
+}
+
+/* NEW: Style for the reward icon image */
+.reward-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* CURRENCY COLORS */
+.rewards-list li[data-item="roubles"] { color: #2ecc71; } 
+.rewards-list li[data-item="dollars"] { color: #5897FB; } 
+.rewards-list li[data-item="euros"] { color: #f39c12; } 
+.rewards-list li[data-item="item"] { color: #e74c3c; } 
+
+
+/* COLLAPSED VIEW REWARD SUMMARY STYLES */
 .reward-summary {
     font-size: 0.8em;
     color: #ccc;
     margin-top: 5px;
 }
-
-/* Expanded View (Hidden by default) */
-.expanded-view {
-    display: grid;
-    grid-template-columns: 120px 1fr; /* Image Box | Details */
-    gap: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #333;
-    margin-top: 15px;
-}
-
-.trader-image-box {
-    width: 120px;
-    height: 120px;
-    background-color: #F5B925;
-    /* Large image logic would go here */
-}
-
-.dialogue-box {
-    background-color: #2a2a2a;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 3px solid #F5B925;
-    margin-bottom: 15px;
-}
-
-.dialogue-box h4 {
-    color: #F5B925;
-    margin: 0 0 5px 0;
-    font-size: 0.9em;
-}
-.dialogue-text {
-    font-size: 0.8em;
-    margin: 0;
-}
-
-.requirements-heading, .objectives-heading, .rewards-heading {
-    color: #ccc;
-    font-size: 0.95em;
-    border-bottom: 1px solid #333;
-    padding-bottom: 3px;
-    margin: 10px 0;
-}
-
-.requirement-item, .objective-item {
-    font-size: 0.85em;
-    margin-bottom: 5px;
-}
-
-.requirement-item.met {
-    color: #2ecc71;
-}
-
-.requirement-item.unmet {
-    color: #e74c3c;
-}
-
-.objective-checklist label {
-    display: block;
-    cursor: pointer;
-}
-.objective-checklist input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-.rewards-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 0.85em;
-}
-.rewards-list li {
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-}
-.reward-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-/* --- Task Status Colors --- */
-.task-completed {
-    border-color: #2ecc71;
-    box-shadow: 0 0 8px rgba(46, 204, 113, 0.3);
-}
-
-.task-locked {
-    opacity: 0.4;
-    pointer-events: none;
-}
-
-.task-quick-slotted .quick-slot-btn {
-    color: #F5B925;
-    text-shadow: 0 0 5px #F5B925;
-    font-weight: bold;
-}
-
-/* --- Currency & Helper Classes --- */
 .currency-rouble { color: #2ecc71; font-weight: bold; }
 .currency-dollar { color: #5897FB; font-weight: bold; }
 .currency-euro { color: #f39c12; font-weight: bold; }
 
-/* --- Task Toggle Button --- */
+/* --- Task Toggle Button Group (NEW) --- */
 .task-buttons-group {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
-
 .task-toggle-btn, .guide-toggle-btn {
-    padding: 8px 15px;
+    padding: 10px 15px;
     border: none;
     border-radius: 4px;
     font-family: 'Roboto Mono', monospace;
-    font-size: 0.9em;
+    font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.2s, box-shadow 0.2s;
-    width: 50%;
+    transition: background-color 0.2s;
 }
 
+/* Shorter button width, shared with Guide button */
+.task-toggle-btn {
+    flex-grow: 1; /* Make the Mark button take up available space */
+}
+
+/* Guide Button Style */
 .guide-toggle-btn {
-    background-color: #2a2a2a;
-    color: #F5B925;
-    border: 1px solid #F5B925;
+    flex-shrink: 0; /* Keep Guide button fixed size */
+    background-color: #F5B925; /* Gold/Yellow color */
+    color: #333;
+    font-weight: bold;
 }
 .guide-toggle-btn:hover {
-    background-color: #3d3d3d;
+    background-color: #d8a51e; 
 }
+
 
 .complete-btn {
     background-color: #5897FB;
@@ -309,22 +423,11 @@ h2 {
     background-color: #c42d3c;
 }
 
-.quick-slot-btn {
-    background: none;
-    border: none;
-    color: #666;
-    font-size: 1.5em;
-    cursor: pointer;
-    line-height: 1;
-    padding: 0;
-    transition: color 0.2s, text-shadow 0.2s;
-}
-
 /* --- Walkthrough Box (NEW) --- */
 .walkthrough-box {
     margin-top: 15px;
     padding: 10px;
-    background-color: #2a2a2a;
+    background-color: #333;
     border-radius: 4px;
     border-left: 3px solid #F5B925;
 }
@@ -340,232 +443,33 @@ h2 {
 }
 
 
-/* --- TAB NAVIGATION STYLES (REVAMPED) --- */
-#tab-navigation {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #333;
-}
-
-#tab-navigation button {
-    flex-grow: 1;
-    padding: 12px 15px;
-    border: none;
-    background-color: #1e1e1e;
-    color: #E0E0E0;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    margin-right: 5px;
-    border-bottom: 3px solid transparent;
-}
-
-/* Gold Glow Effect for Active Tab */
-#tab-navigation button.active {
-    background-color: #2a2a2a;
-    color: #F5B925;
-    border-bottom-color: #F5B925;
-    box-shadow: 0 -2px 10px rgba(245, 185, 37, 0.4); /* Top-side glow */
-}
-
-#tab-navigation button:not(.active):hover {
-    background-color: #333;
-    color: #F5B925;
-}
-
-/* --- STATS & TAX STYLES (New Sections) --- */
-.stat-row {
-    display: flex;
-    justify-content: space-around;
-    background-color: #2a2a2a;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    border-left: 3px solid #F5B925;
-}
-
-.stat-row h3 {
-    margin: 0;
-    font-size: 0.9em;
-}
-
-.stat-group {
-    background-color: #2a2a2a;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: space-around;
-}
-
-.stat-group h4 {
-    margin: 0;
-    font-size: 1em;
-}
-
-.streak-controls {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.streak-controls button {
-    flex-grow: 1;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    font-family: 'Roboto Mono', monospace;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-#streak-survived {
-    background-color: #2ecc71;
-    color: #1e1e1e;
-}
-#streak-survived:hover {
-    background-color: #26b263;
-}
-
-#streak-kia {
-    background-color: #e74c3c;
-    color: white;
-}
-#streak-kia:hover {
-    background-color: #c0392b;
-}
-
-.tax-calculator-box {
-    background-color: #2a2a2a;
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-.tax-inputs {
-    margin-bottom: 15px;
-}
-
-.tax-inputs label {
-    display: block;
-    margin-bottom: 5px;
-    color: #F5B925;
-    font-size: 0.9em;
-}
-
-.tax-inputs input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #333;
-    background-color: #1e1e1e;
-    color: #E0E0E0;
-    border-radius: 4px;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1em;
-}
-
-.tax-results {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px dashed #333;
-}
-
-.tax-results p {
-    margin: 5px 0;
-    font-size: 0.9em;
-}
-
-.result-net {
-    font-size: 1.1em !important;
-    color: #2ecc71;
-    font-weight: bold;
-}
-
-/* --- VIRTUAL STASH STYLES (Basic Layout) --- */
-.stash-input-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    background-color: #2a2a2a;
-    padding: 15px;
-    border-radius: 6px;
-}
-
-.stash-input-group input {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #333;
-    background-color: #1e1e1e;
-    color: #E0E0E0;
-    border-radius: 4px;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1em;
-}
-
-.stash-list {
-    background-color: #1e1e1e;
-    padding: 15px;
-    border-radius: 6px;
-}
-
-.stash-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px dotted #333;
-    font-size: 0.9em;
-}
-.stash-item:last-child {
-    border-bottom: none;
-}
-
-.remove-stash-item {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 2px 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
-}
-.remove-stash-item:hover {
-    background-color: #c0392b;
-}
-
-
 /* --- Responsive Adjustments --- */
 @media (max-width: 950px) {
     .main-layout {
         grid-template-columns: 1fr; /* Stack sidebar and content on smaller screens */
         gap: 20px;
     }
-    #ll-tracker, #filter-controls {
+    #ll-tracker {
+        position: static;
         width: 100%;
+        margin-bottom: 20px;
+    }
+    .ll-checkbox-group {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for LLs across the screen */
+        gap: 15px;
+    }
+    .ll-checkbox-group label {
+        justify-content: center;
     }
     #filter-controls {
         flex-direction: column;
-    }
-    .stat-row {
-        flex-direction: column;
         gap: 10px;
-    }
-    .stat-group {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .streak-controls {
-        flex-direction: column;
     }
     .expanded-view {
-        grid-template-columns: 1fr; /* Stack image and details on small screens */
+        grid-template-columns: 1fr; 
     }
     .trader-image-box {
         width: 100%;
-        height: 150px; /* Make image taller for better look */
+        height: 100px;
     }
 }
