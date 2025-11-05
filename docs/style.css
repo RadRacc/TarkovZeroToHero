@@ -85,70 +85,16 @@ h2 {
     background-color: #F5B925;
 }
 
-/* ------------------------------------------------ */
-/* --- NEW: Tab Navigation Header Bar (Landing Bar) --- */
-/* ------------------------------------------------ */
-#tab-navigation {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #333;
-    padding: 5px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #F5B925;
-    /* Optional: Keep it sticky at the top of the main area */
-    position: sticky; 
-    top: 0;
-    z-index: 100;
-}
-
-#tab-navigation button {
-    flex-grow: 1;
-    padding: 12px 10px;
-    border: none;
-    background-color: transparent;
-    color: #E0E0E0;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 3px;
-    margin: 0 5px;
-}
-
-#tab-navigation button:hover {
-    background-color: #444;
-}
-
-#tab-navigation button.active {
-    background-color: #F5B925;
-    color: #111;
-    font-weight: bold;
-    box-shadow: 0 0 10px rgba(245, 185, 37, 0.5);
-}
-
-/* --- Page Content Styling --- */
-.page-content {
-    display: none; /* Hide all pages by default */
-    padding: 0;
-}
-
-.page-content.active-page {
-    display: block; /* Show the active page */
-}
-
-/* --- Filter and Search Controls (Now inside #tasks) --- */
+/* --- Filter and Search Controls --- */
 #filter-controls {
     display: flex;
     gap: 15px;
     margin-bottom: 25px;
-    padding: 15px; 
+    padding: 10px;
     background-color: hsl(0, 0%, 15%);
     border-radius: 4px;
 }
-#filter-controls select, 
-#filter-controls input[type="text"] {
+#trader-filter, #map-filter, #task-search { 
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #444;
@@ -161,69 +107,47 @@ h2 {
     flex-grow: 1;
 }
 
+
 /* --- TASK CARD STYLES --- */
-#tasks {
-    /* No longer a multi-column grid, keeping it as a stack */
-}
 .task-card {
     background-color: hsl(0, 0%, 15%);
-    padding: 15px;
-    border-radius: 4px;
+    border-radius: 6px;
     margin-bottom: 15px;
-    border-left: 5px solid transparent;
+    padding: 0; 
     cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    user-select: none;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
 }
-.task-card:hover {
+.task-card:hover:not(.task-locked) {
     background-color: hsl(0, 0%, 18%);
 }
-/* Locked Task Style */
-.task-locked {
-    opacity: 0.5; /* Fade out locked tasks */
-    cursor: default;
-    border-left-color: #dc3545; /* Red border for locked tasks */
-}
-.task-locked:hover {
-    background-color: hsl(0, 0%, 15%); /* No hover effect on locked tasks */
-}
-/* Completed Task Style */
-.task-completed {
-    border-left-color: #2ecc71; /* Green border for completed tasks */
-    opacity: 1; 
-}
-/* Quick Slot Task Style */
-.task-quick-slotted {
-    box-shadow: 0 0 10px rgba(245, 185, 37, 0.5); /* Gold glow for quick slotted */
-    order: -1; /* Move to the top of the list */
-}
 
-/* Collapsed View */
+/* Collapsed View (always visible) */
 .collapsed-view {
     display: flex;
     align-items: center;
+    padding: 15px;
     gap: 15px;
+    border-radius: 4px;
 }
+
 .collapsed-text-group {
     flex-grow: 1;
 }
-.trader-name {
-    font-size: 0.8em;
-    color: #F5B925;
-    display: block;
-    margin-bottom: 2px;
-}
+
 .task-title {
     margin: 0;
-    font-size: 1.2em;
-    color: #E0E0E0;
-    line-height: 1.1;
+    font-size: 1.1em;
+    color: #F5B925;
 }
 .task-objective {
-    font-size: 0.9em;
+    margin: 0;
+    font-size: 0.85em;
+    color: #aaa;
+}
+.trader-name {
+    font-size: 0.8em;
     color: #999;
-    margin: 5px 0 0 0;
 }
 .collapsed-requirements {
     font-size: 0.75em;
@@ -233,7 +157,7 @@ h2 {
 
 /* Expanded View (Hidden by default, shown when clicked) */
 .expanded-view {
-    display: none;
+    display: none; 
     grid-template-columns: 100px 1fr;
     gap: 20px;
     padding: 15px;
@@ -246,9 +170,10 @@ h2 {
     margin-bottom: 5px;
 }
 
+
 /* --- Trader Icons and Images --- */
 .trader-icon-small, .trader-image-box {
-    background-size: cover;
+    background-size: cover; 
     background-repeat: no-repeat;
     background-position: center;
     background-color: #333;
@@ -257,24 +182,127 @@ h2 {
 .trader-icon-small {
     min-width: 64px;
     height: 64px;
-    border: 1px solid #F5B925;
+    border: 1px solid #F5B925; 
 }
+
 .trader-image-box {
     width: 100px;
     height: 100px;
     background-size: cover;
 }
-/* TRADER ICON MAPPING */
-[data-trader-id="Prapor"] { background-image: url('images/icon-prapor.png'); }
-[data-trader-id="Therapist"] { background-image: url('images/icon-therapist.png'); }
-[data-trader-id="Skier"] { background-image: url('images/icon-skier.png'); }
-[data-trader-id="Peacekeeper"] { background-image: url('images/icon-peacekeeper.png'); }
-[data-trader-id="Mechanic"] { background-image: url('images/icon-mechanic.png'); }
-[data-trader-id="Ragman"] { background-image: url('images/icon-ragman.png'); }
-[data-trader-id="Jaeger"] { background-image: url('images/icon-jaeger.png'); }
+
+/* TRADER ICON MAPPING - FIX: Capitalizing file names for server case-sensitivity */
+[data-trader-id="Prapor"] { 
+    background-image: url('images/Prapor-portrait.png');
+    background-color: #c0392b; 
+}
+[data-trader-id="Skier"] { 
+    background-image: url('images/Skier-portrait.png');
+    background-color: #2980b9; 
+}
+[data-trader-id="Therapist"] { 
+    background-image: url('images/Therapist-portrait.png');
+    background-color: #27ae60; 
+}
+[data-trader-id="Peacekeeper"] { 
+    background-image: url('images/Peacekeeper-portrait.png');
+    background-color: #f1c40f; 
+}
+[data-trader-id="Mechanic"] { 
+    background-image: url('images/Mechanic-portrait.png');
+    background-color: #7f8c8d; 
+}
+[data-trader-id="Ragman"] { 
+    background-image: url('images/Ragman-portrait.png');
+    background-color: #9b59b6; 
+}
+[data-trader-id="Jaeger"] { 
+    background-image: url('images/Jaeger-portrait.png');
+    background-color: #d35400; 
+}
 
 
-/* Dialogue and Rewards */
+/* --- Status Styles --- */
+
+/* Completed Task */
+.task-completed {
+    border-left: 5px solid #2ecc71;
+    opacity: 0.8;
+}
+.task-completed .task-title {
+    color: #2ecc71;
+}
+
+/* Locked Task */
+.task-locked {
+    border-left: 5px solid #777;
+    opacity: 0.4;
+    pointer-events: none; /* Disable clicking */
+    cursor: default;
+}
+.task-locked .task-title {
+    color: #777;
+}
+
+/* --- Quick Slot Styles --- */
+.task-quick-slotted {
+    border-color: #F5B925; /* Gold border for quick slot */
+    background-color: hsl(45, 10%, 18%); /* Slightly warmer background */
+}
+.quick-slot-btn {
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555; /* Hollow Star default */
+    transition: color 0.1s;
+    padding: 5px;
+}
+.quick-slot-btn:hover {
+    color: #F5B925;
+}
+.quick-slot-btn.slotted-active {
+    color: #F5B925; /* Solid Star */
+}
+
+
+/* --- Requirement and Objective Lists --- */
+.requirement-item {
+    font-size: 0.8em;
+    padding: 3px 0;
+    border-bottom: 1px dotted #222;
+}
+.requirement-item.met {
+    color: #2ecc71;
+}
+.requirement-item.unmet {
+    color: #e74c3c;
+}
+/* ITEM REQUIREMENT STYLES (Blue for item handovers) */
+.requirement-item.item-handover {
+    color: #5897FB; 
+    font-weight: bold;
+}
+
+.objective-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    padding: 4px 0;
+}
+.objective-checklist input[type="checkbox"] {
+    cursor: pointer;
+}
+.objective-checklist label {
+    cursor: pointer;
+}
+.objective-checklist input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: #777;
+}
+
+/* --- Rewards, Initial Equipment, and Dialogue --- */
 .dialogue-box {
     background-color: #222;
     padding: 10px;
@@ -299,105 +327,45 @@ h2 {
     margin: 0 0 15px 0;
     font-size: 1em;
 }
+
 /* Style for the Initial Equipment Section */
 .initial-equipment-list {
-    border-top: 1px dashed #333;
-    padding-top: 10px;
-    margin-top: 10px;
+    margin-bottom: 15px; 
+    border: 1px dashed #444;
+    padding: 5px 10px;
+    border-radius: 4px;
 }
 .equipment-heading {
-    margin-top: 0 !important;
+    color: #9b59b6; /* Purple color for visibility */
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
+/* MODIFIED: Use Flexbox on the list item to align icon and text */
 .rewards-list li {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 4px;
-    font-size: 0.9em;
-}
-.reward-icon {
-    width: 18px;
-    height: 18px;
-}
-
-/* Objectives and Requirements Checklists */
-.objective-checklist, .task-requirements-list {
-    padding: 0;
-    list-style: none;
-    margin-bottom: 15px;
-}
-.objective-item label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
-.objective-item input[type="checkbox"] {
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border: 1px solid #5897FB;
-    border-radius: 3px;
-    background-color: transparent;
-    cursor: pointer;
-}
-.objective-item input[type="checkbox"]:checked {
-    background-color: #5897FB;
-}
-.objective-item input[type="checkbox"]:checked + label {
-    text-decoration: line-through;
-    color: #777;
-}
-
-.task-requirements-list li {
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    padding-left: 15px;
+    padding: 2px 0;
     position: relative;
-}
-.task-requirements-list li::before {
-    content: '✖';
-    color: #dc3545;
-    position: absolute;
-    left: 0;
-}
-.task-requirements-list li.met-req {
-    color: #2ecc71;
-}
-.task-requirements-list li.met-req::before {
-    content: '✔';
-    color: #2ecc71;
-}
-
-/* Buttons */
-.task-buttons-group {
-    display: flex;
-    gap: 10px;
-}
-.task-toggle-btn {
-    flex-grow: 1;
-}
-
-.quick-slot-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    font-size: 2em;
-    line-height: 0.5;
-    color: #777;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-.quick-slot-btn:hover {
     color: #E0E0E0;
 }
-.quick-slot-btn.slotted-active {
-    color: #F5B925; /* Gold/Yellow when slotted */
+
+/* NEW: Style for the reward icon image */
+.reward-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
 }
 
+/* CURRENCY COLORS */
+.rewards-list li[data-item="roubles"] { color: #2ecc71; } 
+.rewards-list li[data-item="dollars"] { color: #5897FB; } 
+.rewards-list li[data-item="euros"] { color: #f39c12; } 
+.rewards-list li[data-item="item"] { color: #e74c3c; } 
+
+
+/* COLLAPSED VIEW REWARD SUMMARY STYLES */
 .reward-summary {
     font-size: 0.8em;
     color: #ccc;
@@ -407,7 +375,12 @@ h2 {
 .currency-dollar { color: #5897FB; font-weight: bold; }
 .currency-euro { color: #f39c12; font-weight: bold; }
 
-/* --- Task Toggle Button --- */
+/* --- Task Toggle Button Group (NEW) --- */
+.task-buttons-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
 .task-toggle-btn, .guide-toggle-btn {
     padding: 10px 15px;
     border: none;
@@ -416,11 +389,17 @@ h2 {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.2s;
-    width: 100%;
-    margin-top: 10px;
 }
+
+/* Shorter button width, shared with Guide button */
+.task-toggle-btn {
+    flex-grow: 1; /* Make the Mark button take up available space */
+}
+
+/* Guide Button Style */
 .guide-toggle-btn {
-    background-color: #F5B925; 
+    flex-shrink: 0; /* Keep Guide button fixed size */
+    background-color: #F5B925; /* Gold/Yellow color */
     color: #333;
     font-weight: bold;
 }
@@ -444,7 +423,7 @@ h2 {
     background-color: #c42d3c;
 }
 
-/* --- Walkthrough Box --- */
+/* --- Walkthrough Box (NEW) --- */
 .walkthrough-box {
     margin-top: 15px;
     padding: 10px;
@@ -464,165 +443,6 @@ h2 {
 }
 
 
-/* ------------------------------------------------ */
-/* --- NEW: STATS AND STASH STYLES --- */
-/* ------------------------------------------------ */
-#stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    background-color: hsl(0, 0%, 15%);
-    padding: 20px;
-    border-radius: 4px;
-    text-align: center;
-}
-.stat-card h3 {
-    color: #ddd;
-    margin-top: 0;
-    border-bottom: 1px solid #444;
-    padding-bottom: 5px;
-}
-.stat-card p {
-    font-size: 2em;
-    margin: 10px 0 0 0;
-    font-weight: bold;
-    color: #F5B925;
-}
-
-.streak-card p {
-    color: #2ecc71;
-}
-
-.streak-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-.streak-buttons button {
-    flex-grow: 1;
-    font-size: 0.9em;
-}
-
-.tool-section {
-    background-color: hsl(0, 0%, 15%);
-    padding: 20px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-.tool-section h3 {
-    color: #F5B925;
-    border-bottom: 1px solid #444;
-    padding-bottom: 5px;
-}
-
-/* Virtual Stash */
-.stash-input-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-.stash-input-group input[type="text"] {
-    flex-grow: 1;
-}
-.stash-input-group input[type="number"] {
-    width: 80px;
-    text-align: center;
-}
-.stash-input-group input, .tax-input-group input {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #444;
-    background-color: #333;
-    color: #E0E0E0;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.9em;
-}
-
-#virtual-stash-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 10px;
-}
-
-.stash-item-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #222;
-    border-left: 3px solid #777;
-    font-size: 0.9em;
-}
-.stash-item-card.found {
-    border-left-color: #2ecc71; /* Green for found in raid */
-}
-.stash-item-card.used {
-    border-left-color: #dc3545; /* Red for used */
-    opacity: 0.7;
-}
-
-.stash-name-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.stash-item-count-text {
-    background-color: #333;
-    padding: 3px 6px;
-    border-radius: 3px;
-    font-weight: bold;
-    color: #F5B925;
-}
-.stash-action-btn {
-    padding: 5px 10px;
-    font-size: 0.8em;
-    margin-top: 0;
-    width: auto;
-}
-
-/* Tax Calculator */
-.tax-input-group {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-.tax-input-group label {
-    font-size: 0.9em;
-}
-.tax-input-group input {
-    width: 150px;
-    text-align: right;
-}
-
-#calculate-tax {
-    margin-bottom: 15px;
-    width: 100%;
-}
-
-#tax-results {
-    padding: 10px;
-    background-color: #222;
-    border-radius: 4px;
-    border-left: 3px solid #5897FB;
-}
-#tax-results p {
-    margin: 5px 0;
-    font-size: 0.9em;
-}
-.result-net {
-    font-size: 1.1em !important;
-    font-weight: bold;
-    border-top: 1px dashed #444;
-    padding-top: 5px;
-    margin-top: 10px !important;
-}
-
 /* --- Responsive Adjustments --- */
 @media (max-width: 950px) {
     .main-layout {
@@ -630,32 +450,26 @@ h2 {
         gap: 20px;
     }
     #ll-tracker {
-        position: relative;
-        top: 0;
+        position: static;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .ll-checkbox-group {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns for LLs across the screen */
+        gap: 15px;
+    }
+    .ll-checkbox-group label {
+        justify-content: center;
     }
     #filter-controls {
         flex-direction: column;
         gap: 10px;
     }
     .expanded-view {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; 
     }
     .trader-image-box {
-        display: none;
-    }
-    #stats-container {
-        grid-template-columns: 1fr;
-    }
-    .stash-input-group {
-        flex-wrap: wrap;
-    }
-    .stash-input-group input[type="number"] {
         width: 100%;
-    }
-    .stash-input-group button {
-        flex-grow: 1;
-    }
-    #virtual-stash-list {
-        grid-template-columns: 1fr;
+        height: 100px;
     }
 }
