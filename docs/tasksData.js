@@ -89,7 +89,7 @@ const TASKS_DATA = [
         ],
         rewards: [
             { type: "roubles", amount: 5500 },
-            { type: "item", name: "2 Capacitors", icon: "icon-capacitor.png" },
+            { type: "item", name: "2 Capacitors", icon: "icon-capacitors.png" },
             { type: "item", name: "1 Insulating Tape", icon: "icon-tape.png" } 
         ]
     },
