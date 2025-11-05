@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EFT Zero to Hero Custom Task Tracker</title>
     
-    <!-- Link to the style file -->
     <link rel="stylesheet" href="style.css"> 
-    <!-- Use a mono font for the Tarkov aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -20,7 +18,6 @@
         
         <div class="main-layout">
             
-            <!-- LEFT SIDEBAR: LOYALTY LEVEL TRACKER -->
             <aside id="ll-tracker">
                 <h2>Trader Loyalty</h2>
                 
@@ -93,48 +90,123 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
+                
+                <hr>
+                
+                <div class="hide-locked-control">
+                     <label><input type="checkbox" id="hide-locked-tasks"> Hide Locked Tasks</label>
+                </div>
+                
             </aside>
             
-            <!-- RIGHT CONTENT AREA: FILTERS AND TASKS -->
             <main>
-                <div id="filter-controls">
-                    <select id="trader-filter">
-                        <option value="all">Filter by Trader (All)</option>
-                        <option value="Prapor">Prapor</option>
-                        <option value="Therapist">Therapist</option>
-                        <option value="Skier">Skier</option>
-                        <option value="Peacekeeper">Peacekeeper</option>
-                        <option value="Mechanic">Mechanic</option>
-                        <option value="Ragman">Ragman</option>
-                        <option value="Jaeger">Jaeger</option>
-                    </select>
-                    <select id="map-filter">
-                        <option value="all">Filter by Map (All)</option>
-                        <option value="Any">Any Map</option>
-                        <option value="Customs">Customs</option>
-                        <option value="Factory">Factory</option>
-                        <option value="Ground Zero">Ground Zero</option>
-                        <option value="Interchange">Interchange</option>
-                        <option value="Lighthouse">Lighthouse</option>
-                        <option value="Reserve">Reserve</option>
-                        <option value="Shoreline">Shoreline</option>
-                        <option value="Streets of Tarkov">Streets of Tarkov</option>
-                        <option value="The Lab">The Lab</option>
-                        <option value="Woods">Woods</option>
-                    </select>
-                    <input type="text" id="task-search" placeholder="Search task title or objective...">
-                </div>
-
-                <!-- Task cards will be injected here by script.js -->
-                <section id="tasks" class="page-content active-page">
-                    <h2>Task Progression</h2>
+                
+                <nav id="tab-navigation">
+                    <button data-tab="tasks" class="active">🎯 Tasks</button>
+                    <button data-tab="stash-tracker">📦 Virtual Stash</button>
+                    <button data-tab="stats-tracker">💰 Stats & Taxes</button>
+                </nav>
+                
+                <section id="stash-tracker" class="page-content" style="display:none;">
+                    <h2>Virtual Stash Tracker</h2>
+                    <p>Track items you need to keep for future tasks or hideout upgrades.</p>
+                    <div class="stash-input-group">
+                        <input type="text" id="stash-item-name" placeholder="Item Name (e.g., Toolset)" required>
+                        <input type="number" id="stash-item-count" placeholder="Count" value="1" min="1" required>
+                        <button id="add-stash-item" class="complete-btn">Add Item</button>
+                    </div>
+                    <div id="virtual-stash-list" class="stash-list">
+                        <p>No items in stash.</p>
+                    </div>
                 </section>
+                
+                <section id="stats-tracker" class="page-content" style="display:none;">
+                    
+                    <h2>📊 Stats Tracker</h2>
+                    
+                    <div class="stat-row">
+                        <h3>Roubles (₽): <span class="currency-rouble" id="stat-roubles">0</span></h3>
+                        <h3>Dollars ($): <span class="currency-dollar" id="stat-dollars">0</span></h3>
+                        <h3>Euros (€): <span class="currency-euro" id="stat-euros">0</span></h3>
+                    </div>
+                    
+                    <div class="stat-group">
+                        <h4>Survival Streak: <span id="streak-count">0</span> raids</h4>
+                        <h4>Current Multiplier: <span class="currency-rouble" id="current-survival-multiplier">1.0x</span></h4>
+                    </div>
+
+                    <div class="streak-controls">
+                        <button id="streak-survived">Raid Survived (Apply Bonus)</button>
+                        <button id="streak-kia">K.I.A (Reset)</button>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h2>💰 Tax Calculators</h2>
+                    
+                    <h3>Flea Market Listing Tax</h3>
+                    <p>Current Sales Tax (Divisor): <span class="currency-rouble" id="current-sales-tax">6.00</span></p>
+                    <div class="tax-calculator-box">
+                        <div class="tax-inputs">
+                            <label for="input-amount-to-tax">Amount to Tax (Roubles):</label>
+                            <input type="number" id="input-amount-to-tax" placeholder="e.g., 250000" value="0" min="0">
+                        </div>
+                        <button id="calculate-flea-tax" class="complete-btn">Calculate Flea Tax</button>
+                        <div id="tax-results" class="tax-results">
+                            <p>Your net profit will be calculated here based on sales tax and income tax tiers.</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Found Roubles Tax (Keep 1/3rd)</h3>
+                    <div class="tax-calculator-box">
+                        <div class="tax-inputs">
+                            <label for="input-found-roubles">Total Found Roubles:</label>
+                            <input type="number" id="input-found-roubles" placeholder="e.g., 90000" value="0" min="0">
+                        </div>
+                        <button id="calculate-found-roubles" class="complete-btn">Calculate Found Roubles</button>
+                        <div id="found-roubles-results" class="tax-results">
+                            <p>Your take-home profit will be calculated here.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                
+                <section id="tasks" class="page-content active-page">
+                    <div id="filter-controls">
+                        <select id="trader-filter">
+                            <option value="all">Filter by Trader (All)</option>
+                            <option value="Prapor">Prapor</option>
+                            <option value="Therapist">Therapist</option>
+                            <option value="Skier">Skier</option>
+                            <option value="Peacekeeper">Peacekeeper</option>
+                            <option value="Mechanic">Mechanic</option>
+                            <option value="Ragman">Ragman</option>
+                            <option value="Jaeger">Jaeger</option>
+                        </select>
+                        <select id="map-filter">
+                            <option value="all">Filter by Map (All)</option>
+                            <option value="Any">Any Map</option>
+                            <option value="Customs">Customs</option>
+                            <option value="Factory">Factory</option>
+                            <option value="Ground Zero">Ground Zero</option>
+                            <option value="Interchange">Interchange</option>
+                            <option value="Lighthouse">Lighthouse</option>
+                            <option value="Reserve">Reserve</option>
+                            <option value="Shoreline">Shoreline</option>
+                            <option value="Streets of Tarkov">Streets of Tarkov</option>
+                            <option value="The Lab">The Lab</option>
+                            <option value="Woods">Woods</option>
+                        </select>
+                        <input type="text" id="task-search" placeholder="Search task title or objective...">
+                    </div>
+
+                    <h2>Task Progression</h2>
+                    </section>
             
             </main>
         </div>
     </div>
 
-    <!-- Load data first, then the script that uses it -->
     <script src="tasksData.js"></script>
     <script src="script.js"></script>
 </body>
