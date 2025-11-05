@@ -139,7 +139,7 @@ function handleHideLockedToggle(event) {
     filterTasks(); // Re-run filters immediately
 }
 
-// --- DYNAMIC TASK CARD GENERATION (From script(1).js) ---
+// --- DYNAMIC TASK CARD GENERATION ---
 function generateTaskCards() {
     tasksSection.innerHTML = ''; // Clear only cards
     
@@ -328,6 +328,26 @@ function handleTabToggle(event) {
             page.style.display = isActive ? 'block' : 'none';
         }
     });
+}
+
+// --- FIX: GUIDE BUTTON HANDLER (Added back) ---
+function handleGuideToggle(event) {
+    const button = event.target;
+    const taskCard = button.closest('.task-card');
+    const walkthroughBox = taskCard.querySelector('.walkthrough-box');
+    
+    // This logic also supports HTML (like <img> tags) in the walkthrough
+    const walkthroughText = taskCard.getAttribute('data-task-walkthrough') || 'No specific guide available for this task.'; 
+
+    if (walkthroughBox) {
+        // Inject the HTML content
+        walkthroughBox.querySelector('.walkthrough-text').innerHTML = walkthroughText; 
+        
+        // Toggle visibility
+        const isHidden = window.getComputedStyle(walkthroughBox).display === 'none';
+        walkthroughBox.style.display = isHidden ? 'block' : 'none'; 
+    }
+    event.stopPropagation();
 }
 
 
@@ -856,7 +876,7 @@ function calculateFoundRoubles() {
     foundRoublesResults.innerHTML = `
         <p>Total Roubles Found: <span class="currency-rouble">${R.toLocaleString()}₽</span></p>
         <p>Tax (2/3rd): <span class="currency-rouble">- ${Math.round(taxAmount).toLocaleString()}₽</span></p>
-        <p class="result-net">Take Home: <span class="currency-rouble">${Math.round(keepAmount).toLocaleString()}₽</span></p>
+        <p class.result-net">Take Home: <span class="currency-rouble">${Math.round(keepAmount).toLocaleString()}₽</span></p>
     `;
 }
 
