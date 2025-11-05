@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFT Task Tracker</title>
+    <title>EFT Zero to Hero Custom Task Tracker</title>
     
     <link rel="stylesheet" href="style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -12,7 +12,8 @@
 
     <div class="container">
         <header>
-            <h1 class="header-title">EFT Task Tracker</h1>
+            <h1 class="header-title">EFT Zero to Hero Custom Task Tracker</h1>
+            <h4> by RadRacc</h4>
         </header>
         
         <div class="main-layout">
@@ -49,7 +50,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
                 <div class="trader-ll-group" data-trader="Peacekeeper">
                     <h3>Peacekeeper</h3>
                     <div class="ll-checkbox-group">
@@ -59,7 +60,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-                
+
                 <div class="trader-ll-group" data-trader="Mechanic">
                     <h3>Mechanic</h3>
                     <div class="ll-checkbox-group">
@@ -69,7 +70,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-                
+
                 <div class="trader-ll-group" data-trader="Ragman">
                     <h3>Ragman</h3>
                     <div class="ll-checkbox-group">
@@ -89,111 +90,117 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
+                <hr>
+                
+                <div class="hide-locked-control">
+                     <label><input type="checkbox" id="hide-locked-tasks"> Hide Locked Tasks</label>
+                </div>
+                
             </aside>
-
+            
             <main>
-                <nav id="tab-navigation">
-                    <button data-tab="tasks" class="active">Task Progression</button>
-                    <button data-tab="stats-tracker">Stats</button>
-                    <button data-tab="stash-tools">Virtual Stash & Taxes</button>
-                </nav>
+                
+                <div id="tab-navigation">
+                    <button data-tab="tasks" class="active">Tasks</button>
+                    <button data-tab="stash-tracker">Virtual Stash</button>
+                    <button data-tab="stats-tracker">Stats & Tax</button>
+                    </div>
+                
+                <section id="stash-tracker" class="page-content" style="display:none;">
+                    <h2>Virtual Stash Tracker</h2>
+                    <p>Use this to track items you need to keep for future tasks or hideout upgrades without taking up space in your actual stash.</p>
+                    <div class="stash-input-group">
+                        <input type="text" id="stash-item-name" placeholder="Item Name (e.g., Toolset)" required>
+                        <input type="number" id="stash-item-count" placeholder="Count" value="1" min="1" required>
+                        <button id="add-stash-item" class="complete-btn">Add Item</button>
+                    </div>
+                    <div id="virtual-stash-list" class="stash-list">
+                        <p>No items in stash.</p>
+                    </div>
+                </section>
+                
+                <section id="stats-tracker" class="page-content" style="display:none;">
+                    <h2>Stats & Tax System</h2>
+                    
+                    <div class="stat-row">
+                        <h3>Current Roubles (₽): <span class="currency-rouble" id="stat-roubles">0</span></h3>
+                        <h3>Current Dollars ($): <span class="currency-dollar" id="stat-dollars">0</span></h3>
+                        <h3>Current Euros (€): <span class="currency-euro" id="stat-euros">0</span></h3>
+                    </div>
+                    
+                    <div class="stat-group">
+                        <h4>Survival Streak: <span id="streak-count">0</span> raids</h4>
+                        <h4>Current Multiplier: <span class="currency-rouble" id="current-survival-multiplier">1.0</span></h4>
+                    </div>
 
-                <section id="tasks" class="page-content active-page">
-                    <h2>Task Progression</h2>
-                    <div id="filter-controls">
-                        <select id="trader-filter">
-                            <option value="all">Filter by Trader (All)</option>
-                            <option value="Prapor">Prapor</option>
-                            <option value="Therapist">Therapist</option>
-                            <option value="Skier">Skier</option>
-                            <option value="Peacekeeper">Peacekeeper</option>
-                            <option value="Mechanic">Mechanic</option>
-                            <option value="Ragman">Ragman</option>
-                            <option value="Jaeger">Jaeger</option>
-                        </select>
-                        <select id="map-filter">
-                            <option value="all">Filter by Map (All)</option>
-                            <option value="Any">Any Map</option>
-                            <option value="Customs">Customs</option>
-                            <option value="Factory">Factory</option>
-                            <option value="Ground Zero">Ground Zero</option>
-                            <option value="Interchange">Interchange</option>
-                            <option value="Lighthouse">Lighthouse</option>
-                            <option value="Reserve">Reserve</option>
-                            <option value="Shoreline">Shoreline</option>
-                            <option value="Streets of Tarkov">Streets of Tarkov</option>
-                            <option value="The Lab">The Lab</option>
-                            <option value="Woods">Woods</option>
-                        </select>
-                        <input type="text" id="task-search" placeholder="Search task title or objective...">
-                        
-                        <div id="hide-locked-container">
-                            <label><input type="checkbox" id="hide-locked-tasks"> Hide Locked Tasks</label>
+                    <div class="streak-controls">
+                        <button id="streak-survived">Raid Survived (Apply Bonus)</button>
+                        <button id="streak-kia">K.I.A (Reset)</button>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h3>Found Roubles Tax (Keep 1/3rd)</h3>
+                    <p>Enter the total amount of Roubles found in a raid. Tax is a fixed 2/3rds.</p>
+                    <div class="tax-calculator-box">
+                        <div class="tax-inputs">
+                            <label for="input-found-roubles">Total Found Roubles:</label>
+                            <input type="number" id="input-found-roubles" placeholder="e.g., 90000" value="0" min="0">
+                        </div>
+                        <button id="calculate-found-roubles" class="complete-btn">Calculate Found Roubles</button>
+                        <div id="found-roubles-results" class="tax-results">
+                            <p>Your take-home profit will be calculated here.</p>
                         </div>
                     </div>
-                    </section>
+                    
+                    <hr>
 
-                <section id="stats-tracker" class="page-content">
-                    <h2>💰 Stats & Streak Tracker</h2>
-                    <div id="stats-container">
-                        <div class="stat-card">
-                            <h3>Roubles (₽)</h3>
-                            <p id="stat-roubles">0</p>
+                    <h3>Flea Market Tax Calculator</h3>
+                    <p>Current Sales Tax Rate (Dynamic): <span class="currency-rouble" id="current-sales-tax-rate">6.00%</span></p>
+                    <div class="tax-calculator-box">
+                        <div class="tax-inputs">
+                            <label for="input-amount-to-tax">Amount to Tax (Roubles):</label>
+                            <input type="number" id="input-amount-to-tax" placeholder="e.g., 250000" value="0" min="0">
                         </div>
-                        <div class="stat-card">
-                            <h3>Dollars ($)</h3>
-                            <p id="stat-dollars">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Euros (€)</h3>
-                            <p id="stat-euros">0</p>
-                        </div>
-                        <div class="stat-card streak-card">
-                            <h3>Survival Streak</h3>
-                            <p id="streak-count">0</p>
-                            <div class="streak-buttons">
-                                <button id="streak-survived" class="complete-btn">Survived</button>
-                                <button id="streak-kia" class="uncomplete-btn">KIA</button>
-                            </div>
+                        <button id="calculate-flea-tax" class="complete-btn">Calculate Flea Tax</button>
+                        <div id="tax-results" class="tax-results">
+                            <p>Your net profit will be calculated here based on sales tax and income tax tiers.</p>
                         </div>
                     </div>
                 </section>
+                
+                
+                <div id="filter-controls" class="page-content active-page">
+                    <select id="trader-filter">
+                        <option value="all">Filter by Trader (All)</option>
+                        <option value="Prapor">Prapor</option>
+                        <option value="Therapist">Therapist</option>
+                        <option value="Skier">Skier</option>
+                        <option value="Peacekeeper">Peacekeeper</option>
+                        <option value="Mechanic">Mechanic</option>
+                        <option value="Ragman">Ragman</option>
+                        <option value="Jaeger">Jaeger</option>
+                    </select>
+                    <select id="map-filter">
+                        <option value="all">Filter by Map (All)</option>
+                        <option value="Any">Any Map</option>
+                        <option value="Customs">Customs</option>
+                        <option value="Factory">Factory</option>
+                        <option value="Ground Zero">Ground Zero</option>
+                        <option value="Interchange">Interchange</option>
+                        <option value="Lighthouse">Lighthouse</option>
+                        <option value="Reserve">Reserve</option>
+                        <option value="Shoreline">Shoreline</option>
+                        <option value="Streets of Tarkov">Streets of Tarkov</option>
+                        <option value="The Lab">The Lab</option>
+                        <option value="Woods">Woods</option>
+                    </select>
+                    <input type="text" id="task-search" placeholder="Search task title or objective...">
+                </div>
 
-                <section id="stash-tools" class="page-content">
-                    <h2>📦 Virtual Stash & Tools</h2>
-
-                    <div class="tool-section">
-                        <h3>Virtual Stash Locker</h3>
-                        <div class="stash-input-group">
-                            <input type="text" id="stash-item-name" placeholder="Item Name (e.g., GPU)">
-                            <input type="number" id="stash-item-count" value="1" min="1">
-                            <button id="add-stash-item" class="complete-btn">Add Item</button>
-                        </div>
-                        <div id="virtual-stash-list">
-                            </div>
-                    </div>
-
-                    <div class="tool-section">
-                        <h3>Flea Market Tax Calculator</h3>
-                        <div class="tax-input-group">
-                            <label>Current Sales Tax Rate (Dynamic):</label>
-                            <p id="current-sales-tax-rate" class="currency-rouble"></p>
-                        </div>
-                        
-                        <div class="tax-input-group">
-                            <label for="input-base-price">Item Base Price (V):</label>
-                            <input type="number" id="input-base-price" placeholder="e.g., 50000" min="1">
-                        </div>
-                        <div class="tax-input-group">
-                            <label for="input-sell-price">Proposed Sell Price (P):</label>
-                            <input type="number" id="input-sell-price" placeholder="e.g., 75000" min="1">
-                        </div>
-                        <button id="calculate-tax" class="guide-toggle-btn">Calculate Tax</button>
-                        <div id="tax-results">
-                            <p>Enter prices above to calculate estimated tax and net profit.</p>
-                        </div>
-                    </div>
+                <section id="tasks" class="page-content active-page">
+                    <h2>Task Progression</h2>
                 </section>
             
             </main>
