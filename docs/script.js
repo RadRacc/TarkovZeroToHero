@@ -330,7 +330,7 @@ function handleTabToggle(event) {
     });
 }
 
-// --- FIX: GUIDE BUTTON HANDLER (Added back) ---
+// --- FIX: GUIDE BUTTON HANDLER ---
 function handleGuideToggle(event) {
     const button = event.target;
     const taskCard = button.closest('.task-card');
@@ -797,13 +797,18 @@ function handleStreakButton(result) {
     if (result === 'survived') {
         statTracker.streak += 1;
         
-        // Sales Tax - (Sales Tax Reduction * Survival Streak Multiplier)
-        // You mentioned 0.5 reduction, so we'll use that as the base reduction.
+        // Sales Tax is reduced on all survived raids, using the current multiplier
         const taxDecrease = 0.5 * currentMultiplier;
         statTracker.salesTax = Math.max(2, statTracker.salesTax - taxDecrease);
         
-        // Increase multiplier by 0.1 (max 2.0)
-        statTracker.survivalStreakMultiplier = Math.min(2.0, currentMultiplier + 0.1); 
+        // NEW LOGIC: Only increase multiplier if the new streak is 2 or more
+        if (statTracker.streak >= 2) { 
+            // If streak is 2 or more, increase the multiplier
+            statTracker.survivalStreakMultiplier = Math.min(2.0, currentMultiplier + 0.1); 
+        } else {
+            // If streak is 1 (first survive), keep multiplier at 1.0
+            statTracker.survivalStreakMultiplier = 1.0; 
+        }
 
     } else if (result === 'kia') {
         // Increase sales tax by 1 (max 10)
