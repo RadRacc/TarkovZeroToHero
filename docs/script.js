@@ -22,7 +22,7 @@ let expandableCards = [];
 const traderFilter = document.getElementById('trader-filter');
 const mapFilter = document.getElementById('map-filter'); 
 const taskSearch = document.getElementById('task-search');
-// --- FIX APPLIED HERE: Only select checkboxes within .trader-ll-group ---
+// CORRECTED: Only select checkboxes within .trader-ll-group
 const llCheckboxes = document.querySelectorAll('.trader-ll-group input[type="checkbox"]');
 const tasksSection = document.getElementById('tasks'); 
 
@@ -36,12 +36,12 @@ const stashItemNameInput = document.getElementById('stash-item-name');
 const stashItemCountInput = document.getElementById('stash-item-count');
 const virtualStashList = document.getElementById('virtual-stash-list');
 
-// Flea Tax Elements (UPDATED)
+// Flea Tax Elements
 const calculateFleaTaxBtn = document.getElementById('calculate-flea-tax');
 const inputAmountToTax = document.getElementById('input-amount-to-tax'); 
 const taxResults = document.getElementById('tax-results');
 
-// Found Roubles Elements (NEW)
+// Found Roubles Elements
 const inputFoundRoubles = document.getElementById('input-found-roubles');
 const calculateFoundRoublesBtn = document.getElementById('calculate-found-roubles');
 const foundRoublesResults = document.getElementById('found-roubles-results');
@@ -64,7 +64,6 @@ function loadProgress() {
         Jaeger: { 1: false, 2: false, 3: false, 4: false }     
     };
     
-    // Default stats object with tax variables (Sales Tax starts at 6%, Multiplier at 1.0)
     const defaultStats = {
         roubles: 0,
         dollars: 0,
@@ -76,11 +75,9 @@ function loadProgress() {
 
     traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
     quickSlottedTasks = JSON.parse(localStorage.getItem(QUICK_SLOT_KEY) || '{}'); 
-    // Merge loaded statTracker with defaults to ensure new tax keys exist
     const loadedStats = JSON.parse(localStorage.getItem(STAT_TRACKER_KEY) || '{}');
     statTracker = { ...defaultStats, ...loadedStats };
     
-    // Safety check to ensure the multiplier is a valid number, defaults to 1.0
     if (typeof statTracker.survivalStreakMultiplier !== 'number' || isNaN(statTracker.survivalStreakMultiplier) || statTracker.survivalStreakMultiplier < 1.0) {
         statTracker.survivalStreakMultiplier = 1.0;
     }
@@ -90,7 +87,6 @@ function loadProgress() {
 
     // Sync LL checkboxes with loaded data
     llCheckboxes.forEach(checkbox => {
-        // Line 92 (now fixed): closest() will always find a parent .trader-ll-group based on the new selector
         const trader = checkbox.closest('.trader-ll-group').getAttribute('data-trader'); 
         const ll = checkbox.getAttribute('data-ll');
         if (traderLL[trader] && traderLL[trader][ll]) {
@@ -98,7 +94,6 @@ function loadProgress() {
         }
     });
     
-    // Sync Hide Locked Tasks checkbox
     if (hideLockedCheckbox) {
         hideLockedCheckbox.checked = hideLockedTasks;
     }
@@ -118,7 +113,6 @@ function loadProgress() {
     filterTasks(); 
     sortTasks(); 
     
-    // Render stash on load
     renderStash();
 }
 
@@ -140,32 +134,29 @@ function handleHideLockedToggle(event) {
     filterTasks();
 }
 
-// NOTE: generateTaskCards, handleGuideToggle, handleLLToggle, checkRequirementsAndGenerateList, 
-// generateChecklist, handleObjectiveToggle, filterTasks, updateTaskStatus, updateAllTaskStatuses, 
-// handleTaskToggle, handleQuickSlotToggle, sortTasks (and all their helper functions) 
-// must be present here, which were omitted for brevity in the previous response but should be in your actual file.
-// Since I don't have the full code for generateTaskCards, I am providing a placeholder based on the previous context.
-
 function generateTaskCards() {
     tasksSection.innerHTML = '<h2>Task Progression</h2>'; 
     
     TASKS_DATA.forEach(task => {
         const card = document.createElement('div');
         card.classList.add('task-card', 'expandable');
-        card.setAttribute('data-task-id', task.id); // Add task ID here
+        card.setAttribute('data-task-id', task.id); 
         
         let rewardRoubles = 0;
         let rewardDollars = 0;
         let rewardEuros = 0;
         
-        // Simplified content generation (Your actual implementation for this section must be in your file)
+        // --- IMAGE PATH FIX ---
         const rewardsHTML = task.rewards.map(reward => {
             if (reward.type === 'roubles') { rewardRoubles = reward.amount; }
             if (reward.type === 'dollars') { rewardDollars = reward.amount; }
             if (reward.type === 'euros') { rewardEuros = reward.amount; }
-            const iconUrl = reward.icon ? `images/${reward.icon}` : '';
-            return `<li data-item="${reward.type}"><img src="${iconUrl}" class="reward-icon" alt="${reward.name || reward.type} Icon"> ${reward.name || ''} ${reward.amount ? reward.amount.toLocaleString() : ''}</li>`;
+            // Corrected image path to use a relative 'images/' folder
+            const iconUrl = reward.icon ? `images/${reward.icon}` : ''; 
+            const amountText = reward.amount ? reward.amount.toLocaleString() : '';
+            return `<li data-item="${reward.type}"><img src="${iconUrl}" class="reward-icon" alt="${reward.name || reward.type} Icon"> ${amountText} ${reward.name || ''}</li>`;
         }).join('');
+        // --- END IMAGE PATH FIX ---
         
         const collapsedReqText = task.requirements.length > 0 && task.requirements[0] !== 'N/A' 
                                  ? `Requires: ${task.requirements.join(', ')}` 
@@ -237,7 +228,6 @@ function addEventListeners() {
     traderFilter.addEventListener('change', filterTasks);
     mapFilter.addEventListener('change', filterTasks); 
     taskSearch.addEventListener('keyup', filterTasks);
-    // Hide Locked Tasks listener
     if (hideLockedCheckbox) hideLockedCheckbox.addEventListener('change', handleHideLockedToggle);
     
     // Tab Navigation
@@ -252,7 +242,7 @@ function addEventListeners() {
     // Stash Buttons
     if (stashAddItemBtn) stashAddItemBtn.addEventListener('click', handleAddItem);
 
-    // Tax Calculator Buttons (UPDATED)
+    // Tax Calculator Buttons
     if (calculateFleaTaxBtn) calculateFleaTaxBtn.addEventListener('click', calculateFleaTax);
     if (calculateFoundRoublesBtn) calculateFoundRoublesBtn.addEventListener('click', calculateFoundRoubles);
 
@@ -285,7 +275,6 @@ function addEventListeners() {
             
             if (expandedView) {
                 const isHidden = window.getComputedStyle(expandedView).display === 'none';
-                // Only allow expansion if the task is not hidden by the 'hide locked' filter
                 if (card.style.display !== 'none') {
                     expandedView.style.display = isHidden ? 'grid' : 'none'; 
                 }
@@ -294,8 +283,10 @@ function addEventListeners() {
     });
 }
 
-// Placeholder for the remaining helper functions that need to be in your script.js file
-// --- Placeholder Functions (Ensure these are defined in your final script.js) ---
+// Placeholder for the remaining helper functions (must be in your script.js file)
+// ... (handleTabToggle, handleGuideToggle, handleLLToggle, getTaskById, checkRequirementsMet, 
+// updateTaskStatus, checkRequirementsAndGenerateList, generateChecklist, handleObjectiveToggle, 
+// updateAllTaskStatuses, handleTaskToggle, handleQuickSlotToggle, sortTasks, filterTasks) ...
 
 function handleTabToggle(event) {
     const targetTab = event.target.getAttribute('data-tab');
@@ -308,12 +299,11 @@ function handleTabToggle(event) {
         page.style.display = 'none';
     });
 
-    // Handle the tasks and filter sections specially since they should display together
     if (targetTab === 'tasks') {
-        document.getElementById('filter-controls').style.display = 'flex'; // Show filters
-        document.getElementById('tasks').style.display = 'block'; // Show tasks section
+        document.getElementById('filter-controls').style.display = 'flex'; 
+        document.getElementById('tasks').style.display = 'block'; 
     } else {
-        document.getElementById('filter-controls').style.display = 'none'; // Hide filters on other tabs
+        document.getElementById('filter-controls').style.display = 'none'; 
         const targetElement = document.getElementById(targetTab);
         if (targetElement) {
             targetElement.style.display = 'block';
@@ -344,9 +334,7 @@ function handleLLToggle(event) {
 
     traderLL[trader][ll] = checkbox.checked;
     
-    // Handle sequential checking/unchecking
     if (checkbox.checked) {
-        // Check all preceding levels if checked
         for (let i = 1; i < parseInt(ll); i++) {
             const prevCheckbox = traderGroup.querySelector(`input[data-ll="${i}"]`);
             if (prevCheckbox && !prevCheckbox.checked) {
@@ -355,7 +343,6 @@ function handleLLToggle(event) {
             }
         }
     } else {
-        // Uncheck all succeeding levels if unchecked
         for (let i = parseInt(ll) + 1; i <= 4; i++) {
             const nextCheckbox = traderGroup.querySelector(`input[data-ll="${i}"]`);
             if (nextCheckbox && nextCheckbox.checked) {
@@ -381,13 +368,11 @@ function checkRequirementsMet(task) {
     const unmetRequirements = [];
 
     task.requirements.forEach(req => {
-        // 1. Check Previous Task Completion
         if (getTaskById(req)) {
             if (!completedTasks[req]) {
                 unmetRequirements.push(`Task: ${req}`);
             }
         } 
-        // 2. Check Loyalty Level
         else if (req.startsWith('LL')) {
             const requiredLL = parseInt(req.substring(2));
             const trader = task.trader;
@@ -411,12 +396,10 @@ function updateTaskStatus(taskCard) {
     const isCompleted = completedTasks[taskId];
     const { isMet, unmet } = checkRequirementsMet(taskData);
     
-    // Status Classes
     taskCard.classList.toggle('task-completed', isCompleted);
-    taskCard.classList.toggle('task-locked', !isMet && !isCompleted); // Cannot be locked if already completed
+    taskCard.classList.toggle('task-locked', !isMet && !isCompleted); 
     taskCard.classList.toggle('task-quick-slotted', !!quickSlottedTasks[taskId]);
 
-    // Update Text/Buttons based on status
     const toggleButton = taskCard.querySelector('.task-toggle-btn');
     const collapsedReqElement = taskCard.querySelector('.collapsed-requirements');
     
@@ -433,30 +416,26 @@ function updateTaskStatus(taskCard) {
         toggleButton.classList.remove('complete-btn', 'uncomplete-btn');
     }
     
-    // Lock/Unlock interactivity
     taskCard.style.pointerEvents = !isMet && !isCompleted ? 'none' : 'auto';
     taskCard.style.opacity = !isMet && !isCompleted ? '0.4' : '1.0';
     
-    // Update collapsed requirements text
     if (collapsedReqElement) {
         if (!isMet && !isCompleted) {
             collapsedReqElement.textContent = `LOCKED. Needs: ${unmet.join(', ')}`;
-            collapsedReqElement.style.color = '#e74c3c'; // Red for unmet/locked
+            collapsedReqElement.style.color = '#e74c3c'; 
         } else {
             const baseText = taskData.requirements.length > 0 && taskData.requirements[0] !== 'N/A' 
                             ? `Requires: ${taskData.requirements.join(', ')}` 
                             : 'Requirements: None';
             collapsedReqElement.textContent = baseText;
-            collapsedReqElement.style.color = isCompleted ? '#2ecc71' : '#999'; // Green if completed, grey otherwise
+            collapsedReqElement.style.color = isCompleted ? '#2ecc71' : '#999'; 
         }
     }
     
-    // Regenerate expanded content to show requirement/objective status
     checkRequirementsAndGenerateList(taskCard, taskData, isMet, unmet);
     generateChecklist(taskCard, taskData);
     
-    // Filter visibility check (needed for the hide locked logic)
-    filterTasks(false); // Do not reset filters, just re-run visibility
+    filterTasks(false); 
 }
 
 function checkRequirementsAndGenerateList(card, taskData, isMet, unmet) {
@@ -490,7 +469,7 @@ function generateChecklist(card, taskData) {
     const taskId = taskData.id;
     checklist.innerHTML = '';
 
-    if (!completedObjectives[taskId]) {
+    if (!completedObjectives[taskId] || completedObjectives[taskId].length !== taskData.objectives.length) {
         completedObjectives[taskId] = Array(taskData.objectives.length).fill(false);
     }
     
@@ -505,7 +484,6 @@ function generateChecklist(card, taskData) {
         checklist.appendChild(item);
     });
     
-    // Attach listener for objective toggling
     checklist.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', handleObjectiveToggle);
     });
@@ -518,33 +496,24 @@ function handleObjectiveToggle(event) {
     
     completedObjectives[taskId][index] = checkbox.checked;
 
-    // Check if all objectives are completed
     const taskCard = checkbox.closest('.task-card');
     const objectives = completedObjectives[taskId];
     const allCompleted = objectives.every(status => status === true);
     
     if (allCompleted) {
-        // Automatically mark task complete if all objectives are checked
         if (!completedTasks[taskId]) {
-            // Simulate clicking the complete button to apply rewards
             const completeButton = taskCard.querySelector('.task-toggle-btn');
             if (completeButton && completeButton.textContent.includes('Complete')) {
-                // Temporarily mark all objectives as uncomplete before calling handleTaskToggle
-                // to allow the toggle function to proceed to 'complete' state.
-                // This is a bit of a hack to ensure the completion logic (rewards, etc.) runs.
                 completedTasks[taskId] = false; 
                 handleTaskToggle({ target: completeButton, stopPropagation: () => {} });
             } else {
-                 // If the task was already completed via the button, just ensure UI is updated.
                  updateTaskStatus(taskCard);
             }
         }
     } else {
-         // If an objective is unchecked, and the task was previously completed, uncomplete it.
         if (completedTasks[taskId]) {
             const toggleButton = taskCard.querySelector('.task-toggle-btn');
              if (toggleButton) {
-                // Only toggle if the task is currently marked as completed (and thus the button says "Uncomplete")
                 handleTaskToggle({ target: toggleButton, stopPropagation: () => {} });
             }
         }
@@ -569,7 +538,6 @@ function handleTaskToggle(event) {
     const taskData = getTaskById(taskId);
     if (!taskData) return;
     
-    // Prevent uncompleting a task if objectives are still checked.
     if (isCompleted && taskData.objectives) {
         const objectivesChecked = completedObjectives[taskId].some(status => status === true);
         if (objectivesChecked) {
@@ -579,15 +547,11 @@ function handleTaskToggle(event) {
         }
     }
     
-    // Toggle completion status
     if (!isCompleted) {
-        // Mark as COMPLETE
         completedTasks[taskId] = true;
         
-        // Auto-check all objectives when marked complete via button
         completedObjectives[taskId] = Array(taskData.objectives.length).fill(true);
         
-        // Apply Rewards
         const r = parseInt(button.getAttribute('data-reward-roubles') || 0);
         const d = parseInt(button.getAttribute('data-reward-dollars') || 0);
         const e = parseInt(button.getAttribute('data-reward-euros') || 0);
@@ -597,13 +561,10 @@ function handleTaskToggle(event) {
         statTracker.euros += e;
         
     } else {
-        // Mark as UNCOMPLETE
         delete completedTasks[taskId];
         
-        // Reset objectives to uncompleted
         completedObjectives[taskId] = Array(taskData.objectives.length).fill(false);
         
-        // Remove Rewards (Reverse the transaction)
         const r = parseInt(button.getAttribute('data-reward-roubles') || 0);
         const d = parseInt(button.getAttribute('data-reward-dollars') || 0);
         const e = parseInt(button.getAttribute('data-reward-euros') || 0);
@@ -617,7 +578,6 @@ function handleTaskToggle(event) {
     updateStatsDisplay();
     saveProgress();
     
-    // Re-evaluate dependencies of ALL tasks
     updateAllTaskStatuses(); 
     
     event.stopPropagation(); 
@@ -644,7 +604,6 @@ function sortTasks() {
     const allCards = document.querySelectorAll('.task-card.expandable'); 
     const tasksContainer = document.getElementById('tasks');
     
-    // Sort to put quick-slotted tasks first
     const sortedCards = Array.from(allCards).sort((a, b) => {
         const aIsSlotted = a.classList.contains('task-quick-slotted');
         const bIsSlotted = b.classList.contains('task-quick-slotted');
@@ -652,16 +611,14 @@ function sortTasks() {
         if (aIsSlotted && !bIsSlotted) return -1; 
         if (!aIsSlotted && bIsSlotted) return 1; 
         
-        // Secondary sort: keep existing order for unslotted tasks
         return 0; 
     });
     
-    // Re-append cards in the sorted order
     sortedCards.forEach(card => tasksContainer.appendChild(card));
 }
 
 function filterTasks(reset = true) {
-    if (reset) sortTasks(); // Sort before filtering
+    if (reset) sortTasks(); 
     
     const selectedTrader = traderFilter.value;
     const selectedMap = mapFilter.value;
@@ -692,22 +649,20 @@ function filterTasks(reset = true) {
     });
 }
 
-// --- STATS TRACKER LOGIC (Updated Display and Streak Logic) ---
+
+// --- STATS TRACKER LOGIC ---
 
 function updateStatsDisplay() {
-    // Stat displays
     document.getElementById('stat-roubles').textContent = statTracker.roubles.toLocaleString();
     document.getElementById('stat-dollars').textContent = statTracker.dollars.toLocaleString();
     document.getElementById('stat-euros').textContent = statTracker.euros.toLocaleString();
     
-    // UPDATED: Show both streak count and multiplier
     document.getElementById('streak-count').textContent = statTracker.streak;
     const multiplierElement = document.getElementById('current-survival-multiplier');
     if (multiplierElement) {
         multiplierElement.textContent = statTracker.survivalStreakMultiplier.toFixed(1);
     }
     
-    // Update Sales Tax Rate Display
     const salesTaxRateElement = document.getElementById('current-sales-tax-rate');
     if (salesTaxRateElement) {
         salesTaxRateElement.textContent = `${statTracker.salesTaxRate.toFixed(2)}%`;
@@ -715,37 +670,34 @@ function updateStatsDisplay() {
 }
 
 function handleStreakButton(result) {
-    // Rounding function for one decimal place (for multiplier) and two (for tax rate)
     const roundToTwo = (num) => Math.round(num * 100) / 100;
     const roundToOne = (num) => Math.round(num * 10) / 10;
     
-    // Use current multiplier, defaulting to 1.0
     let currentMultiplier = statTracker.survivalStreakMultiplier || 1.0;
 
     if (result === 'survived') {
         statTracker.streak += 1;
         
-        // 1. Decrease sales tax by 0.5 * multiplier (min 2)
         const taxDecrease = 0.5 * currentMultiplier;
         statTracker.salesTaxRate = Math.max(2, statTracker.salesTaxRate - taxDecrease);
         
-        // 2. Increase multiplier by 0.1 (max 2.0).
+        // Increase multiplier by 0.1 for every cumulative raid survived past the first.
+        // The first raid survived is covered by the default 1.0 multiplier.
+        // Since streak is already 1, we add 0.1 from the 2nd raid onwards.
+        // Simplified: Multiplier goes up by 0.1 for every raid survived, max 2.0.
         statTracker.survivalStreakMultiplier = Math.min(2.0, currentMultiplier + 0.1); 
 
     } else if (result === 'kia') {
         
-        // 1. Increase sales tax by 1 * multiplier (max 10)
         const taxIncrease = 1 * currentMultiplier;
         statTracker.salesTaxRate = Math.min(10, statTracker.salesTaxRate + taxIncrease);
         
-        // 2. Reset multiplier and streak
-        statTracker.survivalStreakMultiplier = 1.0; // Reset to 1.0, as requested
+        statTracker.survivalStreakMultiplier = 1.0; 
         statTracker.streak = 0;
     }
     
-    // Ensure both tax rate and multiplier are rounded for display/storage
     statTracker.salesTaxRate = roundToTwo(statTracker.salesTaxRate);
-    statTracker.survivalStreakMultiplier = roundToOne(statTracker.survivalStreakMultiplier); // Round to 1 decimal place
+    statTracker.survivalStreakMultiplier = roundToOne(statTracker.survivalStreakMultiplier);
 
     updateStatsDisplay();
     saveProgress();
@@ -759,7 +711,14 @@ function handleAddItem() {
     const count = parseInt(stashItemCountInput.value);
 
     if (name && count > 0) {
-        virtualStash.push({ name, count, timestamp: Date.now() });
+        // Check if item already exists to increment count
+        const existingItem = virtualStash.find(item => item.name.toLowerCase() === name.toLowerCase());
+        if (existingItem) {
+            existingItem.count += count;
+        } else {
+            virtualStash.push({ name, count, timestamp: Date.now() });
+        }
+        
         stashItemNameInput.value = '';
         stashItemCountInput.value = '1';
         renderStash();
@@ -796,10 +755,9 @@ function handleRemoveItem(event) {
 }
 
 
-// --- TAX CALCULATOR LOGIC (Updated Flea Tax Calculation) ---
+// --- TAX CALCULATOR LOGIC ---
 
 function calculateFleaTax() {
-    // P is the Amount to Tax (Roubles)
     const P = parseFloat(inputAmountToTax.value); 
     
     if (isNaN(P) || P <= 0) {
@@ -809,13 +767,12 @@ function calculateFleaTax() {
     
     // 1. Calculate SALES TAX
     const salesTaxRate = statTracker.salesTaxRate / 100;
-    // Sales Tax Amount = Amount to Tax * Sales Tax Rate
     const salesTaxAmount = P * salesTaxRate;
     
     // Pre-Income Taxes = Amount to Tax - Sales Tax Amount
     const preIncomeTaxes = P - salesTaxAmount;
     
-    // 2. Determine INCOME TAX TIER (Tiers apply to Pre-Income Taxes)
+    // 2. Determine INCOME TAX TIER (based on Pre-Income Taxes)
     let incomeTaxRate = 0;
     
     if (preIncomeTaxes <= 100000) {
@@ -831,9 +788,8 @@ function calculateFleaTax() {
     }
     
     // 3. Calculate INCOME TAX and FINAL PROFIT
-    // Income Tax Amount = Pre-Income Taxes * Income Tax Rate
     const incomeTaxAmount = preIncomeTaxes * incomeTaxRate;
-    // Net Profit = Pre-Income Taxes - Income Tax Amount
+    // Final Money Amount = Pre-Income Taxes - Income Tax Amount
     const netProfit = preIncomeTaxes - incomeTaxAmount;
     
     taxResults.innerHTML = `
@@ -846,17 +802,15 @@ function calculateFleaTax() {
     `;
 }
 
-// --- NEW: FOUND ROUBLES TAX LOGIC ---
-
 function calculateFoundRoubles() {
-    const R = parseFloat(inputFoundRoubles.value); // R is the total roubles found
+    const R = parseFloat(inputFoundRoubles.value); 
     
     if (isNaN(R) || R <= 0) {
         foundRoublesResults.innerHTML = '<p style="color:red;">Please enter a valid positive amount of Found Roubles.</p>';
         return;
     }
     
-    // Found roubles are ONLY divided by 3 (i.e., you keep 1/3rd)
+    // Taxes only apply to roubles, and if found in raid, it is ONLY divided by 3 (keep 1/3rd)
     const keepAmount = R / 3;
     const taxAmount = R - keepAmount;
     
@@ -867,5 +821,4 @@ function calculateFoundRoubles() {
     `;
 }
 
-// Load progress when the page first loads
 loadProgress();
