@@ -3,8 +3,8 @@ const COMPLETED_TASKS_KEY = 'eftZthCompletedTasksMinimal';
 const COMPLETED_OBJECTIVES_KEY = 'eftZthCompletedObjectives'; 
 const TRADER_LL_KEY = 'eftZthTraderLL'; 
 const QUICK_SLOT_KEY = 'eftZthQuickSlotTasks'; 
-const STAT_TRACKER_KEY = 'eftZthStatTracker'; 
-const VIRTUAL_STASH_KEY = 'eftZthVirtualStash'; 
+const STAT_TRACKER_KEY = 'eftZthStatTracker'; // For Stats & Tax
+const VIRTUAL_STASH_KEY = 'eftZthVirtualStash'; // For Stash
 const HIDE_LOCKED_KEY = 'eftZthHideLocked'; // For "Hide Locked Tasks"
 
 let completedTasks = {}; 
@@ -132,10 +132,16 @@ function saveProgress() {
     console.log('Task and objective status saved.'); 
 }
 
-// --- DYNAMIC TASK CARD GENERATION ---
+// --- HIDE LOCKED TASK HANDLER ---
+function handleHideLockedToggle(event) {
+    hideLockedTasks = event.target.checked;
+    saveProgress();
+    filterTasks(); // Re-run filters immediately
+}
+
+// --- DYNAMIC TASK CARD GENERATION (From script(1).js) ---
 function generateTaskCards() {
-    // Clear only the cards, not the H2 or filters
-    tasksSection.innerHTML = ''; 
+    tasksSection.innerHTML = ''; // Clear only cards
     
     TASKS_DATA.forEach(task => {
         const card = document.createElement('div');
@@ -217,6 +223,7 @@ function generateTaskCards() {
             } else if (reqText.startsWith('I:')) {
                 itemReqCount++;
             } else {
+                // Find task title from TASKS_DATA
                 const requiredTask = TASKS_DATA.find(t => t.id === reqText); 
                 if (requiredTask) {
                     taskReqText = requiredTask.title;
@@ -308,20 +315,18 @@ function handleTabToggle(event) {
 
     // Show/Hide pages
     pages.forEach(page => {
-        // The 'tasks' section is special, it contains the filter controls
+        // The 'tasks' section and 'filter-controls' are linked
         if (page.id === 'tasks' || page.id === 'filter-controls') {
             const isActive = targetTabId === 'tasks';
             page.classList.toggle('active-page', isActive);
-            page.style.display = isActive ? 'block' : 'none';
+            page.style.display = isActive ? (page.id === 'tasks' ? 'block' : 'flex') : 'none';
         } else {
+            // Handle other pages
             const isActive = page.id === targetTabId;
             page.classList.toggle('active-page', isActive);
             page.style.display = isActive ? 'block' : 'none';
         }
     });
-
-    // Make sure filters (which are separate) are shown/hidden with the tasks page
-    document.getElementById('filter-controls').style.display = (targetTabId === 'tasks') ? 'flex' : 'none';
 }
 
 
@@ -356,7 +361,7 @@ function addEventListeners() {
     if (calculateFleaTaxBtn) calculateFleaTaxBtn.addEventListener('click', calculateFleaTax);
     if (calculateFoundRoublesBtn) calculateFoundRoublesBtn.addEventListener('click', calculateFoundRoubles);
 
-    // Dynamic Task Card Buttons
+    // Dynamic Task Card Buttons (must be re-run after generateTaskCards)
     document.querySelectorAll('.task-toggle-btn').forEach(button => {
         button.addEventListener('click', handleTaskToggle);
     });
@@ -367,7 +372,7 @@ function addEventListeners() {
         button.addEventListener('click', handleGuideToggle);
     });
     
-    // Expand/Collapse Listener
+    // Expand/Collapse Listener (Re-attaching to new cards)
     document.querySelectorAll('.task-card .collapsed-view').forEach(header => {
         header.addEventListener('click', (event) => {
             // Stop if clicking an interactive element inside the header
@@ -411,7 +416,7 @@ function handleLLToggle(event) {
     updateAllTaskStatuses(); 
 }
 
-// --- 4. REQUIREMENTS CHECK AND GENERATION ---
+// --- 4. REQUIREMENTS CHECK AND GENERATION (From script(1).js) ---
 function checkRequirementsAndGenerateList(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const taskData = TASKS_DATA.find(t => t.id === taskId);
@@ -436,7 +441,8 @@ function checkRequirementsAndGenerateList(taskCard) {
             // Item Requirement (e.g., "I:Toolset:2")
             const parts = reqText.split(':');
             displayReqText = `Hand over: ${parts[2]}x ${parts[1]}`;
-            isMet = true; // This is an objective, not a lock.
+            // This is an objective, not a lock. We assume it's "met" for locking purposes.
+            isMet = true; 
             reqClass = 'item-handover';
             
         } else if (reqText.startsWith('LL')) {
@@ -473,7 +479,7 @@ function checkRequirementsAndGenerateList(taskCard) {
 }
 
 
-// --- 5. CHECKLIST GENERATION AND MANAGEMENT ---
+// --- 5. CHECKLIST GENERATION AND MANAGEMENT (From script(1).js) ---
 function generateChecklist(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const objectivesList = TASKS_DATA.find(t => t.id === taskId).objectives;
@@ -484,6 +490,7 @@ function generateChecklist(taskCard) {
 
     if (!objectivesList || objectivesList.length === 0) return;
 
+    // Ensure objectives data exists for this task
     if (!completedObjectives[taskId] || completedObjectives[taskId].length !== objectivesList.length) {
         completedObjectives[taskId] = Array(objectivesList.length).fill(false);
     }
@@ -586,7 +593,7 @@ function filterTasks() {
     });
 }
 
-// --- 7. TASK STATUS MANAGEMENT ---
+// --- 7. TASK STATUS MANAGEMENT (From script(1).js) ---
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const isQuickSlotted = quickSlottedTasks[taskId] === true; 
@@ -747,8 +754,8 @@ function updateStatsDisplay() {
     document.getElementById('stat-roubles').textContent = statTracker.roubles.toLocaleString();
     document.getElementById('stat-dollars').textContent = statTracker.dollars.toLocaleString();
     document.getElementById('stat-euros').textContent = statTracker.euros.toLocaleString();
-    document.getElementById('streak-count').textContent = statTracker.streak;
     
+    document.getElementById('streak-count').textContent = statTracker.streak;
     const multiplierElement = document.getElementById('current-survival-multiplier');
     if (multiplierElement) {
         multiplierElement.textContent = `${statTracker.survivalStreakMultiplier.toFixed(1)}x`;
@@ -769,7 +776,7 @@ function handleStreakButton(result) {
     if (result === 'survived') {
         statTracker.streak += 1;
         
-        // Decrease sales tax by 0.5 * multiplier (min 2)
+        // Decrease sales tax by (0.5 * multiplier)
         const taxDecrease = 0.5 * currentMultiplier;
         statTracker.salesTax = Math.max(2, statTracker.salesTax - taxDecrease);
         
@@ -777,7 +784,7 @@ function handleStreakButton(result) {
         statTracker.survivalStreakMultiplier = Math.min(2.0, currentMultiplier + 0.1); 
 
     } else if (result === 'kia') {
-        // Increase sales tax by 1 (max 10) - multiplier does NOT affect increase
+        // Increase sales tax by 1 (max 10)
         statTracker.salesTax = Math.min(10, statTracker.salesTax + 1);
         
         // Reset multiplier and streak
