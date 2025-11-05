@@ -32,14 +32,14 @@ const TASKS_DATA = [
         objectiveSummary: "Hand over 2 found in-raid Matches.",
         map: "Any",
         requirements: ["Target Practice"],
-        dialogueInitial: "I'm running a small, unauthorized side project and I need two small things for it: matches. Doesn't matter why, just that they need to be fresh—Found In Raid. It's a simple test to see if you can grab something small but necessary without drawing attention. Bring me two boxes and you're good to go.",
+        dialogueInitial: "I'm running a small, unauthorized side project and I need two small things for it: matches. Doesn't matter why, just that they need to be fresh—found in-raid. It's a simple test to see if you can grab something small but necessary without drawing attention. Bring me two boxes and you're good to go.",
         dialogueComplete: "Perfect. Just what I needed. You're efficient. Small jobs lead to big jobs, remember that. Here's a little something for your quick service.",
         objectives: [
             "Hand over 2 found in-raid Matches"
         ],
         rewards: [
-            { type: "roubles", amount: 4000 },
-            { type: "item", name: "1 30-round 5.45x39 magazine", icon: "icon-ak-mag.png" },
+            { type: "roubles", amount: 3000 },
+            { type: "item", name: "1 WARTECH TV-109 + TV-106 chest rig", icon: "icon-wartech-rig.png" },
             { type: "item", name: "1 Roll of Duct Tape", icon: "icon-duct-tape.png" }
         ]
     },
@@ -57,13 +57,13 @@ const TASKS_DATA = [
             { name: "2 Salewa first aid kits", icon: "icon-sfak.png" }
         ],
         // UPDATED DIALOGUE
-        dialogueInitial: "The team at Emercom Checkpoint is critically low on trauma supplies, and their usual resupply route is compromised. I've prepared two **Salewa First Aid Kits** here for you. Your task is to act as a courier: take these kits and deliver them to the designated dead drop near the checkpoint on **Ground Zero**. This is urgent. Do not lose the equipment I give you.",
+        dialogueInitial: "The team at Emercom Checkpoint is critically low on trauma supplies, and their usual resupply route is compromised. I've prepared two Salewa first aid kits here for you. Your task is to act as a courier: take these kits and deliver them to the designated dead drop near the checkpoint on Ground Zero. This is urgent. Do not lose the equipment I give you.",
         dialogueComplete: "The packages arrived safely at the checkpoint. Good. Your timely delivery has potentially saved several lives. Consider this task a demonstration of your reliability under pressure. This payment is well-earned.",
         objectives: [
             "Deliver 2 Salewa first aid kits to Emercom Checkpoint (Ground Zero)"
         ],
         rewards: [
-            { type: "roubles", amount: 3500 },
+            { type: "roubles", amount: 4000 },
             { type: "item", name: "2 Car first aid kits", icon: "icon-cfak.png" },
             { type: "item", name: "2 Army Bandages", icon: "icon-army-bandage.png" }
         ]
@@ -112,7 +112,7 @@ const TASKS_DATA = [
             "Hand over 2 found in raid Toolsets" 
         ],
         rewards: [
-            { type: "roubles", amount: 10000 },
+            { type: "roubles", amount: 5000 },
             { type: "item", name: "2 Electronic Components", icon: "icon-electronic-components.png" },
             { type: "item", name: "1 Screwdriver", icon: "icon-screwdriver.png" },
             { type: "item", name: "1 Silicon Tube", icon: "icon-silicon-tube.png" },
@@ -133,9 +133,9 @@ const TASKS_DATA = [
             "Hand over the secure flash drive"
         ],
         rewards: [
-            { type: "roubles", amount: 15000 },
-            { type: "item", name: "1 Secure Flash Drive", icon: "icon-usb.png" },
-            { type: "item", name: "1 Tri-Zip Backpack", icon: "icon-trizip.png" }
+            { type: "roubles", amount: 10000 },
+            { type: "item", name: "1 Secure Flash drive", icon: "icon-flash-drive.png" },
+            { type: "item", name: "1 Camelbak Tri-Zip assault backpack", icon: "icon-trizip-foliage.png" }
         ]
     },
     {
@@ -149,12 +149,12 @@ const TASKS_DATA = [
         dialogueComplete: "Sniper Rock is clear. The patrols confirmed it. Good work, soldier. You took care of my little problem, so I'll take care of yours. Here are some scopes; maybe you can use that rock yourself next time.",
         objectives: [
             "Eliminate 5 Scavs in the Sniper Rock area",
-            "Survive and Extract from Woods"
+            "Survive and Extract from the location"
         ],
         rewards: [
-            { type: "roubles", amount: 12000 },
-            { type: "item", name: "1 Vudu 1-6x scope", icon: "icon-vudu.png" },
-            { type: "item", name: "2 AK-74 60-round magazines", icon: "icon-ak-mag.png" }
+            { type: "roubles", amount: 7000 },
+            { type: "item", name: "1 Kalashnikov AKS-74U 5.45x39 assault rifle", icon: "icon-aks74u.png" },
+            { type: "item", name: "150 5.45x39mm FMJ", icon: "icon-545x39-fmj.png" }
         ]
     },
     {
