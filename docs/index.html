@@ -3,29 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFT Zero to Hero Custom Task Tracker</title>
+    <title>EFT Task Tracker</title>
     
-    <!-- Link to the style file -->
     <link rel="stylesheet" href="style.css"> 
-    <!-- Use a mono font for the Tarkov aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1 class="header-title">EFT Zero to Hero Custom Task Tracker</h1>
-            <h4> by RadRacc</h4>
+            <h1 class="header-title">EFT Task Tracker</h1>
         </header>
         
         <div class="main-layout">
             
-            <!-- LEFT SIDEBAR: LOYALTY LEVEL TRACKER -->
             <aside id="ll-tracker">
                 <h2>Trader Loyalty</h2>
                 
                 <div class="trader-ll-group" data-trader="Prapor">
                     <h3>Prapor</h3>
+                    <div class="ll-checkbox-group">
+                        <label><input type="checkbox" data-ll="1"> LL1</label>
+                        <label><input type="checkbox" data-ll="2"> LL2</label>
+                        <label><input type="checkbox" data-ll="3"> LL3</label>
+                        <label><input type="checkbox" data-ll="4"> LL4</label>
+                    </div>
+                </div>
+
+                <div class="trader-ll-group" data-trader="Skier">
+                    <h3>Skier</h3>
                     <div class="ll-checkbox-group">
                         <label><input type="checkbox" data-ll="1"> LL1</label>
                         <label><input type="checkbox" data-ll="2"> LL2</label>
@@ -44,16 +50,6 @@
                     </div>
                 </div>
 
-                <div class="trader-ll-group" data-trader="Skier">
-                    <h3>Skier</h3>
-                    <div class="ll-checkbox-group">
-                        <label><input type="checkbox" data-ll="1"> LL1</label>
-                        <label><input type="checkbox" data-ll="2"> LL2</label>
-                        <label><input type="checkbox" data-ll="3"> LL3</label>
-                        <label><input type="checkbox" data-ll="4"> LL4</label>
-                    </div>
-                </div>
-                
                 <div class="trader-ll-group" data-trader="Peacekeeper">
                     <h3>Peacekeeper</h3>
                     <div class="ll-checkbox-group">
@@ -83,7 +79,7 @@
                         <label><input type="checkbox" data-ll="4"> LL4</label>
                     </div>
                 </div>
-
+                
                 <div class="trader-ll-group" data-trader="Jaeger">
                     <h3>Jaeger</h3>
                     <div class="ll-checkbox-group">
@@ -95,46 +91,95 @@
                 </div>
             </aside>
             
-            <!-- RIGHT CONTENT AREA: FILTERS AND TASKS -->
-            <main>
-                <div id="filter-controls">
-                    <select id="trader-filter">
-                        <option value="all">Filter by Trader (All)</option>
-                        <option value="Prapor">Prapor</option>
-                        <option value="Therapist">Therapist</option>
-                        <option value="Skier">Skier</option>
-                        <option value="Peacekeeper">Peacekeeper</option>
-                        <option value="Mechanic">Mechanic</option>
-                        <option value="Ragman">Ragman</option>
-                        <option value="Jaeger">Jaeger</option>
-                    </select>
-                    <select id="map-filter">
-                        <option value="all">Filter by Map (All)</option>
-                        <option value="Any">Any Map</option>
-                        <option value="Customs">Customs</option>
-                        <option value="Factory">Factory</option>
-                        <option value="Ground Zero">Ground Zero</option>
-                        <option value="Interchange">Interchange</option>
-                        <option value="Lighthouse">Lighthouse</option>
-                        <option value="Reserve">Reserve</option>
-                        <option value="Shoreline">Shoreline</option>
-                        <option value="Streets of Tarkov">Streets of Tarkov</option>
-                        <option value="The Lab">The Lab</option>
-                        <option value="Woods">Woods</option>
-                    </select>
-                    <input type="text" id="task-search" placeholder="Search task title or objective...">
+            <aside id="stats-tracker">
+                <h2>Personal Stats</h2>
+                <div id="currency-display" class="stat-group">
+                    <h4>Total Earned Wallet</h4>
+                    <p>₽ <span id="stat-roubles">0</span></p>
+                    <p>$ <span id="stat-dollars">0</span></p>
+                    <p>€ <span id="stat-euros">0</span></p>
                 </div>
+                <div id="survival-streak" class="stat-group">
+                    <h4>Survival Streak</h4>
+                    <p><span id="streak-count">0</span> raids</p>
+                    <div class="button-group">
+                        <button id="streak-survived" class="complete-btn small-btn">Survived</button>
+                        <button id="streak-kia" class="uncomplete-btn small-btn">K.I.A.</button>
+                    </div>
+                </div>
+            </aside>
 
-                <!-- Task cards will be injected here by script.js -->
+            <main class="main-content-area">
+                
+                <div id="tab-navigation">
+                    <button data-tab="tasks" class="tab-button active">Task Tracker</button>
+                    <button data-tab="stash-tools" class="tab-button">Stash & Tools</button>
+                    <button data-tab="hideout-perks" class="tab-button">Hideout & Perks</button>
+                </div>
+                
                 <section id="tasks" class="page-content active-page">
+                    <div class="filter-group">
+                        <select id="trader-filter">
+                            <option value="all">Filter by Trader (All)</option>
+                            <option value="Prapor">Prapor</option>
+                            <option value="Skier">Skier</option>
+                            <option value="Therapist">Therapist</option>
+                            <option value="Peacekeeper">Peacekeeper</option>
+                            <option value="Mechanic">Mechanic</option>
+                            <option value="Ragman">Ragman</option>
+                            <option value="Jaeger">Jaeger</option>
+                        </select>
+                        <select id="map-filter">
+                            <option value="all">Filter by Map (All)</option>
+                            <option value="Any">Any Map</option>
+                            <option value="Customs">Customs</option>
+                            <option value="Factory">Factory</option>
+                            <option value="Interchange">Interchange</option>
+                            <option value="Reserve">Reserve</option>
+                            <option value="Shoreline">Shoreline</option>
+                            <option value="The Lab">The Lab</option>
+                            <option value="Woods">Woods</option>
+                        </select>
+                        <input type="text" id="task-search" placeholder="Search task title or objective...">
+                    </div>
+
                     <h2>Task Progression</h2>
                 </section>
-            
+                
+                <section id="stash-tools" class="page-content hidden-page">
+                    <h2>Virtual Stash (Locker)</h2>
+                    <p class="section-description">Keep track of key items you've found for quests or hideout to save space in your in-game stash.</p>
+                    <div id="stash-input">
+                        <input type="text" id="stash-item-name" placeholder="Item Name (e.g., LEDX)">
+                        <input type="number" id="stash-item-count" value="1" min="1" max="99">
+                        <button id="add-stash-item" class="complete-btn small-btn">Add to Locker</button>
+                    </div>
+                    <div id="virtual-stash-list">
+                        </div>
+
+                    <h2 style="margin-top: 30px;">Flea Market Tax Calculator</h2>
+                    <p class="section-description">Calculate the approximate tax on a sale to determine your net profit.</p>
+                    <div id="tax-calculator-container">
+                        <input type="number" id="input-base-price" placeholder="Item Base Price (V) - Use Wiki Value" min="1">
+                        <input type="number" id="input-sell-price" placeholder="Proposed Sale Price (P)" min="1">
+                        <button id="calculate-tax" class="guide-toggle-btn small-btn">Calculate Net Profit</button>
+                        <div id="tax-results">
+                            </div>
+                    </div>
+                </section>
+
+                <section id="hideout-perks" class="page-content hidden-page">
+                    <h2>Hideout & Trader Perks</h2>
+                    <p class="section-description">Future section to track your Hideout modules and unlock custom site-side perks like tax reduction or enhanced LL status.</p>
+                    <div class="hideout-content-placeholder">
+                        <p>Planning for Hideout Modules and related Trader Perks will appear here soon.</p>
+                    </div>
+                </section>
+
             </main>
         </div>
     </div>
 
-    <!-- Load data first, then the script that uses it -->
     <script src="tasksData.js"></script>
     <script src="script.js"></script>
 </body>
