@@ -21,13 +21,21 @@ body {
 }
 
 /* Main Header */
+header h1, header h4 {
+    text-align: center;
+}
 .header-title {
     color: #F5B925;
-    text-align: center;
     border-bottom: 2px solid #333;
     padding-bottom: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
+header h4 {
+    color: #888;
+    margin-top: -10px;
+    font-weight: 400;
+}
+
 
 /* --- MAIN CONTENT GRID LAYOUT --- */
 .main-layout {
@@ -83,6 +91,13 @@ h2 {
 }
 .ll-checkbox-group input[type="checkbox"]:checked {
     background-color: #F5B925;
+}
+.hide-locked-control {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+.hide-locked-control label {
+    cursor: pointer;
 }
 
 /* --- Filter and Search Controls --- */
@@ -191,33 +206,33 @@ h2 {
     background-size: cover;
 }
 
-/* TRADER ICON MAPPING */
+/* TRADER ICON MAPPING - FIX: Capitalizing file names */
 [data-trader-id="Prapor"] { 
-    background-image: url('images/prapor-portrait.png');
+    background-image: url('images/Prapor-portrait.png');
     background-color: #c0392b; 
 }
 [data-trader-id="Skier"] { 
-    background-image: url('images/skier-portrait.png');
+    background-image: url('images/Skier-portrait.png');
     background-color: #2980b9; 
 }
 [data-trader-id="Therapist"] { 
-    background-image: url('images/therapist-portrait.png');
+    background-image: url('images/Therapist-portrait.png');
     background-color: #27ae60; 
 }
 [data-trader-id="Peacekeeper"] { 
-    background-image: url('images/peacekeeper-portrait.png');
+    background-image: url('images/Peacekeeper-portrait.png');
     background-color: #f1c40f; 
 }
 [data-trader-id="Mechanic"] { 
-    background-image: url('images/mechanic-portrait.png');
+    background-image: url('images/Mechanic-portrait.png');
     background-color: #7f8c8d; 
 }
 [data-trader-id="Ragman"] { 
-    background-image: url('images/ragman-portrait.png');
+    background-image: url('images/Ragman-portrait.png');
     background-color: #9b59b6; 
 }
 [data-trader-id="Jaeger"] { 
-    background-image: url('images/jaeger-portrait.png');
+    background-image: url('images/Jaeger-portrait.png');
     background-color: #d35400; 
 }
 
@@ -265,6 +280,49 @@ h2 {
     color: #F5B925; /* Solid Star */
 }
 
+/* --- TAB NAVIGATION STYLES (REVAMPED) --- */
+#tab-navigation {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+}
+
+#tab-navigation button {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: none;
+    background-color: #1e1e1e;
+    color: #E0E0E0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    margin-right: 5px;
+    border-bottom: 3px solid transparent;
+}
+
+/* Gold Glow Effect for Active Tab */
+#tab-navigation button.active {
+    background-color: #2a2a2a;
+    color: #F5B925;
+    border-bottom-color: #F5B925;
+    box-shadow: 0 -2px 10px rgba(245, 185, 37, 0.4); /* Top-side glow */
+}
+
+#tab-navigation button:not(.active):hover {
+    background-color: #333;
+    color: #F5B925;
+}
+
+/* Page Content Toggling */
+.page-content {
+    display: none; /* Hide all pages by default */
+}
+.page-content.active-page {
+    display: block; /* Show the active page */
+}
 
 /* --- Requirement and Objective Lists --- */
 .requirement-item {
@@ -341,7 +399,6 @@ h2 {
     margin-bottom: 5px;
 }
 
-/* MODIFIED: Use Flexbox on the list item to align icon and text */
 .rewards-list li {
     display: flex;
     align-items: center;
@@ -351,7 +408,6 @@ h2 {
     color: #E0E0E0;
 }
 
-/* NEW: Style for the reward icon image */
 .reward-icon {
     width: 48px;
     height: 48px;
@@ -375,7 +431,7 @@ h2 {
 .currency-dollar { color: #5897FB; font-weight: bold; }
 .currency-euro { color: #f39c12; font-weight: bold; }
 
-/* --- Task Toggle Button Group (NEW) --- */
+/* --- Task Toggle Button Group --- */
 .task-buttons-group {
     display: flex;
     gap: 10px;
@@ -391,7 +447,6 @@ h2 {
     transition: background-color 0.2s;
 }
 
-/* Shorter button width, shared with Guide button */
 .task-toggle-btn {
     flex-grow: 1; /* Make the Mark button take up available space */
 }
@@ -423,7 +478,7 @@ h2 {
     background-color: #c42d3c;
 }
 
-/* --- Walkthrough Box (NEW) --- */
+/* --- Walkthrough Box --- */
 .walkthrough-box {
     margin-top: 15px;
     padding: 10px;
@@ -440,6 +495,185 @@ h2 {
 .walkthrough-box p {
     font-size: 0.85em;
     margin: 0;
+}
+
+/* --- STATS & TAX STYLES (REVAMPED) --- */
+.stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    background-color: hsl(0, 0%, 15%);
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.stat-row h3 {
+    margin: 0;
+    font-size: 1.1em;
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.stat-group {
+    display: flex;
+    gap: 20px;
+    background-color: hsl(0, 0%, 15%);
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.stat-group h4 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #ddd;
+}
+.stat-group h4 span {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+#current-survival-multiplier {
+    color: #F5B925;
+}
+
+.streak-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.streak-controls button {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+#streak-survived {
+    background-color: #2ecc71;
+    color: #111;
+}
+#streak-kia {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Tax Calculator Styles */
+.tax-calculator-box {
+    background-color: hsl(0, 0%, 15%);
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.tax-calculator-box h3 {
+    color: #F5B925;
+    margin-top: 0;
+}
+.tax-calculator-box p {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-top: -10px;
+}
+
+.tax-inputs {
+    margin-bottom: 15px;
+}
+.tax-inputs label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+.tax-inputs input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #E0E0E0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1em;
+}
+
+.tax-results {
+    background-color: #111;
+    padding: 15px;
+    border-radius: 4px;
+    border-left: 3px solid #5897FB;
+}
+.tax-results p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #E0E0E0;
+    margin-top: 5px;
+}
+.result-net {
+    font-size: 1.1em !important;
+    font-weight: bold;
+    color: #2ecc71 !important;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    margin-top: 10px !important;
+}
+
+
+/* --- VIRTUAL STASH STYLES --- */
+.stash-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background-color: hsl(0, 0%, 15%);
+    padding: 15px;
+    border-radius: 4px;
+}
+.stash-input-group input[type="text"] {
+    flex-grow: 1;
+}
+.stash-input-group input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #E0E0E0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1em;
+}
+.stash-input-group input[type="number"] {
+    width: 80px;
+}
+.stash-input-group button {
+    margin-top: 0; /* Override button margin */
+    width: auto;
+}
+
+.stash-list {
+    background-color: hsl(0, 0%, 15%);
+    padding: 15px;
+    border-radius: 4px;
+}
+.stash-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.stash-item span {
+    font-size: 1em;
+    font-weight: bold;
+}
+.remove-stash-item {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 
@@ -471,5 +705,8 @@ h2 {
     .trader-image-box {
         width: 100%;
         height: 100px;
+    }
+    .stat-row {
+        flex-direction: column;
     }
 }
