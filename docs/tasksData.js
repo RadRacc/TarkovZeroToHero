@@ -88,7 +88,7 @@ const TASKS_DATA = [
             "Survive and Extract from the location"
         ],
         rewards: [
-            { type: "roubles", amount: 5500 },
+            { type: "roubles", amount: 5000 },
             { type: "item", name: "2 Capacitors", icon: "icon-capacitors.png" },
             { type: "item", name: "1 Insulating Tape", icon: "icon-tape.png" } 
         ]
@@ -133,7 +133,7 @@ const TASKS_DATA = [
             "Hand over the secure flash drive"
         ],
         rewards: [
-            { type: "roubles", amount: 10000 },
+            { type: "euros", amount: 50 },
             { type: "item", name: "1 Secure Flash drive", icon: "icon-flash-drive.png" },
             { type: "item", name: "1 Camelbak Tri-Zip assault backpack", icon: "icon-trizip-foliage.png" }
         ]
@@ -152,7 +152,7 @@ const TASKS_DATA = [
             "Survive and Extract from the location"
         ],
         rewards: [
-            { type: "roubles", amount: 7000 },
+            { type: "roubles", amount: 6000 },
             { type: "item", name: "1 Kalashnikov AKS-74U 5.45x39 assault rifle", icon: "icon-aks74u.png" },
             { type: "item", name: "150 5.45x39mm FMJ", icon: "icon-545x39-fmj.png" }
         ]
@@ -170,7 +170,7 @@ const TASKS_DATA = [
             "Eliminate 5 PMCs"
         ],
         rewards: [
-            { type: "dollars", amount: 120 },
+            { type: "dollars", amount: 100 },
             { type: "item", name: "1 Bottle of Dan Jackiel whiskey", icon: "icon-whiskey.png" }
         ]
     },
@@ -182,16 +182,16 @@ const TASKS_DATA = [
         id: "Trauma Care",
         trader: "Therapist",
         title: "Trauma Care",
-        objectiveSummary: "Hand over 2 found in-raid Grizzly First Aid Kits.",
+        objectiveSummary: "Hand over 2 found in-raid Grizzly medical kits.",
         map: "Any",
         requirements: ["First Aid Supplies", "LL2"], 
-        dialogueInitial: "The situation has become critical. I'm no longer dealing with minor wounds; I need full-scale trauma kits. Two Grizzly First Aid Kits, Found In Raid, immediately. This is an urgent life-saving measure, and I can't afford a moment's delay. The complexity of these injuries means I need the highest quality supplies. Bring them to me quickly.",
+        dialogueInitial: "The situation has become critical. I'm no longer dealing with minor wounds; I need full-scale trauma kits. Two Grizzly medical kits, found in-raid, immediately. This is an urgent life-saving measure, and I can't afford a moment's delay. The complexity of these injuries means I need the highest quality supplies. Bring them to me quickly.",
         dialogueComplete: "You saved lives today. That is more important than any currency. These Grizzly kits are exactly what I needed to stabilize the patients. Your ability to deliver high-value, critical supplies under pressure is noted. Take this reward; it includes a place to safely store your own medical gear.",
         objectives: [
-            "Hand over 2 found in-raid Grizzly First Aid Kits"
+            "Hand over 2 found in-raid Grizzly medical kits"
         ],
         rewards: [
-            { type: "roubles", amount: 25000 },
+            { type: "roubles", amount: 8000 },
             { type: "item", name: "1 Medicine Case", icon: "icon-medicine-case.png" } 
         ]
     },
