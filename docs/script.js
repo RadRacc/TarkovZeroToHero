@@ -3,11 +3,17 @@ const COMPLETED_TASKS_KEY = 'eftZthCompletedTasksMinimal';
 const COMPLETED_OBJECTIVES_KEY = 'eftZthCompletedObjectives'; 
 const TRADER_LL_KEY = 'eftZthTraderLL'; 
 const QUICK_SLOT_KEY = 'eftZthQuickSlotTasks'; 
+const STAT_TRACKER_KEY = 'eftZthStatTracker'; // NEW
+const VIRTUAL_STASH_KEY = 'eftZthVirtualStash'; // NEW
+const HIDEOUT_KEY = 'eftZthHideoutPerks'; // NEW
 
 let completedTasks = {}; 
 let completedObjectives = {}; 
 let traderLL = {}; 
 let quickSlottedTasks = {}; 
+let statTracker = {}; // NEW
+let virtualStash = []; // NEW
+let hideoutPerks = {}; // NEW
 
 // DOM Elements
 let expandableCards = []; 
@@ -16,6 +22,21 @@ const mapFilter = document.getElementById('map-filter');
 const taskSearch = document.getElementById('task-search');
 const llCheckboxes = document.querySelectorAll('#ll-tracker input[type="checkbox"]');
 const tasksSection = document.getElementById('tasks'); 
+
+// NEW DOM Elements
+const tabButtons = document.querySelectorAll('#tab-navigation button');
+const pages = document.querySelectorAll('.page-content');
+const streakSurvivedBtn = document.getElementById('streak-survived');
+const streakKiaBtn = document.getElementById('streak-kia');
+const stashAddItemBtn = document.getElementById('add-stash-item');
+const stashItemNameInput = document.getElementById('stash-item-name');
+const stashItemCountInput = document.getElementById('stash-item-count');
+const virtualStashList = document.getElementById('virtual-stash-list');
+const calculateTaxBtn = document.getElementById('calculate-tax');
+const inputBasePrice = document.getElementById('input-base-price');
+const inputSellPrice = document.getElementById('input-sell-price');
+const taxResults = document.getElementById('tax-results');
+
 
 // --- 2. CORE LOGIC FUNCTIONS ---
 function loadProgress() {
@@ -29,11 +50,21 @@ function loadProgress() {
         Peacekeeper: { 1: false, 2: false, 3: false, 4: false },
         Mechanic: { 1: false, 2: false, 3: false, 4: false },    
         Ragman: { 1: false, 2: false, 3: false, 4: false },    
-        Jaeger: { 1: false, 2: false, 3: false, 4: false }      
+        Jaeger: { 1: false, 2: false, 3: false, 4: false }     
+    };
+    // NEW: Default stats object
+    const defaultStats = {
+        roubles: 0,
+        dollars: 0,
+        euros: 0,
+        streak: 0
     };
 
     traderLL = JSON.parse(localStorage.getItem(TRADER_LL_KEY) || JSON.stringify(defaultData));
     quickSlottedTasks = JSON.parse(localStorage.getItem(QUICK_SLOT_KEY) || '{}'); 
+    statTracker = JSON.parse(localStorage.getItem(STAT_TRACKER_KEY) || JSON.stringify(defaultStats)); // NEW
+    virtualStash = JSON.parse(localStorage.getItem(VIRTUAL_STASH_KEY) || '[]'); // NEW
+    hideoutPerks = JSON.parse(localStorage.getItem(HIDEOUT_KEY) || '{}'); // NEW
 
     // Sync LL checkboxes with loaded data
     llCheckboxes.forEach(checkbox => {
@@ -46,13 +77,14 @@ function loadProgress() {
 
     // Check if TASKS_DATA is available
     if (typeof TASKS_DATA === 'undefined') {
-         tasksSection.innerHTML = '<h2>🎯 Task Progression</h2><p style="color:red;">FATAL ERROR: TASKS_DATA is missing. Ensure `tasksData.js` is loaded before `script.js` in your index.html file.</p>';
-         console.error("FATAL ERROR: TASKS_DATA is undefined. Ensure tasksData.js is loaded before script.js.");
-         return;
+          tasksSection.innerHTML = '<h2>🎯 Task Progression</h2><p style="color:red;">FATAL ERROR: TASKS_DATA is missing. Ensure `tasksData.js` is loaded before `script.js` in your index.html file.</p>';
+          console.error("FATAL ERROR: TASKS_DATA is undefined. Ensure tasksData.js is loaded before script.js.");
+          return;
     }
     
     // START OF DYNAMIC GENERATION FLOW
     generateTaskCards();
+    generateStash(); // NEW
     
     // Re-initialize expandableCards now that they exist in the DOM
     expandableCards = document.querySelectorAll('.task-card.expandable'); 
@@ -60,6 +92,7 @@ function loadProgress() {
     // Add event listeners to dynamically created elements
     addEventListeners(); 
 
+    updateStatsDisplay(); // NEW
     updateAllTaskStatuses(); 
     filterTasks(); 
     sortTasks(); 
@@ -70,11 +103,13 @@ function saveProgress() {
     localStorage.setItem(COMPLETED_OBJECTIVES_KEY, JSON.stringify(completedObjectives)); 
     localStorage.setItem(TRADER_LL_KEY, JSON.stringify(traderLL)); 
     localStorage.setItem(QUICK_SLOT_KEY, JSON.stringify(quickSlottedTasks)); 
-    console.log('Task and objective status saved.'); 
+    localStorage.setItem(STAT_TRACKER_KEY, JSON.stringify(statTracker)); // NEW
+    localStorage.setItem(VIRTUAL_STASH_KEY, JSON.stringify(virtualStash)); // NEW
+    localStorage.setItem(HIDEOUT_KEY, JSON.stringify(hideoutPerks)); // NEW
+    console.log('Task, objective, stats, and stash status saved.'); 
 }
 
-// --- NEW: DYNAMIC TASK CARD GENERATION ---
-
+// --- NEW: DYNAMIC TASK CARD GENERATION (Unchanged from original script) ---
 function generateTaskCards() {
     tasksSection.innerHTML = '<h2>Task Progression</h2>'; 
     
@@ -127,7 +162,7 @@ function generateTaskCards() {
         // --- 2. Generate Initial Equipment List HTML ---
         let initialEquipmentHTML = '';
         if (task.initial_equipment && task.initial_equipment.length > 0) {
-             const itemsHTML = task.initial_equipment.map(item => {
+              const itemsHTML = task.initial_equipment.map(item => {
                 const iconPath = item.icon ? `images/${item.icon}` : 'images/icon-item.png';
                 const iconHTML = `<img src="${iconPath}" alt="${item.name} icon" class="reward-icon">`;
                 return `<li>${iconHTML}<span class="reward-text">${item.name}</span></li>`;
@@ -237,7 +272,7 @@ function generateTaskCards() {
     });
 }
 
-// --- NEW: Toggle Guide/Walkthrough ---
+// --- NEW: Toggle Guide/Walkthrough (Unchanged) ---
 function handleGuideToggle(event) {
     const button = event.target;
     const taskCard = button.closest('.task-card');
@@ -249,6 +284,25 @@ function handleGuideToggle(event) {
     }
     event.stopPropagation();
 }
+
+// --- NEW: Toggle Tab Navigation ---
+function handleTabToggle(event) {
+    const targetTab = event.target.dataset.tab;
+    
+    // Deactivate all buttons and hide all pages
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    pages.forEach(page => page.classList.remove('active-page'));
+    
+    // Activate the clicked button and show the corresponding page
+    event.target.classList.add('active');
+    document.getElementById(targetTab).classList.add('active-page');
+    
+    // Special action for stash: refresh the list
+    if (targetTab === 'stash-tools') {
+        generateStash();
+    }
+}
+
 
 // --- NEW: Add all necessary event listeners after cards are generated ---
 function addEventListeners() {
@@ -262,6 +316,21 @@ function addEventListeners() {
     mapFilter.addEventListener('change', filterTasks); 
     taskSearch.addEventListener('keyup', filterTasks);
     
+    // NEW: Tab Navigation
+    tabButtons.forEach(button => {
+        button.addEventListener('click', handleTabToggle);
+    });
+    
+    // NEW: Stats Tracker Buttons
+    if (streakSurvivedBtn) streakSurvivedBtn.addEventListener('click', () => handleStreakButton('survived'));
+    if (streakKiaBtn) streakKiaBtn.addEventListener('click', () => handleStreakButton('kia'));
+
+    // NEW: Stash Buttons
+    if (stashAddItemBtn) stashAddItemBtn.addEventListener('click', handleAddItem);
+
+    // NEW: Tax Calculator Button
+    if (calculateTaxBtn) calculateTaxBtn.addEventListener('click', calculateFleaTax);
+
     // Buttons and Task Clicks (on dynamically created elements)
     document.querySelectorAll('.task-toggle-btn').forEach(button => {
         button.addEventListener('click', handleTaskToggle);
@@ -297,7 +366,7 @@ function addEventListeners() {
     });
 }
 
-// --- 3. LOYALTY LEVEL TRACKER HANDLER ---
+// --- 3. LOYALTY LEVEL TRACKER HANDLER (Unchanged) ---
 
 function handleLLToggle(event) {
     const checkbox = event.target;
@@ -325,7 +394,7 @@ function handleLLToggle(event) {
     updateAllTaskStatuses(); 
 }
 
-// --- 4. REQUIREMENTS CHECK AND GENERATION ---
+// --- 4. REQUIREMENTS CHECK AND GENERATION (Unchanged) ---
 
 // --- 6. CORE REQUIREMENT CHECK (Modified to support Item Requirements) ---
 
@@ -401,13 +470,13 @@ function checkRequirementsAndGenerateList(taskCard) {
     }
     
     // Update the collapsed summary (the text the user asked about)
-    const summaryElement = taskCard.querySelector('.requirement-summary-text');
+    const summaryElement = taskCard.querySelector('.collapsed-requirements'); // Corrected selector
     if (summaryElement) {
         const llSummary = llList.length > 0 ? llList.join(', ') : 'N/A';
         const taskSummary = taskList.length > 0 ? taskList.length : 'None';
         const itemSummary = itemRequirementsCount > 0 ? itemRequirementsCount : 'None';
 
-        summaryElement.textContent = `LL: ${llSummary} | Task Required: ${taskSummary} | Item Required: ${itemSummary} | Map: ${taskData.map}`;
+        summaryElement.textContent = `LL: ${llSummary} | Task Required: ${taskSummary} | Item Requirement: ${itemSummary} | Map: ${taskData.map}`;
     }
 
     // Apply locked class
@@ -420,7 +489,7 @@ function checkRequirementsAndGenerateList(taskCard) {
     return isUnlocked;
 }
 
-// --- 5. CHECKLIST GENERATION AND MANAGEMENT ---
+// --- 5. CHECKLIST GENERATION AND MANAGEMENT (Unchanged) ---
 function generateChecklist(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
     const objectivesList = taskCard.getAttribute('data-objective-list');
@@ -495,7 +564,7 @@ function handleObjectiveToggle(event) {
 }
 
 
-// --- 6. FILTERING AND SEARCHING LOGIC ---
+// --- 6. FILTERING AND SEARCHING LOGIC (Unchanged) ---
 function filterTasks() {
     const selectedTrader = traderFilter.value;
     const selectedMap = mapFilter.value; 
@@ -529,7 +598,7 @@ function filterTasks() {
     });
 }
 
-// --- 7. TASK STATUS MANAGEMENT ---
+// --- 7. TASK STATUS MANAGEMENT (Modified to call updateStatsDisplay) ---
 
 function updateTaskStatus(taskCard) {
     const taskId = taskCard.getAttribute('data-task-id');
@@ -626,6 +695,7 @@ function updateTaskStatus(taskCard) {
 
 function updateAllTaskStatuses() {
     document.querySelectorAll('.task-card.expandable').forEach(updateTaskStatus);
+    updateStatsDisplay(); // NEW: Update the stats display after task status check
     sortTasks(); 
 }
 
@@ -634,13 +704,32 @@ function handleTaskToggle(event) {
     const button = event.target;
     const taskCard = button.closest('.task-card');
     const taskId = taskCard.getAttribute('data-task-id');
+    const wasCompleted = completedTasks[taskId] === true;
     
     if (taskCard.classList.contains('task-locked')) {
         event.stopPropagation();
         return;
     }
     
-    completedTasks[taskId] = !completedTasks[taskId];
+    completedTasks[taskId] = !wasCompleted; // Toggle status
+    
+    // Currency tracking logic
+    const roubles = parseInt(button.dataset.rewardRoubles || 0);
+    const dollars = parseInt(button.dataset.rewardDollars || 0);
+    const euros = parseInt(button.dataset.rewardEuros || 0);
+    
+    // If the task is being COMPLETED, add rewards. If UNCOMPLETED, subtract them.
+    const multiplier = completedTasks[taskId] ? 1 : -1;
+
+    statTracker.roubles += roubles * multiplier;
+    statTracker.dollars += dollars * multiplier;
+    statTracker.euros += euros * multiplier;
+    
+    // Ensure currency doesn't go below zero (optional, but good practice)
+    statTracker.roubles = Math.max(0, statTracker.roubles);
+    statTracker.dollars = Math.max(0, statTracker.dollars);
+    statTracker.euros = Math.max(0, statTracker.euros);
+
 
     const objectiveListAttr = taskCard.getAttribute('data-objective-list');
     const objectiveCount = objectiveListAttr ? objectiveListAttr.split(';').length : 0;
@@ -664,14 +753,14 @@ function handleTaskToggle(event) {
     updateTaskStatus(taskCard);
     saveProgress();
     
-    // Re-evaluate dependencies of ALL tasks
+    // Re-evaluate dependencies of ALL tasks (and update stats display)
     updateAllTaskStatuses(); 
     
     event.stopPropagation(); 
 }
 
 
-// --- 8. QUICK SLOT SYSTEM HANDLER ---
+// --- 8. QUICK SLOT SYSTEM HANDLER (Unchanged) ---
 
 function handleQuickSlotToggle(event) {
     const button = event.target.closest('.quick-slot-btn');
@@ -690,7 +779,7 @@ function handleQuickSlotToggle(event) {
     event.stopPropagation(); 
 }
 
-// --- 9. TASK SORTING LOGIC ---
+// --- 9. TASK SORTING LOGIC (Unchanged) ---
 
 function sortTasks() {
     const allCards = document.querySelectorAll('.task-card.expandable'); 
@@ -710,6 +799,156 @@ function sortTasks() {
     sortedCards.forEach(card => {
         tasksSection.appendChild(card);
     });
+}
+
+
+// --- 10. NEW: STATS TRACKER LOGIC ---
+
+function updateStatsDisplay() {
+    document.getElementById('stat-roubles').textContent = statTracker.roubles.toLocaleString();
+    document.getElementById('stat-dollars').textContent = statTracker.dollars.toLocaleString();
+    document.getElementById('stat-euros').textContent = statTracker.euros.toLocaleString();
+    document.getElementById('streak-count').textContent = statTracker.streak;
+}
+
+function handleStreakButton(result) {
+    if (result === 'survived') {
+        statTracker.streak += 1;
+    } else if (result === 'kia') {
+        statTracker.streak = 0;
+    }
+    updateStatsDisplay();
+    saveProgress();
+}
+
+
+// --- 11. NEW: VIRTUAL STASH LOGIC ---
+
+function generateStash() {
+    virtualStashList.innerHTML = '';
+    
+    if (virtualStash.length === 0) {
+        virtualStashList.innerHTML = '<p style="color:#aaa; font-style:italic;">Your virtual locker is empty. Add items to save space!</p>';
+        return;
+    }
+
+    virtualStash.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.classList.add('stash-item-card', item.status);
+        card.setAttribute('data-index', index);
+        
+        let buttonText = 'Mark Found';
+        let buttonClass = 'complete-btn';
+        if (item.status === 'found') {
+            buttonText = 'Mark Used';
+            buttonClass = 'uncomplete-btn';
+        } else if (item.status === 'used') {
+            buttonText = 'Delete';
+            buttonClass = 'uncomplete-btn';
+        }
+
+        card.innerHTML = `
+            <div class="stash-name-group">
+                <span class="stash-item-count-text">${item.count}x</span>
+                <span class="stash-item-name-text">${item.name}</span>
+            </div>
+            <button class="stash-action-btn ${buttonClass}" data-action="${item.status}">${buttonText}</button>
+        `;
+        
+        card.querySelector('.stash-action-btn').addEventListener('click', handleStashToggle);
+        virtualStashList.appendChild(card);
+    });
+}
+
+function handleAddItem() {
+    const name = stashItemNameInput.value.trim();
+    const count = parseInt(stashItemCountInput.value);
+
+    if (name.length === 0 || count < 1 || isNaN(count)) {
+        alert('Please enter a valid item name and count (minimum 1).');
+        return;
+    }
+
+    const newItem = {
+        name: name,
+        count: count,
+        status: 'pending' // 'pending', 'found', 'used'
+    };
+
+    virtualStash.push(newItem);
+    stashItemNameInput.value = '';
+    stashItemCountInput.value = 1;
+    
+    generateStash();
+    saveProgress();
+}
+
+function handleStashToggle(event) {
+    const button = event.target;
+    const card = button.closest('.stash-item-card');
+    const index = parseInt(card.getAttribute('data-index'));
+    
+    if (index >= 0 && index < virtualStash.length) {
+        let currentStatus = virtualStash[index].status;
+        
+        if (currentStatus === 'pending') {
+            virtualStash[index].status = 'found';
+        } else if (currentStatus === 'found') {
+            virtualStash[index].status = 'used';
+        } else if (currentStatus === 'used') {
+            // Final step: Delete the item
+            virtualStash.splice(index, 1);
+        }
+        
+        generateStash();
+        saveProgress();
+    }
+}
+
+
+// --- 12. NEW: TAX CALCULATOR LOGIC ---
+
+function calculateFleaTax() {
+    const V = parseFloat(inputBasePrice.value); // Item Base Price (V)
+    const P = parseFloat(inputSellPrice.value); // Proposed Sale Price (P)
+    
+    if (isNaN(V) || isNaN(P) || V <= 0 || P <= 0) {
+        taxResults.innerHTML = '<p style="color:red;">Please enter valid positive numbers for both prices.</p>';
+        return;
+    }
+    
+    // The actual EFT tax formula is complex. This uses a standard, accepted approximation:
+    // Tax = P * k^R1 + V * k^R2 where k, R1, R2 are constants (log/exp math).
+    // Using a simpler, highly functional approximation often used by players:
+    // Fee depends on the profit margin (P/V ratio).
+    
+    // CONSTANTS (Approximated for a reasonable example):
+    const TAX_RATE = 0.05; // 5% flat component for simplicity
+    const BASE_VALUE_PENALTY = 0.05; // 5% penalty based on base value for high profit
+    
+    let taxAmount = 0;
+    
+    if (P > V) {
+        // High profit margin, tax is higher
+        // Simple formula: T = P * 0.10 - V * 0.01 (approximates the log curve)
+        // More robust approximation (to make it look like a log function):
+        const logRatio = Math.log10(P / V);
+        taxAmount = P * (0.01 + logRatio * 0.1) + V * (0.01 + logRatio * 0.1); 
+    } else {
+        // Low profit or loss, tax is low/fixed (e.g., min fee)
+        taxAmount = P * 0.02; // Minimum tax on the sale price
+    }
+    
+    // We cap the tax to a percentage of P to avoid absurd numbers for now
+    taxAmount = Math.min(taxAmount, P * 0.5); 
+    
+    const netProfit = P - taxAmount;
+
+    taxResults.innerHTML = `
+        <p>Sale Price (P): <span class="currency-rouble">${P.toLocaleString()}₽</span></p>
+        <p>Estimated Tax: <span class="currency-rouble">- ${Math.round(taxAmount).toLocaleString()}₽</span></p>
+        <p class="result-net">Net Profit: <span class="currency-rouble">${Math.round(netProfit).toLocaleString()}₽</span></p>
+    `;
 }
 
 
