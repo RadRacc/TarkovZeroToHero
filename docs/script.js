@@ -853,8 +853,8 @@ function calculateFleaTax() {
     const netProfit = preIncomeTaxes - incomeTaxAmount;
     
     taxResults.innerHTML = `
-        <p>Amount to Tax (P): <span class="currency-rouble">${P.toLocaleString()}₽</span></p>
-        <p>Sales Tax (Divisor): <span class="currency-rouble">÷ ${ST.toFixed(2)}</span></p>
+        <p>Money from sales: <span class="currency-rouble">${P.toLocaleString()}₽</span></p>
+        <p>Sales Tax: <span class="currency-rouble">÷ ${ST.toFixed(2)}</span></p>
         <p>Pre-Income Taxes (FST): <span class="currency-rouble">${Math.round(preIncomeTaxes).toLocaleString()}₽</span></p>
         <hr style="border-color:#444;">
         <p>Income Tax (${(incomeTaxRate * 100).toFixed(0)}%): <span class="currency-rouble">- ${Math.round(incomeTaxAmount).toLocaleString()}₽</span></p>
@@ -870,12 +870,12 @@ function calculateFoundRoubles() {
         return;
     }
     
-    const keepAmount = R / 3;
+    const keepAmount = R / 5;
     const taxAmount = R - keepAmount;
     
     foundRoublesResults.innerHTML = `
         <p>Total Roubles Found: <span class="currency-rouble">${R.toLocaleString()}₽</span></p>
-        <p>Tax (2/3rd): <span class="currency-rouble">- ${Math.round(taxAmount).toLocaleString()}₽</span></p>
+        <p>Tax: <span class="currency-rouble">- ${Math.round(taxAmount).toLocaleString()}₽</span></p>
         <p class.result-net">Take Home: <span class="currency-rouble">${Math.round(keepAmount).toLocaleString()}₽</span></p>
     `;
 }
